@@ -529,6 +529,11 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
           <div style="font-size:9px;color:var(--muted);margin-top:3px">Money in your checking account available to spend</div>
         </div>
         <div class="cf-field">
+          <label>Minimum checking buffer — cash floor ($)</label>
+          <input type="number" id="cf-checking-floor" value="500" min="0" step="50" placeholder="500" oninput="onDashboardCheckingFloorInput()">
+          <div style="font-size:9px;color:var(--muted);margin-top:3px">Used by the paycheck planner after each deposit through the rest of that pay window. The plan never allows projected checking below <strong style="color:var(--muted2)">$0</strong>.</div>
+        </div>
+        <div class="cf-field">
           <label>Emergency fund balance ($)</label>
           <input type="number" id="cf-ef-balance" value="" min="0" step="100" placeholder="0" oninput="cfRecalc()">
           <div style="font-size:9px;color:var(--muted);margin-top:3px">Savings set aside for emergencies (separate account)</div>
@@ -833,7 +838,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
     <h3>Where each tab fits</h3>
     <p><strong>Dashboard</strong> is the control room: loan balances/minimums and investments on one side, auto-filled monthly obligations on the other, plus checking, emergency fund targets, income, bills, manual savings, and manual investment transfers. The overview at the top highlights cash flow and debt, with investments, savings, and a single health score; savings pace follows your paycheck plan (optimized when you have run analysis).</p>
     <p><strong>Debt payoff</strong> is for charts and controls—extra cash, return, horizon, strategy comparison, net worth/debt trajectories, per-loan detail, and month-by-month breakdown.</p>
-    <p><strong>Paycheck planner</strong> is for timing: calendar, paycheck-by-paycheck set-asides, budget overview, and insights. <strong>Run paycheck analysis</strong> (on the Paycheck plan sub-tab) runs the lookahead optimizer you already have; <strong>Optimize</strong> in the header is reserved for a future subscriber workflow and does not change behavior yet.</p>
+    <p><strong>Paycheck planner</strong> is for timing: calendar, paycheck-by-paycheck set-asides, budget overview, and insights. Your <strong>manual plan</strong> always previews <strong>12 months</strong> from the Dashboard inputs (including your checking cash floor). <strong>Apply optimized plan (1 year)</strong> (Premium) runs the lookahead optimizer without a separate dialog; <strong>Optimize</strong> in the header is reserved for a future subscriber workflow and does not change behavior yet.</p>
 
     <h3>The three strategies</h3>
 
@@ -2414,7 +2419,7 @@ addLoan('Credit Card', 4500, 22.99, 135);
 
 /* Calendar */
 .cal-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-.cal-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; min-height: 52px; }
+.cal-header-row { display: flex; align-items: flex-start; justify-content: center; gap: 16px; flex-wrap: wrap; min-height: 52px; width: 100%; }
 .cal-header-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: var(--muted); min-height: 22px; align-items: center; }
 .cal-nav {
   display: grid;
@@ -2427,7 +2432,24 @@ addLoan('Credit Card', 4500, 22.99, 135);
 .cal-nav > button { margin-top: 2px; }
 .cal-nav button { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-family: var(--font-m); font-size: 12px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; min-width: 38px; }
 .cal-nav button:hover { border-color: var(--border3); }
-.cal-month-center { min-width: 0; text-align: center; }
+.cal-month-center {
+  min-width: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.cal-month-center .cal-past-toggle {
+  justify-content: center;
+  margin-top: 4px;
+  width: 100%;
+  max-width: 280px;
+}
+.cal-month-center .cal-past-toggle label {
+  max-width: none;
+  text-align: center;
+}
 .cal-month-title { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.2; }
 .cal-opening-line { min-height: 18px; margin-top: 2px; font-size: 10px; color: var(--muted); line-height: 1.35; font-family: var(--font-m); font-variant-numeric: tabular-nums; }
 .cal-opening-line:empty::before { content: '\00a0'; }
@@ -2702,10 +2724,28 @@ addLoan('Credit Card', 4500, 22.99, 135);
 .pp-save-suggest-box h4 { font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .pp-save-suggest-box ul { margin: 0; padding-left: 18px; }
 .pp-save-suggest-box li { margin-bottom: 6px; }
-.pp-planner-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 1200; display: none; align-items: center; justify-content: center; padding: 20px; }
-.pp-planner-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl); max-width: 440px; width: 100%; padding: 22px; box-shadow: 0 24px 64px rgba(0,0,0,0.45); }
-.pp-planner-card h3 { font-family: var(--font-d); font-size: 15px; font-weight: 700; margin: 0 0 6px; }
-.pp-planner-card p { font-size: 11px; color: var(--muted); line-height: 1.65; margin: 0 0 16px; }
+.pp-inline-planner-bar { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; width: 100%; max-width: 300px; }
+.pp-inline-planner-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: var(--font-d); }
+.pp-inline-planner-select {
+  width: 100%; max-width: 300px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--text); font-family: var(--font-m); font-size: 12px; padding: 8px 10px; outline: none; cursor: pointer;
+}
+#cft-paycheckplan.pp-mode-simple .pp-plan-horizon-pill {
+  display: inline-block;
+  margin-left: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: rgba(96, 165, 250, 0.14);
+  border: 1px solid rgba(96, 165, 250, 0.32);
+  vertical-align: middle;
+  font-family: var(--font-d);
+}
+.pp-premium-run-hint a { color: var(--blue); text-decoration: underline; }
 .cal-past-toggle { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted2); user-select: none; }
 .cal-past-toggle input { accent-color: var(--green); width: 15px; height: 15px; cursor: pointer; }
 .cal-past-toggle label { cursor: pointer; line-height: 1.4; max-width: 220px; }
@@ -2830,11 +2870,229 @@ addLoan('Credit Card', 4500, 22.99, 135);
   margin-bottom: 10px;
 }
 #cft-paycheckplan.pp-mode-simple .pp-simple-summary-wrap {
+  width: 100%;
+  margin-bottom: 14px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-simple-summary-wrap--compare {
+  margin-bottom: 16px;
+}
+/* Side-by-side plan comparison */
+#cft-paycheckplan.pp-mode-simple .pp-compare-deck {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  align-items: stretch;
+  width: 100%;
+}
+@media (max-width: 900px) {
+  #cft-paycheckplan.pp-mode-simple .pp-compare-deck {
+    grid-template-columns: 1fr;
+  }
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px 14px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--manual {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--optimized {
+  border-color: rgba(79, 156, 249, 0.35);
+  box-shadow: inset 3px 0 0 rgba(79, 156, 249, 0.75), 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--planner {
+  border-color: rgba(74, 222, 128, 0.28);
+  box-shadow: inset 3px 0 0 rgba(74, 222, 128, 0.55);
+  max-width: 720px;
+  margin: 0 auto;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--solo {
+  max-width: 720px;
+  margin: 0 auto;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-hd {
+  margin-bottom: 4px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 6px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-title {
+  margin: 0;
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-sub {
+  margin: 0 0 10px 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 42em;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-toolbar-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-d);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-metric-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 2px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(5.5rem, auto);
+  gap: 8px 16px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-row:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-lbl {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted2);
+  line-height: 1.35;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-lbl-note {
+  display: inline;
+  font-weight: 500;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-value {
+  text-align: right;
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num {
+  font-family: var(--font-d);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--accent {
+  color: var(--green);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--good {
+  color: var(--green);
+  font-size: 16px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--bad {
+  color: var(--red);
+  font-size: 16px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--muted {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 15px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--amber {
+  color: var(--amber);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--green {
+  color: var(--green);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num--red {
+  color: var(--red);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num-suffix {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted2);
+  margin-left: 4px;
+  font-family: var(--font-m);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-num-suffix--soft {
+  font-weight: 500;
+  color: var(--muted);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 4px;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-apply-btn {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 8px;
+  line-height: 1.2;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-apply-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-apply-btn--ghost:hover {
+  border-color: var(--muted);
+  color: var(--text);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-foot {
+  margin: 12px 0 0 0;
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-foot strong {
+  color: rgba(120, 185, 255, 0.95);
+  font-weight: 700;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--optimized .pp-compare-panel-toolbar {
+  border-bottom-color: rgba(79, 156, 249, 0.15);
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--optimized .pp-opt-plan-select-wrap {
+  flex: 1 1 200px;
+  margin-left: 0;
+  max-width: 100%;
+}
+#cft-paycheckplan.pp-mode-simple .pp-compare-panel--optimized .pp-opt-plan-select {
   width: 100%;
-  margin-bottom: 10px;
+  max-width: 100%;
+  font-size: 11px;
+  padding: 7px 10px;
+  padding-right: 26px;
 }
 /* Optimized preview: same card as modeled plan, light accent + strategy pills */
 #cft-paycheckplan.pp-mode-simple .pp-simple-summary.pp-simple-summary-optimized {
@@ -3404,12 +3662,12 @@ addLoan('Credit Card', 4500, 22.99, 135);
               <div class="cal-month-center">
                 <div class="cal-month-title" id="cal-month-title">—</div>
                 <div class="cal-opening-line" id="cal-opening-line">&nbsp;</div>
+                <div class="cal-past-toggle">
+                  <input type="checkbox" id="cf-auto-past-paid" onchange="setAutoPastBillsPaid(this.checked)">
+                  <label for="cf-auto-past-paid">Bills Up to Date</label>
+                </div>
               </div>
               <button type="button" onclick="calNext()">›</button>
-            </div>
-            <div class="cal-past-toggle">
-              <input type="checkbox" id="cf-auto-past-paid" onchange="setAutoPastBillsPaid(this.checked)">
-              <label for="cf-auto-past-paid">Bills Up to Date</label>
             </div>
           </div>
           <div class="cal-header-legend">
@@ -3425,7 +3683,7 @@ addLoan('Credit Card', 4500, 22.99, 135);
         </div>
         <div class="cal-grid cal-day-grid" id="cal-grid" style="margin-top:3px"></div>
         <div id="cal-month-report-mount"></div>
-        <div id="cal-calendar-hint" style="margin-top:12px;font-size:10px;color:var(--muted)">Balance shown in corner is projected end-of-day checking. Red = negative warning. Amber = below half a month of expenses. Toggle above to assume past bills are paid mid-month, or click any bill/loan chip to mark paid individually. Use <strong style="color:var(--text)">Run paycheck analysis</strong> on the Paycheck plan tab for optimized emergency fund / debt / invest moves that respect your cash floor.</div>
+        <div id="cal-calendar-hint" style="margin-top:12px;font-size:10px;color:var(--muted)">Balance shown in corner is projected end-of-day checking. Red = negative warning. Amber = below half a month of expenses. Toggle above to assume past bills are paid mid-month, or click any bill/loan chip to mark paid individually. On the Paycheck plan tab, <strong style="color:var(--text)">Apply optimized plan (1 year)</strong> (Premium) installs coordinated emergency fund / debt / invest moves that respect your Dashboard cash floor.</div>
 
         <!-- Balance chart below calendar -->
         <div style="margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px">
@@ -3477,13 +3735,20 @@ addLoan('Credit Card', 4500, 22.99, 135);
               Same-day order assumes <strong style="color:var(--text)">bills clear before the deposit</strong> (conservative).
             </div>
           </div>
-          <div class="pp-plan-head-actions" style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-            <button type="button" class="pp-run-btn pp-run-btn--head" id="pp-run-analysis-head" onclick="openPaycheckPlannerModal()">Run paycheck analysis</button>
+          <div class="pp-plan-head-actions" style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+            <div class="pp-inline-planner-bar">
+              <label for="pp-inline-post-ef-goal" class="pp-inline-planner-lbl">After emergency fund</label>
+              <select id="pp-inline-post-ef-goal" class="pp-inline-planner-select" onchange="onPaycheckInlinePostEfChange(this)" title="Where surplus goes once the emergency fund target is met">
+                <option value="surplus_debt">Send surplus to extra debt</option>
+                <option value="surplus_invest">Send surplus to investments</option>
+              </select>
+            </div>
+            <button type="button" class="pp-run-btn pp-run-btn--head" id="pp-run-analysis-head" onclick="runPaycheckPlannerAnalysis()">Apply optimized plan (1 year)</button>
+            <span id="pp-premium-run-hint" class="pp-premium-run-hint" style="font-size:10px;color:var(--muted);text-align:right;max-width:280px;line-height:1.45"></span>
             <button type="button" class="pp-clear-btn pp-secondary-action" onclick="clearPaycheckPlannerRun()">Clear optimized plan</button>
             <button type="button" class="pp-clear-btn pp-troubleshoot-tools" onclick="copyClearpathTroubleshootExportToClipboard()" title="JSON: inputs, planner snapshot, engine timeline, live recompute">Copy troubleshoot export</button>
             <span id="pp-export-status" class="pp-troubleshoot-tools" style="font-size:9px;color:var(--green);min-height:1.2em;text-align:right;max-width:200px"></span>
             <span class="pp-fluff pp-troubleshoot-tools" style="font-size:9px;color:var(--muted);text-align:right;max-width:200px">Troubleshoot: copies a JSON blob (inputs + planner + timeline + fresh recompute) for support or AI. Large debt-free horizons may truncate outflow list — see engineTimeline.exportCaps.</span>
-            <span class="pp-fluff" style="font-size:9px;color:var(--muted);text-align:right;max-width:160px">Premium-style optimizer: sets float &amp; post-emergency-fund goal in the dialog.</span>
           </div>
         </div>
         <div id="pp-summary-cards" class="pp-summary-cards-deck" style="margin-bottom:20px"></div>
@@ -3518,49 +3783,6 @@ addLoan('Credit Card', 4500, 22.99, 135);
 
     </div>
 
-    <div id="pp-planner-overlay" class="pp-planner-overlay" onclick="if(event.target===this)closePaycheckPlannerModal()">
-      <div class="pp-planner-card" onclick="event.stopPropagation()">
-        <h3>Paycheck analysis</h3>
-        <p>Uses your current checking cash, income schedule, bills, debts, and loan minimums. Optimized transfers replace manual savings and investment transfers from the Dashboard until you clear the plan.</p>
-        <div class="cf-field" style="margin-bottom:12px">
-          <label>Minimum checking balance (cash floor) ($)</label>
-          <input type="number" id="pp-planner-float" value="500" min="0" step="50" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:13px;padding:8px 10px;outline:none;width:100%;max-width:200px">
-          <div style="font-size:9px;color:var(--muted);margin-top:4px">Applies from <strong>after</strong> each deposit and your modeled set-aside through the rest of that pay window (normal pre-pay lows are ignored). The plan still never allows a projected <strong>below $0</strong> balance anywhere on the timeline.</div>
-        </div>
-        <div class="cf-field" style="margin-bottom:14px">
-          <label>After emergency fund is complete, send surplus to</label>
-          <select id="pp-planner-goal" onchange="ppPlannerSyncDebtStratUi()" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:12px;padding:8px 10px;outline:none;width:100%;max-width:320px">
-            <option value="surplus_debt">Extra debt payoff</option>
-            <option value="surplus_invest">Investments</option>
-          </select>
-        </div>
-        <div class="cf-field" style="margin-bottom:14px">
-          <label>Extra debt payoff order <span style="font-weight:400;color:var(--muted)">(matches Dashboard)</span></label>
-          <select id="pp-planner-debt-strat" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:12px;padding:8px 10px;outline:none;width:100%;max-width:320px">
-            <option value="avalanche">Avalanche — highest APR first</option>
-            <option value="snowball">Snowball — smallest balance first</option>
-            <option value="minimum">Minimum only — no extra to principal from this plan</option>
-          </select>
-          <div id="pp-planner-debt-strat-note" style="font-size:9px;color:var(--muted);margin-top:4px;line-height:1.45">Used when surplus goes to debt and for calendar total-debt projection. <strong>Minimum only</strong> matches the Dashboard: no extra principal from the plan — surplus after the emergency fund is funded goes to <strong>investments</strong> (Dashboard rate).</div>
-        </div>
-        <div class="cf-field" style="margin-bottom:14px">
-          <label>Projection length</label>
-          <select id="pp-planner-projection" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:12px;padding:8px 10px;outline:none;width:100%;max-width:320px">
-            <option value="3m">3 months (default)</option>
-            <option value="6m">6 months</option>
-            <option value="12m">1 year</option>
-            <option value="36m">3 years</option>
-            <option value="debt_free">Until debt free (estimated horizon)</option>
-          </select>
-          <div style="font-size:9px;color:var(--muted);margin-top:5px;line-height:1.55">The span you pick is the calendar window used for paychecks and plan totals. Bills are loaded through two extra months after that so the last deposit window still lines up with real due dates. Paycheck count is capped for speed on long runs.</div>
-        </div>
-        <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
-          <button type="button" class="pp-clear-btn" onclick="closePaycheckPlannerModal()">Cancel</button>
-          <button type="button" class="pp-run-btn" onclick="confirmPaycheckPlannerRun()">Run analysis</button>
-        </div>
-      </div>
-    </div>
-
     <div id="paycheck-inputs-backdrop" class="pf-inputs-backdrop" aria-hidden="true" onclick="closePaycheckInputsFlyout()"></div>
     <div id="paycheck-inputs-flyout" class="pf-inputs-flyout" role="dialog" aria-modal="true" aria-labelledby="pf-inputs-flyout-title" aria-hidden="true">
       <div class="pf-inputs-flyout-head">
@@ -3584,11 +3806,111 @@ let cfCounter = 0;
 let calViewDate = new Date();
 let cfCharts = {};
 let autoPastBillsPaid = false;
-/** Last paycheck optimization (null until user runs analysis from modal). */
+/** Last paycheck optimization (null until user applies an optimized plan). */
 let paycheckPlannerResult = null;
 /** Simple-view optimized strip: null = auto (best projected health among shadow routes); else minimum / avalanche / snowball. */
 let paycheckOptimizedPreviewDebtStrategy = null;
-let plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: '3m', plannerDebtStrategy: 'avalanche', paycheckSimpleView: false };
+/** All paycheck engine runs (manual preview, shadow compare, persisted optimization) use this horizon. */
+const PAYCHECK_PLANNER_MODEL_HORIZON = '12m';
+
+let plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON, plannerDebtStrategy: 'avalanche', paycheckSimpleView: false };
+
+/** Premium: optimized 1-year plan apply. Free tier: set localStorage.clearpathPlannerPremium to '0' to hide (manual 12-mo preview stays). */
+function isPaycheckPlannerPremium() {
+  try {
+    return localStorage.getItem('clearpathPlannerPremium') !== '0';
+  } catch (e) {
+    return true;
+  }
+}
+
+function syncPlannerCheckingFloatFromDom() {
+  const el = document.getElementById('cf-checking-floor');
+  if (el) plannerUiDefaults.checkingFloat = Math.max(0, parseFloat(el.value) || 0);
+}
+
+function onDashboardCheckingFloorInput() {
+  syncPlannerCheckingFloatFromDom();
+  if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
+  if (typeof cfRecalc === 'function') cfRecalc();
+}
+
+function onPaycheckInlinePostEfChange(el) {
+  if (!el) return;
+  plannerUiDefaults.postEfGoal = normalizeCfGoalStrategy(el.value);
+  if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
+  if (typeof cfRecalc === 'function') cfRecalc();
+}
+
+function refreshPaycheckPlannerHeadUi() {
+  const goalEl = document.getElementById('pp-inline-post-ef-goal');
+  if (goalEl) goalEl.value = normalizeCfGoalStrategy(plannerUiDefaults.postEfGoal || 'surplus_debt');
+  const runBtn = document.getElementById('pp-run-analysis-head');
+  const hint = document.getElementById('pp-premium-run-hint');
+  const prem = isPaycheckPlannerPremium();
+  if (runBtn) {
+    runBtn.disabled = !prem;
+    runBtn.style.opacity = prem ? '' : '0.55';
+    runBtn.title = prem
+      ? 'Runs a coordinated 12-month optimized plan using your Dashboard cash floor and the strategy selected in the optimized preview row.'
+      : 'Available when your workspace has Premium paycheck optimization enabled.';
+  }
+  if (hint) {
+    if (prem) {
+      hint.innerHTML =
+        'Uses the <strong style="color:var(--muted2)">strategy</strong> chosen in the optimized preview row (Auto picks the strongest estimated health). Models <strong style="color:var(--muted2)">12 calendar months</strong> of paychecks.';
+    } else {
+      hint.textContent =
+        'Optimized apply is a Premium feature. Your manual plan still previews 12 months. In this build, free tier is simulated by setting localStorage.clearpathPlannerPremium to "0" and reloading.';
+    }
+  }
+}
+
+function runPaycheckPlannerAnalysis() {
+  if (typeof closePaycheckInputsFlyout === 'function') closePaycheckInputsFlyout();
+  if (!isPaycheckPlannerPremium()) {
+    const st = document.getElementById('pp-export-status');
+    if (st) {
+      st.style.color = 'var(--amber)';
+      st.textContent = 'Premium required to apply an optimized plan.';
+    }
+    refreshPaycheckPlannerHeadUi();
+    return;
+  }
+  syncPlannerCheckingFloatFromDom();
+  const postEf = normalizeCfGoalStrategy(plannerUiDefaults.postEfGoal || 'surplus_debt');
+  const float = Math.max(0, Number(plannerUiDefaults.checkingFloat) || 0);
+  const debtStrat = getEffectiveOptimizedPreviewDebtStrategy();
+  const proj = PAYCHECK_PLANNER_MODEL_HORIZON;
+  plannerUiDefaults = { ...plannerUiDefaults, checkingFloat: float, postEfGoal: postEf, plannerProjection: proj };
+
+  const cashBalance = parseFloat(document.getElementById('cf-cash-balance').value) || 0;
+  const efBalance = parseFloat(document.getElementById('cf-ef-balance').value) || 0;
+  const efMonths = parseFloat(document.getElementById('cf-ef-months').value) || 3;
+  const totalBills = cfBills.reduce((s, b) => s + (b.amount || 0), 0);
+  const totalCfDebts = cfDebts.reduce((s, d) => s + (d.amount || 0), 0);
+  const totalLoanMin = loans.reduce((s, l) => s + (Number(l.minPay) || 0) + Math.max(0, Number(l.extraPay) || 0), 0);
+  const totalOut = totalBills + totalCfDebts + totalLoanMin;
+  const readyForSaves = cfIncomes.some(inc => inc.amount > 0) && totalOut > 0.01;
+
+  const opt = computePaycheckOptimization({
+    cashBalance, efBalance, efMonths, totalOut, postEfGoal: postEf, checkingFloat: float, readyForSaves,
+    plannerProjection: proj,
+    plannerDebtStrategy: debtStrat
+  });
+  paycheckPlannerResult = attachPerPaycheckDebtAllocations({
+    ...opt,
+    ranAt: Date.now()
+  });
+  resetPaycheckOptimizedPreviewOverrides();
+  if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
+  const st = document.getElementById('pp-export-status');
+  if (st) {
+    st.style.color = 'var(--green)';
+    st.textContent = 'Optimized 12-month plan applied.';
+  }
+  if (typeof cfRecalc === 'function') cfRecalc();
+}
 
 let paycheckOptimizedAutoPickKey = '';
 let paycheckOptimizedAutoPickStrategy = null;
@@ -3608,7 +3930,7 @@ function paycheckOptimizedAutoPickCacheKey() {
   const loanSig = ((loans && loans.length) ? loans : []).map(function (l) {
     return [l.id, Math.round(Number(l.balance) || 0), Number(l.rate) || 0, Math.round(Number(l.minPay) || 0)].join(':');
   }).join('|');
-  const proj = normalizePlannerProjection(plannerUiDefaults.plannerProjection || '3m');
+  const proj = normalizePlannerProjection(plannerUiDefaults.plannerProjection || PAYCHECK_PLANNER_MODEL_HORIZON);
   const fl = String(Math.round(Number(plannerUiDefaults.checkingFloat) || 0));
   return [invV, sur, loanSig, normalizeCfGoalStrategy(plannerUiDefaults.postEfGoal || 'surplus_debt'), proj, fl, 'healthv1'].join('#');
 }
@@ -3635,7 +3957,7 @@ function computeBestPreviewDebtStrategyByProjectedHealth() {
   const L = loans || [];
   keys.forEach(function (k) {
     const strat = normalizePlannerDebtStrategy(k);
-    const shadow = buildShadowOptimizedPlanSnapshot(strat);
+    const shadow = buildShadowOptimizedPlanSnapshot(strat, PAYCHECK_PLANNER_MODEL_HORIZON);
     if (!shadow || !shadow.paycheckPlans || !shadow.paycheckPlans.length) return;
     const postEf = normalizeCfGoalStrategy(shadow.postEfGoal || plannerUiDefaults.postEfGoal || 'surplus_debt');
     const pS = {
@@ -3651,7 +3973,7 @@ function computeBestPreviewDebtStrategyByProjectedHealth() {
     };
     const ppOpt = filterPaycheckPlansForDisplayedHorizon(pS, shadow.paycheckPlans);
     if (!ppOpt.length) return;
-    const hb = computeDashboardHealthBreakdownProjectedForPlan(base, ppOpt);
+    const hb = computeDashboardHealthBreakdownProjectedForPlan(base, ppOpt, pS);
     const sc = hb && Number.isFinite(Number(hb.score)) ? Number(hb.score) : -Infinity;
     let nw = -Infinity;
     if (typeof simulateStrategy === 'function' && L.length) {
@@ -3738,7 +4060,8 @@ function estimateDebtFreePlannerMonths() {
 
 function getPlannerCollectMonths(projectionLength) {
   const pl = normalizePlannerProjection(projectionLength);
-  const base = pl === '6m' ? 6 : pl === '12m' ? 12 : pl === '36m' ? 36 : pl === 'debt_free' ? estimateDebtFreePlannerMonths() : 3;
+  /** 12m = 13 calendar months inclusive from the first day of this month through the same month next year (e.g. Apr 2026–Apr 2027). */
+  const base = pl === '6m' ? 6 : pl === '12m' ? 13 : pl === '36m' ? 36 : pl === 'debt_free' ? estimateDebtFreePlannerMonths() : 3;
   return Math.min(480, base);
 }
 
@@ -3766,13 +4089,13 @@ function formatDashGlPlanSpanLine(p) {
   if (p.manualPaycheckReport && n != null && n > 0 && p.paycheckPlans && p.paycheckPlans.length) {
     return 'Manual preview: ' + n + ' calendar month' + (n === 1 ? '' : 's') + ' from today · ' + pc + ' paycheck' + (pc === 1 ? '' : 's') + ' · Projection: ' + setting + '.';
   }
-  return 'Monthly figures come straight from your entries. Run Paycheck analysis to anchor savings pace and the health score to a dated plan window.';
+  return 'Monthly figures come straight from your entries. Add dated income to see a 12-month manual plan, or apply an optimized plan (Premium) to anchor savings pace and the health score to a dated window.';
 }
 
 function getPlannerMaxPaychecks(projectionLength) {
   const pl = normalizePlannerProjection(projectionLength);
   if (pl === '6m') return 52;
-  if (pl === '12m') return 104;
+  if (pl === '12m') return 112;
   if (pl === '36m') return 312;
   if (pl === 'debt_free') return 200;
   return 28;
@@ -4341,8 +4664,9 @@ function loadClearpathPersistedState() {
     }
     if (data.cf.plannerUiDefaults) plannerUiDefaults = { ...plannerUiDefaults, ...data.cf.plannerUiDefaults };
     if (typeof plannerUiDefaults.paycheckSimpleView !== 'boolean') plannerUiDefaults.paycheckSimpleView = false;
-    plannerUiDefaults.plannerProjection = normalizePlannerProjection(plannerUiDefaults.plannerProjection);
+    plannerUiDefaults.plannerProjection = PAYCHECK_PLANNER_MODEL_HORIZON;
     plannerUiDefaults.plannerDebtStrategy = normalizePlannerDebtStrategy(plannerUiDefaults.plannerDebtStrategy);
+    setVal('cf-checking-floor', plannerUiDefaults.checkingFloat != null ? plannerUiDefaults.checkingFloat : 500);
     paycheckPlannerResult = deserializePlannerResult(data.cf.paycheckPlannerResult);
     if (paycheckPlannerResult && paycheckPlannerResult.paycheckPlans && paycheckPlannerResult.paycheckPlans.length && typeof attachPerPaycheckDebtAllocations === 'function') {
       attachPerPaycheckDebtAllocations(paycheckPlannerResult);
@@ -6102,7 +6426,7 @@ function buildUnifiedPlan() {
       cashBalance, efBalance, efMonths, totalOut,
       postEfGoal: plannerUiDefaults.postEfGoal,
       checkingFloat: plannerUiDefaults.checkingFloat,
-      plannerProjection: plannerUiDefaults.plannerProjection,
+      plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON,
       plannerDebtStrategy: plannerUiDefaults.plannerDebtStrategy
     });
     if (man.paycheckPlans && man.paycheckPlans.length) {
@@ -6266,14 +6590,19 @@ function loanMonthlyServiceFromProjectedBalances(loanBalancesProjected) {
  * Health score (0–100) using the same blend as the Dashboard, but with end-of-modeled-horizon
  * emergency fund level, implied loan service from last projected balances, average EF+invest pace
  * from this plan’s paychecks, and this plan’s overdraft count. Cash-flow surplus uses current inputs.
+ * @param {object|null} replayP — plan snapshot for calendar debt replay (saveEvents, horizon, strategy). Defaults to baseP; pass shadow plan when scoring optimized routes.
  */
-function computeDashboardHealthBreakdownProjectedForPlan(baseP, planList) {
+function computeDashboardHealthBreakdownProjectedForPlan(baseP, planList, replayP) {
   if (!baseP || !planList || !planList.length) return null;
   const last = planList[planList.length - 1];
+  const rP = replayP != null ? replayP : baseP;
+  const loanProjCal = projectedLoanBalancesAtDisplayedPlanCalendarEnd(rP);
   const loanProj =
-    last && Array.isArray(last.loanBalancesProjected) && last.loanBalancesProjected.length
-      ? last.loanBalancesProjected
-      : null;
+    loanProjCal && loanProjCal.length
+      ? loanProjCal
+      : (last && Array.isArray(last.loanBalancesProjected) && last.loanBalancesProjected.length
+        ? last.loanBalancesProjected
+        : null);
   const svc = loanMonthlyServiceFromProjectedBalances(loanProj);
   const paceMo = Math.min(12, Math.max(1, getSnapshotPlanMonths(baseP)));
   const paceP = { ...baseP, paycheckPlans: planList };
@@ -6289,25 +6618,58 @@ function computeDashboardHealthBreakdownProjectedForPlan(baseP, planList) {
   return computeDashboardHealthBreakdown(pSnap, svc.mins, svc.interest, savingsMo);
 }
 
-/** Inline snippet for simple summary strips (null → empty). */
-function formatSimpleProjectedHealthHtml(breakdown) {
-  if (!breakdown || breakdown.score == null || !Number.isFinite(Number(breakdown.score))) return '';
+/** Simple-view compare deck: one aligned row (label | value). */
+function buildPlanCompareMetricRow(labelHtml, valueHtml) {
+  return '<div class="pp-compare-row">' +
+    '<div class="pp-compare-lbl">' + labelHtml + '</div>' +
+    '<div class="pp-compare-value">' + valueHtml + '</div>' +
+    '</div>';
+}
+
+/** Health row for compare deck — always shows a value or em dash. */
+function formatHealthCompareRowHtml(breakdown) {
+  if (!breakdown || breakdown.score == null || !Number.isFinite(Number(breakdown.score))) {
+    const tipEsc = 'Add more plan detail to estimate health.';
+    return buildPlanCompareMetricRow(
+      'Health <span class="pp-compare-lbl-note">(0–100 est.)</span>',
+      '<span class="pp-compare-num pp-compare-num--muted" title="' + tipEsc + '">—</span>'
+    );
+  }
   const s = Math.round(Number(breakdown.score));
-  let cls = 'pp-health-proj-num pp-health-proj-num--amber';
-  if (s >= 75) cls = 'pp-health-proj-num pp-health-proj-num--green';
-  else if (s < 45) cls = 'pp-health-proj-num pp-health-proj-num--red';
+  let cls = 'pp-compare-num pp-compare-num--amber';
+  if (s >= 75) cls = 'pp-compare-num pp-compare-num--green';
+  else if (s < 45) cls = 'pp-compare-num pp-compare-num--red';
   const tip =
     'Estimated 0–100 score using the same blend as Dashboard health (surplus, emergency funding, debt load, savings & invest pace, overdrafts), applied to this plan’s end-of-horizon state and averages. Not advice.';
   const tipEsc = String(tip).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-  return (
-    '<span class="pp-sd">\u00b7</span><span class="pp-health-proj" title="' +
-    tipEsc +
-    '">Health (est.) <strong class="' +
-    cls +
-    '">' +
-    s +
-    '</strong></span>'
+  return buildPlanCompareMetricRow(
+    'Health <span class="pp-compare-lbl-note">(0–100 est.)</span>',
+    '<span class="' + cls + '" title="' + tipEsc + '">' + s + '</span><span class="pp-compare-num-suffix">/100</span>'
   );
+}
+
+/**
+ * Vertical metric list for manual vs optimized panels — same row order for easy scanning.
+ * `freeCash` is dollars (rounded); `overdrafts` is a count.
+ */
+function buildPlanCompareMetricRowsHtml(spec) {
+  const ef = Math.round(Number(spec.ef) || 0);
+  const debt = Math.round(Number(spec.debt) || 0);
+  const inv = Math.round(Number(spec.inv) || 0);
+  const fc = Math.round(Number(spec.freeCash) || 0);
+  const od = Math.max(0, Number(spec.overdrafts) || 0);
+  const freeLbl = spec.freeCashLabel || 'To goals & extra';
+  const odInner = od === 0
+    ? '<span class="pp-compare-num pp-compare-num--good">0</span><span class="pp-compare-num-suffix pp-compare-num-suffix--soft"> no hits</span>'
+    : '<span class="pp-compare-num pp-compare-num--bad">' + od + '</span><span class="pp-compare-num-suffix pp-compare-num-suffix--soft"> ' + (od === 1 ? 'event' : 'events') + '</span>';
+  return '<div class="pp-compare-metric-rows">' +
+    buildPlanCompareMetricRow('Emergency fund <span class="pp-compare-lbl-note">end of window</span>', '<span class="pp-compare-num">' + fmtSimpleMoney(ef) + '</span>') +
+    buildPlanCompareMetricRow('Debt remaining <span class="pp-compare-lbl-note">projected</span>', '<span class="pp-compare-num">' + fmtSimpleMoney(debt) + '</span>') +
+    buildPlanCompareMetricRow('Investments <span class="pp-compare-lbl-note">end of window</span>', '<span class="pp-compare-num">' + fmtSimpleMoney(inv) + '</span>') +
+    buildPlanCompareMetricRow(freeLbl, '<span class="pp-compare-num pp-compare-num--accent">' + fmtSimpleMoney(fc) + '</span>') +
+    buildPlanCompareMetricRow('Overdraft count <span class="pp-compare-lbl-note">modeled</span>', odInner) +
+    formatHealthCompareRowHtml(spec.healthHb) +
+    '</div>';
 }
 
 /** Calendar months used for plan totals (matches paycheck engine horizon). */
@@ -6315,7 +6677,7 @@ function getSnapshotPlanMonths(p) {
   if (!p) return 1;
   const h = p.plannerHorizonMonths;
   if (h != null && h > 0) return h;
-  return Math.max(1, getPlannerCollectMonths(p.plannerProjection || plannerUiDefaults.plannerProjection || '3m'));
+  return Math.max(1, getPlannerCollectMonths(p.plannerProjection || plannerUiDefaults.plannerProjection || PAYCHECK_PLANNER_MODEL_HORIZON));
 }
 
 /** Advance a YM key from `getFullYear()*12+getMonth()` by delta calendar months. */
@@ -6343,8 +6705,8 @@ function plannerDisplayedCalendarYmBounds(p) {
   const startYm = now.getFullYear() * 12 + now.getMonth();
   let months = p.plannerHorizonMonths != null && p.plannerHorizonMonths > 0
     ? Math.min(480, Math.round(Number(p.plannerHorizonMonths)))
-    : getPlannerCollectMonths(p.plannerProjection || plannerUiDefaults.plannerProjection || '3m');
-  if (isBasicManualCashflowPlan(p)) months = Math.min(12, months);
+    : getPlannerCollectMonths(p.plannerProjection || plannerUiDefaults.plannerProjection || PAYCHECK_PLANNER_MODEL_HORIZON);
+  if (isBasicManualCashflowPlan(p)) months = Math.min(36, months);
   months = Math.max(1, months);
   const lastYmInclusive = plannerCalendarYmAdd(startYm, months - 1);
   return { firstYm: startYm, lastYmInclusive, monthsShown: months };
@@ -6627,25 +6989,6 @@ function syncDashboardAtGlance(p) {
   }
 }
 
-function openPaycheckPlannerModal() {
-  if (typeof closePaycheckInputsFlyout === 'function') closePaycheckInputsFlyout();
-  const o = document.getElementById('pp-planner-overlay');
-  if (!o) return;
-  document.getElementById('pp-planner-float').value = String(plannerUiDefaults.checkingFloat ?? 500);
-  document.getElementById('pp-planner-goal').value = plannerUiDefaults.postEfGoal || 'surplus_debt';
-  const pr = document.getElementById('pp-planner-projection');
-  if (pr) pr.value = normalizePlannerProjection(plannerUiDefaults.plannerProjection);
-  const ds = document.getElementById('pp-planner-debt-strat');
-  if (ds) ds.value = normalizePlannerDebtStrategy(plannerUiDefaults.plannerDebtStrategy);
-  ppPlannerSyncDebtStratUi();
-  o.style.display = 'flex';
-}
-
-function closePaycheckPlannerModal() {
-  const o = document.getElementById('pp-planner-overlay');
-  if (o) o.style.display = 'none';
-}
-
 function syncPaycheckViewToggleUi() {
   const full = document.getElementById('pp-view-full');
   const sim = document.getElementById('pp-view-simple');
@@ -6777,6 +7120,21 @@ function projectedTotalDebtEndOfDisplayedPlan(p) {
   try {
     const dm = debtMetricsAfterCalendarMonth(y, mo, se, strat);
     if (dm && Number.isFinite(Number(dm.totalDebt))) return Number(dm.totalDebt);
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+/** Per-loan balances after the plan window’s last calendar month (for health / service calcs). */
+function projectedLoanBalancesAtDisplayedPlanCalendarEnd(p) {
+  const b = plannerDisplayedCalendarYmBounds(p);
+  if (!b || !loans || !loans.length) return null;
+  const strat = normalizePlannerDebtStrategy(p && p.plannerDebtStrategy);
+  const y = Math.floor(b.lastYmInclusive / 12);
+  const mo = b.lastYmInclusive % 12;
+  const se = effectiveUnifiedSaveEventsForCalendarReplay(p);
+  try {
+    const dm = debtMetricsAfterCalendarMonth(y, mo, se, strat);
+    if (dm && dm.perLoan && dm.perLoan.length) return dm.perLoan;
   } catch (e) { /* ignore */ }
   return null;
 }
@@ -7024,39 +7382,14 @@ function renderCalendarMonthEventSummaryHtml(year, month, events, MONTHS) {
     </div>`;
 }
 
-function confirmPaycheckPlannerRun() {
-  const float = Math.max(0, parseFloat(document.getElementById('pp-planner-float').value) || 500);
-  const postEf = normalizeCfGoalStrategy(document.getElementById('pp-planner-goal').value);
-  const proj = normalizePlannerProjection(document.getElementById('pp-planner-projection')?.value);
-  const debtStrat = normalizePlannerDebtStrategy(document.getElementById('pp-planner-debt-strat')?.value);
-  plannerUiDefaults = { ...plannerUiDefaults, checkingFloat: float, postEfGoal: postEf, plannerProjection: proj, plannerDebtStrategy: debtStrat };
-
-  const cashBalance = parseFloat(document.getElementById('cf-cash-balance').value) || 0;
-  const efBalance = parseFloat(document.getElementById('cf-ef-balance').value) || 0;
-  const efMonths = parseFloat(document.getElementById('cf-ef-months').value) || 3;
-  const totalBills = cfBills.reduce((s, b) => s + (b.amount || 0), 0);
-  const totalCfDebts = cfDebts.reduce((s, d) => s + (d.amount || 0), 0);
-  const totalLoanMin = loans.reduce((s, l) => s + (Number(l.minPay) || 0) + Math.max(0, Number(l.extraPay) || 0), 0);
-  const totalOut = totalBills + totalCfDebts + totalLoanMin;
-  const readyForSaves = cfIncomes.some(inc => inc.amount > 0) && totalOut > 0.01;
-
-  const opt = computePaycheckOptimization({
-    cashBalance, efBalance, efMonths, totalOut, postEfGoal: postEf, checkingFloat: float, readyForSaves,
-    plannerProjection: proj,
-    plannerDebtStrategy: debtStrat
-  });
-  paycheckPlannerResult = attachPerPaycheckDebtAllocations({
-    ...opt,
-    ranAt: Date.now()
-  });
-  resetPaycheckOptimizedPreviewOverrides();
-  closePaycheckPlannerModal();
-  cfRecalc();
-}
-
 function clearPaycheckPlannerRun() {
   paycheckPlannerResult = null;
   resetPaycheckOptimizedPreviewOverrides();
+  const st = document.getElementById('pp-export-status');
+  if (st) {
+    st.textContent = '';
+    st.style.color = '';
+  }
   cfRecalc();
 }
 
@@ -7106,14 +7439,14 @@ function cfRecalc(opts) {
     let t;
     if (p.manualPaycheckReport) {
       t = 'The Paycheck plan tab previews each deposit window with your scheduled manual savings and investment transfers (same cards as an optimized run, but not rebalanced across checks). Watch for low or negative checking. ';
-      t += 'Use “Run paycheck analysis” when you want a floor-safe plan that replaces those manual transfers on the calendar. ';
+      t += 'Use “Apply optimized plan” (Premium) when you want a floor-safe plan that replaces those manual transfers on the calendar. ';
       if (!p.efFunded) {
         t += 'The optimizer fills the emergency fund first; after that, surplus follows your chosen goal (' + (g === 'surplus_invest' ? 'invest' : 'debt') + '). ';
       } else {
         t += (STRATEGY_HINTS[g] || '');
       }
     } else {
-      t = 'Use “Run paycheck analysis” on the Paycheck plan tab for optimized emergency fund / debt / invest moves from each deposit. ';
+      t = 'On the Paycheck plan tab, use “Apply optimized plan (1 year)” (Premium) for coordinated emergency fund / debt / invest moves from each deposit. ';
       if (p.plannerActive) {
         t += 'Optimized plan is active on the calendar. Manual savings and investment transfers from the Dashboard are paused while it runs. ';
       } else {
@@ -7819,18 +8152,7 @@ function getLoanSnapForMonthStart(targetYear, targetMonth) {
 }
 
 function ppPlannerSyncDebtStratUi() {
-  const goal = document.getElementById('pp-planner-goal');
-  const sel = document.getElementById('pp-planner-debt-strat');
-  const note = document.getElementById('pp-planner-debt-strat-note');
-  if (!goal || !sel) return;
-  const inv = goal.value === 'surplus_invest';
-  sel.disabled = inv;
-  sel.style.opacity = inv ? '0.45' : '1';
-  if (note) {
-    note.textContent = inv
-      ? 'Surplus is routed to investments in this run — debt order applies only to calendar debt projection if you switch goal later.'
-      : 'Used when surplus goes to debt and for calendar total-debt projection. Minimum = plan never applies extra principal (minimums still accrue with interest).';
-  }
+  /* Legacy hook: modal removed; post-EF goal lives in #pp-inline-post-ef-goal. */
 }
 
 function calPrev() {
@@ -8264,10 +8586,10 @@ function renderOverview(p) {
   } else {
     if (tEl) tEl.textContent = 'Surplus & goals';
     if (sEl) sEl.textContent = p.plannerActive
-      ? 'Plan is on but no set-asides yet — widen projection or adjust float / income in Run paycheck analysis.'
+      ? 'Plan is on but no set-asides yet — check income dates or adjust your Dashboard cash floor and inputs.'
       : (p.manualPaycheckReport
         ? 'No scheduled manual savings or investment transfers in the preview horizon — add transfers on the Dashboard or widen the planner projection.'
-        : 'Modeled split: part of surplus toward the emergency fund gap, remainder for after-emergency-fund goals once funded. Run paycheck analysis for a full horizon.');
+        : 'Modeled split: part of surplus toward the emergency fund gap, remainder for after-emergency-fund goals once funded. The planner uses a full 12-month horizon.');
     const efGap = Math.max(0, efTarget - efCurrent);
     const barOpts = {
       responsive: true, maintainAspectRatio: false, indexAxis: 'y',
@@ -8362,7 +8684,7 @@ function formatInsightsHealthPanel(hbLive, hbProjected, canProjectEnd) {
   if (!hb || hb.score == null || !Number.isFinite(Number(hb.score))) {
     return `<div class="insight-card insight-health-wide">
       <div class="insight-title">Financial health score</div>
-      <div class="insight-body" style="color:var(--muted2);line-height:1.55">Once the Dashboard has income and fixed outflows, this panel shows the same 0–100 blend as the score tile above, with each ingredient broken out. Run <strong style="color:var(--text)">Paycheck analysis</strong> (or use a manual preview) to unlock the plan-end projection toggle.</div>
+      <div class="insight-body" style="color:var(--muted2);line-height:1.55">Once the Dashboard has income and fixed outflows, this panel shows the same 0–100 blend as the score tile above, with each ingredient broken out. A <strong style="color:var(--text)">12-month manual paycheck preview</strong> or an <strong style="color:var(--text)">optimized plan</strong> unlocks the plan-end projection toggle.</div>
     </div>`;
   }
   const sc = Math.round(Number(hb.score));
@@ -8491,7 +8813,7 @@ function renderInsights(p) {
       type: 'good',
       icon: '✓',
       title: 'Room to fund goals',
-      body: `About ${surplusPct.toFixed(0)}% of income (~$${Math.round(surplus).toLocaleString()}/mo) is available after fixed costs. **Run paycheck analysis** to route it safely to the emergency fund, then to **${postGoal}** without breaking your checking floor.`
+      body: `About ${surplusPct.toFixed(0)}% of income (~$${Math.round(surplus).toLocaleString()}/mo) is available after fixed costs. **Apply optimized plan** (Premium) routes it safely to the emergency fund, then to **${postGoal}** without breaking your checking floor.`
     });
   }
 
@@ -8506,9 +8828,9 @@ function renderInsights(p) {
     } else if (p.plannerActive) {
       efBody += ' Re-run the plan if you change income or bills.';
     } else if (p.manualPaycheckReport) {
-      efBody += ' This date follows your Dashboard savings schedule; **Run paycheck analysis** for a coordinated, floor-safe plan.';
+      efBody += ' This date follows your Dashboard savings schedule; **Apply optimized plan** (Premium) for a coordinated, floor-safe plan.';
     } else {
-      efBody += ' Run paycheck analysis to see when set-asides can fund it on your deposit schedule.';
+      efBody += ' Apply an optimized plan to see when coordinated set-asides can fund it on your deposit schedule.';
     }
     insights.push({ type: 'warn', icon: '🛡', title: 'Emergency fund is the next milestone', body: efBody });
   } else {
@@ -8516,7 +8838,7 @@ function renderInsights(p) {
       type: 'good',
       icon: '🎯',
       title: 'Emergency fund target met — focus on your chosen goal',
-      body: `Surplus can go to **${postGoal}** (set in Run paycheck analysis). ${p.postEfGoal === 'surplus_debt' ? `Debt strategy: **${debtStratLabel}**.` : 'You can still model debt on the calendar with a debt-first goal if you switch later.'}`
+      body: `Surplus can go to **${postGoal}** (Paycheck plan tab → After emergency fund). ${p.postEfGoal === 'surplus_debt' ? `Debt strategy: **${debtStratLabel}**.` : 'You can still model debt on the calendar with a debt-first goal if you switch later.'}`
     });
   }
 
@@ -8542,14 +8864,14 @@ function renderInsights(p) {
     if (neg) sub += ' At least one window still goes **below $0** — reduce a transfer or fix timing.';
     if (!neg && floorHit) sub += ' Some windows hit your **cash floor** after scheduled savings.';
     if (!neg && !floorHit && tight) sub += ' Some windows are **tight** vs your cushion.';
-    sub += ' **Run paycheck analysis** when you want optimized set-asides on the calendar.';
+    sub += ' **Apply optimized plan** (Premium) when you want coordinated set-asides on the calendar.';
     insights.push({ type: neg ? 'danger' : (floorHit || tight) ? 'warn' : 'good', icon: '📋', title: 'Manual paycheck preview', body: sub });
   } else if (p.readyForSaves) {
     insights.push({
       type: 'warn',
       icon: '▶',
-      title: 'Run paycheck analysis',
-      body: 'You have income and fixed costs entered. **Run paycheck analysis** on the Paycheck plan tab to generate safe emergency fund / debt / invest set-asides that respect your checking floor and lookahead windows.'
+      title: 'Apply optimized plan',
+      body: 'You have income and fixed costs entered. On the Paycheck plan tab, **Apply optimized plan (1 year)** (Premium) generates safe emergency fund / debt / invest set-asides that respect your Dashboard cash floor and lookahead windows.'
     });
   }
 
@@ -8822,8 +9144,8 @@ function renderPaycheckSavingsTips(p) {
       : `<h4>Cash gap — next steps</h4><p style="margin:0 0 10px">At least one pay window still projects <strong>below $0</strong> with no savings set-aside. Shift a due date, tap emergency fund temporarily, raise income, or trim expenses — ideas from your bill list:</p>`)
     : (anyHeadroomAboveZero
       ? (manual
-        ? `<h4>Buffer vs scheduled savings</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, some windows could keep checking at <strong>$0</strong> with different timing, but not always at your <strong>$${Math.round(floatAmt).toLocaleString()}</strong> cash floor once your <strong>scheduled</strong> savings leave checking. Add a cushion, reduce a manual transfer, or use <strong>Run paycheck analysis</strong> to rebalance across checks. Consider:</p>`
-        : `<h4>Set-aside blocked by your checking floor</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, the optimizer keeps projected checking at or above your <strong>$${Math.round(floatAmt).toLocaleString()}</strong> floor (not just $0). Some windows still dip below that floor if you move money to goals, so the plan caps set-aside at <strong>$0</strong> even though balances can grow month to month. Try a lower floor in <strong>Run paycheck analysis</strong>, or add a small buffer before savings. Consider:</p>`)
+        ? `<h4>Buffer vs scheduled savings</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, some windows could keep checking at <strong>$0</strong> with different timing, but not always at your <strong>$${Math.round(floatAmt).toLocaleString()}</strong> cash floor once your <strong>scheduled</strong> savings leave checking. Add a cushion, reduce a manual transfer, or use <strong>Apply optimized plan</strong> (Premium) to rebalance across checks. Consider:</p>`
+        : `<h4>Set-aside blocked by your checking floor</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, the optimizer keeps projected checking at or above your <strong>$${Math.round(floatAmt).toLocaleString()}</strong> floor (not just $0). Some windows still dip below that floor if you move money to goals, so the plan caps set-aside at <strong>$0</strong> even though balances can grow month to month. Try lowering the <strong>minimum checking buffer</strong> on the Dashboard, or add a small cushion before savings. Consider:</p>`)
       : (manual
         ? `<h4>No extra headroom this horizon</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, even treating <strong>$0</strong> as the minimum, there is very little room beyond your scheduled savings without risking overdraft. Consider:</p>`
         : `<h4>No safe set-aside this horizon</h4><p style="margin:0 0 10px">Across the next <strong>${ppVis.length}</strong> deposits, even allowing checking down to <strong>$0</strong> (bills before pay on each check day), there is effectively <strong>no</strong> room for extra savings without risking overdraft. Consider:</p>`));
@@ -8874,7 +9196,7 @@ function renderPaycheckDebtStrategies(p) {
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden">
       <div style="padding:12px 16px;border-bottom:1px solid var(--border)">
         <div style="font-family:var(--font-d);font-size:12px;font-weight:700;margin-bottom:4px">Debt payoff strategies (Dashboard loans)</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.55">Each row applies your <strong>monthly cash-flow surplus</strong> ($${Math.round(extraM).toLocaleString()}/mo after bills &amp; loan minimums) on top of minimums, using that payoff order. Investment return in the engine: ${invRate}%/yr. Use the same strategy on the <strong>Dashboard</strong> tab, and the matching <strong>Extra debt payoff order</strong> when you <strong>Run paycheck analysis</strong>, so calendar total debt and the chart follow the same rules.</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.55">Each row applies your <strong>monthly cash-flow surplus</strong> ($${Math.round(extraM).toLocaleString()}/mo after bills &amp; loan minimums) on top of minimums, using that payoff order. Investment return in the engine: ${invRate}%/yr. Use the same strategy on the <strong>Dashboard</strong> tab; the optimized preview / apply flow uses the route you pick there so calendar total debt and the chart stay aligned.</div>
       </div>
       <table style="width:100%;border-collapse:collapse;font-size:12px">
         <thead><tr>
@@ -8924,7 +9246,7 @@ function rawPaycheckOptimizerRun(plannerDebtStrategyOverride, plannerProjectionO
   );
   const proj = plannerProjectionOverride != null
     ? normalizePlannerProjection(plannerProjectionOverride)
-    : normalizePlannerProjection(plannerUiDefaults.plannerProjection || '3m');
+    : normalizePlannerProjection(plannerUiDefaults.plannerProjection || PAYCHECK_PLANNER_MODEL_HORIZON);
   const debtStrat = normalizePlannerDebtStrategy(
     plannerDebtStrategyOverride != null ? plannerDebtStrategyOverride : plannerUiDefaults.plannerDebtStrategy || 'avalanche'
   );
@@ -8938,7 +9260,7 @@ function rawPaycheckOptimizerRun(plannerDebtStrategyOverride, plannerProjectionO
 /** Sum of EF + extra debt + invest the optimizer schedules over the next 12 calendar months (same engine as analysis). */
 function getOptimizedTotalSetAsideOverNextYear(debtStrat) {
   const strat = normalizePlannerDebtStrategy(debtStrat);
-  const cacheKey = paycheckOptimizedAutoPickCacheKey() + '|12m|' + strat + '|' + normalizePlannerProjection(plannerUiDefaults.plannerProjection || '3m') + '|' + String(Math.round(Number(plannerUiDefaults.checkingFloat) || 0)) + '|pef:surplus_debt';
+  const cacheKey = paycheckOptimizedAutoPickCacheKey() + '|12m|' + strat + '|' + PAYCHECK_PLANNER_MODEL_HORIZON + '|' + String(Math.round(Number(plannerUiDefaults.checkingFloat) || 0)) + '|pef:surplus_debt';
   if (previewYearSetAsideCache.key === cacheKey && previewYearSetAsideCache.value >= 0) {
     return previewYearSetAsideCache.value;
   }
@@ -8965,7 +9287,8 @@ function getOptimizedTotalSetAsideOverNextYear(debtStrat) {
  */
 function buildShadowOptimizedPlanSnapshot(plannerDebtStrategyOverride, plannerProjectionOverride) {
   try {
-    const opt = rawPaycheckOptimizerRun(plannerDebtStrategyOverride, plannerProjectionOverride, 'surplus_debt');
+    const projUse = plannerProjectionOverride != null ? plannerProjectionOverride : PAYCHECK_PLANNER_MODEL_HORIZON;
+    const opt = rawPaycheckOptimizerRun(plannerDebtStrategyOverride, projUse, 'surplus_debt');
     if (!opt || !opt.paycheckPlans || !opt.paycheckPlans.length) return null;
     return attachPerPaycheckDebtAllocations({ ...opt });
   } catch (e) {
@@ -8990,7 +9313,7 @@ function buildOptimizedPlanPreviewSelectHtml() {
 function buildManualOptimizedCompareStripHtml(p, _manualMetrics, dashDebtVal) {
   if (!p || !p.manualPaycheckReport || p.plannerActive) return '';
   const effectiveStrat = getEffectiveOptimizedPreviewDebtStrategy();
-  const shadow = buildShadowOptimizedPlanSnapshot(effectiveStrat);
+  const shadow = buildShadowOptimizedPlanSnapshot(effectiveStrat, PAYCHECK_PLANNER_MODEL_HORIZON);
   if (!shadow || !shadow.paycheckPlans || !shadow.paycheckPlans.length) return '';
   const postEf = normalizeCfGoalStrategy(shadow.postEfGoal || plannerUiDefaults.postEfGoal || 'surplus_debt');
   const pS = {
@@ -9009,11 +9332,11 @@ function buildManualOptimizedCompareStripHtml(p, _manualMetrics, dashDebtVal) {
   const optEf = Math.round(emergencyFundTotalAfterDisplayedPlans(p, ppOpt));
   const lastOpt = ppOpt[ppOpt.length - 1];
   let optDebt = Math.round(Number(dashDebtVal) || 0);
-  if (lastOpt && Array.isArray(lastOpt.loanBalancesProjected) && lastOpt.loanBalancesProjected.length) {
+  const debtCalOpt = projectedTotalDebtEndOfDisplayedPlan(pS);
+  if (debtCalOpt != null && Number.isFinite(debtCalOpt)) {
+    optDebt = Math.round(debtCalOpt);
+  } else if (lastOpt && Array.isArray(lastOpt.loanBalancesProjected) && lastOpt.loanBalancesProjected.length) {
     optDebt = Math.round(lastOpt.loanBalancesProjected.reduce((s, l) => s + Math.max(0, Number(l.balance) || 0), 0));
-  } else {
-    const debtP = projectedTotalDebtEndOfDisplayedPlan(pS);
-    if (debtP != null && Number.isFinite(debtP)) optDebt = Math.round(debtP);
   }
   const optInv = lastOpt && lastOpt.runningInvest != null && !isNaN(Number(lastOpt.runningInvest))
     ? Math.round(Number(lastOpt.runningInvest) || 0)
@@ -9031,37 +9354,39 @@ function buildManualOptimizedCompareStripHtml(p, _manualMetrics, dashDebtVal) {
     '<span class="pp-opt-plan-bubble-star" aria-hidden="true">\u2605</span>' +
     '<span class="pp-opt-plan-bubble-text">' + previewPlannerDebtStrategyShortLabel(effectiveStrat) + '</span>' +
     '</span>';
-  const optFreeCashInline =
-    '<span class="pp-sd">\u00b7</span><span class="pp-inline-freecash">Free Cash Allocated <strong class="pp-sn">' + fmtSimpleMoney(yearSetAside) + '</strong></span>';
-  const odHtml = optOd > 0
-    ? '<span class="pp-sd">\u00b7</span><span><strong class="pp-sn-warn">' + optOd + '</strong> overdraft' + (optOd !== 1 ? 's' : '') + '</span>'
-    : '';
-  const optHealthHb = computeDashboardHealthBreakdownProjectedForPlan(p, ppOpt);
-  const optHealthInline = formatSimpleProjectedHealthHtml(optHealthHb);
-  return '<div class="pp-simple-summary pp-simple-summary-optimized" role="note">' +
-    '<div class="pp-summary-strip-head pp-summary-strip-head--optimized">' +
-    '<div class="pp-optimized-headline">' +
-    '<div class="pp-optimized-title-row">' +
-    '<span class="pp-simple-hint">Optimized plan</span>' +
+  const optHealthHb = computeDashboardHealthBreakdownProjectedForPlan(p, ppOpt, pS);
+  const metricRows = buildPlanCompareMetricRowsHtml({
+    ef: optEf,
+    debt: optDebt,
+    inv: optInv,
+    freeCash: yearSetAside,
+    overdrafts: optOd,
+    healthHb: optHealthHb,
+    freeCashLabel: 'To goals & extra <span class="pp-compare-lbl-note">(optimized routing)</span>'
+  });
+  const applyBtn = isPaycheckPlannerPremium()
+    ? '<button type="button" class="pp-run-btn pp-run-btn--embedded pp-compare-apply-btn" onclick="runPaycheckPlannerAnalysis()">Apply optimized plan</button>'
+    : '<button type="button" class="pp-run-btn pp-run-btn--embedded pp-compare-apply-btn" disabled style="opacity:0.5" title="Premium feature">Apply optimized plan</button>';
+  return (
+    '<section class="pp-compare-panel pp-compare-panel--optimized" role="region" aria-labelledby="pp-compare-opt-h">' +
+    '<header class="pp-compare-panel-hd">' +
+    '<div class="pp-compare-panel-title-row">' +
+    '<h3 id="pp-compare-opt-h" class="pp-compare-panel-title">Recommended plan</h3>' +
+    '<span class="pp-plan-horizon-pill">12 mo</span>' +
     planBubble +
     '</div>' +
+    '<div class="pp-compare-panel-toolbar">' +
+    '<span class="pp-compare-toolbar-lbl">Preview routing</span>' +
     planSelect +
     '</div>' +
+    '</header>' +
+    metricRows +
+    '<div class="pp-compare-panel-actions">' +
+    applyBtn +
     '</div>' +
-    '<div class="pp-summary-strip-metrics pp-summary-strip-metrics-optimized">' +
-    '<div class="pp-summary-strip-metrics-inner">' +
-    '<span>Emergency fund <strong class="pp-sn">' + fmtSimpleMoney(optEf) + '</strong></span>' +
-    '<span class="pp-sd">\u00b7</span>' +
-    '<span>Debt <strong class="pp-sn">' + fmtSimpleMoney(optDebt) + '</strong></span>' +
-    '<span class="pp-sd">\u00b7</span>' +
-    '<span>Investments <strong class="pp-sn">' + fmtSimpleMoney(optInv) + '</strong></span>' +
-    optFreeCashInline +
-    odHtml +
-    optHealthInline +
-    '</div>' +
-    '<button type="button" class="pp-run-btn pp-run-btn--embedded" onclick="openPaycheckPlannerModal()">Run analysis</button>' +
-    '</div>' +
-    '<div class="pp-optimized-cta">After emergency funding: avalanche/snowball → extra debt; minimums → investments. Horizon matches your planner projection. Premium unlocks per-check steps.</div>';
+    '<p class="pp-compare-foot">Same <strong>12-month</strong> calendar window as your manual plan. Numbers use the routing above (or Auto). Apply runs the engine with that route and your Dashboard cash floor.</p>' +
+    '</section>'
+  );
 }
 
 function renderPaycheckPlan() {
@@ -9081,6 +9406,7 @@ function renderPaycheckPlan() {
   const ppPanel = document.getElementById('cft-paycheckplan');
   if (ppPanel) ppPanel.classList.toggle('pp-mode-simple', simpleV);
   syncPaycheckViewToggleUi();
+  refreshPaycheckPlannerHeadUi();
 
   const readyHint = document.getElementById('pp-ready-hint');
   if (readyHint) {
@@ -9115,7 +9441,11 @@ function renderPaycheckPlan() {
       let tail = ' · Projection setting: ' + prLbl;
       if (hm != null && cap != null) tail += ' · Modeled span: ' + hm + ' calendar mo · ' + cap + ' paychecks';
       tail += ' · Extra debt: ' + dsLbl;
-      runMeta.textContent = 'Last optimized run: ' + d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) + tail;
+      runMeta.textContent =
+        'Last optimized run: ' +
+        d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) +
+        tail +
+        ' · One-year coordinated lookahead.';
     } else if (p.manualPaycheckReport) {
       const pr = normalizePlannerProjection(p.plannerProjection);
       const prLbl = formatPlannerSettingLabel(pr);
@@ -9126,7 +9456,7 @@ function renderPaycheckPlan() {
       let tail = ' · Projection setting: ' + prLbl;
       if (hm != null && cap != null) tail += ' · Modeled span: ' + hm + ' calendar mo · ' + cap + ' paychecks';
       tail += ' · Loan minimums / bill order for calendar: ' + dsLbl;
-      runMeta.textContent = 'Manual plan preview (not optimized)' + tail;
+      runMeta.textContent = 'Manual plan preview — 12-month outlook (not optimized)' + tail;
     } else {
       runMeta.textContent = '';
     }
@@ -9144,7 +9474,7 @@ function renderPaycheckPlan() {
       if (stratDesc) { stratDesc.textContent = ''; stratDesc.style.color = 'var(--muted)'; }
     } else if (!p.plannerActive) {
       empty.innerHTML = `<div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--muted2);margin-bottom:8px">No paycheck windows in range</div>
-        <div style="font-size:12px;line-height:1.7">Add dated income (next pay date for biweekly/weekly, or day-of-month) so deposits can be projected. Manual savings and investment transfers from the Dashboard still apply on the calendar; <strong style="color:var(--text)">Run paycheck analysis</strong> adds an optimized, floor-safe plan when you are ready.</div>`;
+        <div style="font-size:12px;line-height:1.7">Add dated income (next pay date for biweekly/weekly, or day-of-month) so deposits can be projected. Manual savings and investment transfers from the Dashboard still apply on the calendar; <strong style="color:var(--text)">Apply optimized plan (1 year)</strong> (Premium) replaces them with a coordinated, floor-safe plan when you are ready.</div>`;
       if (stratDesc) {
         stratDesc.textContent = '';
         stratDesc.style.color = 'var(--muted)';
@@ -9172,11 +9502,11 @@ function renderPaycheckPlan() {
   const stratDesc = document.getElementById('pp-strat-desc');
   if (stratDesc) {
     if (p.manualPaycheckReport) {
-      let s = 'Manual plan preview — each card uses your scheduled Dashboard savings and investment transfers in that pay window (not rebalanced across deposits). Bill dates and loan minimums match the calendar; red or amber lines flag where checking would fall below $0 or under your cash floor before the next deposit.';
+      let s = 'Manual plan preview (12 calendar months) — each card uses your scheduled Dashboard savings and investment transfers in that pay window (not rebalanced across deposits). Bill dates and loan minimums match the calendar; red or amber lines flag where checking would fall below $0 or under your cash floor before the next deposit.';
       if (ppDisplay.length < p.paycheckPlans.length) {
         const b = plannerDisplayedCalendarYmBounds(p);
         const n = b && b.monthsShown != null ? b.monthsShown : 12;
-        s += ' Only the first ' + n + ' calendar month' + (n === 1 ? '' : 's') + ' from this month (manual preview cap) are shown on the calendar and here; run Paycheck analysis for a longer optimized window.';
+        s += ' Showing the first ' + n + ' calendar month' + (n === 1 ? '' : 's') + ' from this month; additional modeled paychecks fall outside the displayed window.';
       }
       if (!p.efFunded) {
         if (p.projectedEFFundedDate) {
@@ -9263,8 +9593,8 @@ function renderPaycheckPlan() {
     } else if (floorBlocksSavings) {
       const z = maxAllocAtZeroMin != null ? Math.round(maxAllocAtZeroMin) : 0;
       bannerHtml = manualCard
-        ? `<div class="pp-info-banner">Your <strong>$${Math.round(checkingFloat).toLocaleString()}</strong> cash floor is hard to keep <em>after</em> your scheduled savings through the next deposit. If you paused those transfers, roughly up to <strong>$${z.toLocaleString()}</strong> could still go to goals this window while keeping projected checking <strong>≥ $0</strong>. Try less savings here, pad checking, or use <strong>Run paycheck analysis</strong> for a coordinated plan.</div>`
-        : `<div class="pp-info-banner">Your <strong>$${Math.round(checkingFloat).toLocaleString()}</strong> checking floor blocks set-aside on <strong>this deposit</strong> (the plan never lets projected checking dip below that anywhere in the lookahead). If overdraft is not a concern, up to about <strong>$${z.toLocaleString()}</strong> could move to goals on this check while still keeping projected balances <strong>≥ $0</strong> — lower the floor in <strong>Run paycheck analysis</strong> to model that.</div>`;
+        ? `<div class="pp-info-banner">Your <strong>$${Math.round(checkingFloat).toLocaleString()}</strong> cash floor is hard to keep <em>after</em> your scheduled savings through the next deposit. If you paused those transfers, roughly up to <strong>$${z.toLocaleString()}</strong> could still go to goals this window while keeping projected checking <strong>≥ $0</strong>. Try less savings here, pad checking, or use <strong>Apply optimized plan</strong> (Premium) for a coordinated plan.</div>`
+        : `<div class="pp-info-banner">Your <strong>$${Math.round(checkingFloat).toLocaleString()}</strong> checking floor blocks set-aside on <strong>this deposit</strong> (the plan never lets projected checking dip below that anywhere in the lookahead). If overdraft is not a concern, up to about <strong>$${z.toLocaleString()}</strong> could move to goals on this check while still keeping projected balances <strong>≥ $0</strong> — lower the <strong>minimum checking buffer</strong> on the Dashboard to model that.</div>`;
     } else if (isStrapped) {
       bannerHtml = manualCard
         ? `<div class="pp-warning-banner">No surplus this window even at <strong>$0</strong> scheduled savings — every dollar stays for bills and timing until the next deposit. Focus on obligations; revisit manual savings when cash runway widens.</div>`
@@ -9431,11 +9761,11 @@ function renderPaycheckPlan() {
   const sumTot = p.totalToEF + p.totalToDebt + p.totalToInvest;
   const lastPPHorizon = planList.length ? planList[planList.length - 1] : null;
   let debtEndHorizon = Math.round(dashDebt);
-  if (lastPPHorizon && Array.isArray(lastPPHorizon.loanBalancesProjected) && lastPPHorizon.loanBalancesProjected.length) {
+  const debtAtCalendarEnd = projectedTotalDebtEndOfDisplayedPlan(p);
+  if (debtAtCalendarEnd != null && Number.isFinite(debtAtCalendarEnd)) {
+    debtEndHorizon = Math.round(debtAtCalendarEnd);
+  } else if (lastPPHorizon && Array.isArray(lastPPHorizon.loanBalancesProjected) && lastPPHorizon.loanBalancesProjected.length) {
     debtEndHorizon = Math.round(lastPPHorizon.loanBalancesProjected.reduce((s, l) => s + Math.max(0, Number(l.balance) || 0), 0));
-  } else {
-    const debtProj = projectedTotalDebtEndOfDisplayedPlan(p);
-    if (debtProj != null && Number.isFinite(debtProj)) debtEndHorizon = Math.round(debtProj);
   }
   const efEndHorizon = planList.length
     ? Math.round(emergencyFundTotalAfterDisplayedPlans(p, planList))
@@ -9444,11 +9774,7 @@ function renderPaycheckPlan() {
     ? Math.round(Number(lastPPHorizon.runningInvest) || 0)
     : Math.round(p.runningInvest || 0);
   const manualPlannedFree = p.manualPaycheckReport ? sumManualPlannedFreeCashForPlanList(planList) : null;
-  const manualFreeCashInline = manualPlannedFree != null
-    ? `<span class="pp-sd">\u00b7</span><span class="pp-inline-freecash">Free Cash Allocated <strong class="pp-sn">${fmtSimpleMoney(manualPlannedFree.total)}</strong></span>`
-    : '';
   const manualHealthHb = computeDashboardHealthBreakdownProjectedForPlan(p, planList);
-  const manualHealthInline = formatSimpleProjectedHealthHtml(manualHealthHb);
   const compareStripHtml = simpleV && p.manualPaycheckReport && !p.plannerActive
     ? buildManualOptimizedCompareStripHtml(p, {
       ef: efEndHorizon,
@@ -9458,36 +9784,71 @@ function renderPaycheckPlan() {
     }, dashDebt)
     : '';
   if (ppPanel) ppPanel.classList.toggle('pp-has-embedded-run', !!compareStripHtml);
-  const simpleMetricsSpans =
-    `<span>Emergency fund <strong class="pp-sn">${fmtSimpleMoney(efEndHorizon)}</strong></span>` +
-    `<span class="pp-sd">\u00b7</span>` +
-    `<span>Debt <strong class="pp-sn">${fmtSimpleMoney(debtEndHorizon)}</strong></span>` +
-    `<span class="pp-sd">\u00b7</span>` +
-    `<span>Investments <strong class="pp-sn">${fmtSimpleMoney(invEndHorizon)}</strong></span>` +
-    manualFreeCashInline +
-    (projectedOverdrafts > 0 ? `<span class="pp-sd">\u00b7</span><span><strong class="pp-sn-warn">${projectedOverdrafts}</strong> overdraft${projectedOverdrafts !== 1 ? 's' : ''}</span>` : '') +
-    manualHealthInline;
-  const simpleTopCard = p.plannerActive
-    ? `<div class="pp-simple-summary pp-simple-summary-planner">
-      <div class="pp-summary-strip-head pp-summary-strip-head--manual">
-        <span class="pp-simple-hint">Optimized plan</span>
-      </div>
-      <div class="pp-summary-strip-metrics pp-summary-strip-metrics-planner">
-        <div class="pp-summary-strip-metrics-inner">${simpleMetricsSpans}</div>
-        <button type="button" class="pp-run-btn pp-run-btn--embedded" onclick="clearPaycheckPlannerRun()" title="Discard this optimizer run and return to manual calendar preview">Revert to manual</button>
-      </div>
-    </div>`
-    : `<div class="pp-simple-summary">
-      <div class="pp-summary-strip-head pp-summary-strip-head--manual">
-        <span class="pp-simple-hint">End of modeled plan</span>
-      </div>
-      <div class="pp-summary-strip-metrics">
-      ${simpleMetricsSpans}
-      </div>
-    </div>`;
+  const freeCashPlannerActive = (Number(p.totalToEF) || 0) + (Number(p.totalToDebt) || 0) + (Number(p.totalToInvest) || 0);
+  const freeCashManual = manualPlannedFree ? manualPlannedFree.total : 0;
+  const manualRows = buildPlanCompareMetricRowsHtml({
+    ef: efEndHorizon,
+    debt: debtEndHorizon,
+    inv: invEndHorizon,
+    freeCash: p.plannerActive ? freeCashPlannerActive : freeCashManual,
+    overdrafts: projectedOverdrafts,
+    healthHb: manualHealthHb,
+    freeCashLabel: p.plannerActive
+      ? 'Total to goals <span class="pp-compare-lbl-note">(active plan)</span>'
+      : 'To goals & extra <span class="pp-compare-lbl-note">(your schedule)</span>'
+  });
+  let simpleWrapHtml = '';
+  if (p.plannerActive) {
+    simpleWrapHtml =
+      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare">' +
+      '<section class="pp-compare-panel pp-compare-panel--planner" aria-labelledby="pp-compare-active-h">' +
+      '<header class="pp-compare-panel-hd">' +
+      '<div class="pp-compare-panel-title-row">' +
+      '<h3 id="pp-compare-active-h" class="pp-compare-panel-title">Active optimized plan</h3>' +
+      '<span class="pp-plan-horizon-pill">12 mo</span>' +
+      '</div>' +
+      '<p class="pp-compare-panel-sub">This run replaces manual savings and investment transfers on the calendar until you revert.</p>' +
+      '</header>' +
+      manualRows +
+      '<div class="pp-compare-panel-actions">' +
+      '<button type="button" class="pp-run-btn pp-run-btn--embedded pp-compare-apply-btn pp-compare-apply-btn--ghost" onclick="clearPaycheckPlannerRun()" title="Discard this optimizer run and return to manual calendar preview">Revert to manual</button>' +
+      '</div>' +
+      '</section>' +
+      '</div>';
+  } else if (compareStripHtml) {
+    simpleWrapHtml =
+      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare">' +
+      '<div class="pp-compare-deck" role="region" aria-label="Twelve month manual plan compared to optimized preview">' +
+      '<section class="pp-compare-panel pp-compare-panel--manual" aria-labelledby="pp-compare-manual-h">' +
+      '<header class="pp-compare-panel-hd">' +
+      '<div class="pp-compare-panel-title-row">' +
+      '<h3 id="pp-compare-manual-h" class="pp-compare-panel-title">Your current plan</h3>' +
+      '<span class="pp-plan-horizon-pill">12 mo</span>' +
+      '</div>' +
+      '<p class="pp-compare-panel-sub">Scheduled transfers from the Dashboard — not coordinated across deposit windows.</p>' +
+      '</header>' +
+      manualRows +
+      '</section>' +
+      compareStripHtml +
+      '</div>' +
+      '</div>';
+  } else {
+    simpleWrapHtml =
+      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare">' +
+      '<section class="pp-compare-panel pp-compare-panel--manual pp-compare-panel--solo" aria-labelledby="pp-compare-manual-solo-h">' +
+      '<header class="pp-compare-panel-hd">' +
+      '<div class="pp-compare-panel-title-row">' +
+      '<h3 id="pp-compare-manual-solo-h" class="pp-compare-panel-title">Your current plan</h3>' +
+      '<span class="pp-plan-horizon-pill">12 mo</span>' +
+      '</div>' +
+      '<p class="pp-compare-panel-sub">Twelve-month outlook from your schedule. When a preview route is available, a recommended plan appears beside this panel.</p>' +
+      '</header>' +
+      manualRows +
+      '</section>' +
+      '</div>';
+  }
   document.getElementById('pp-summary-cards').innerHTML = simpleV
-    ? `<div class="pp-simple-summary-wrap">
-    ${simpleTopCard}${compareStripHtml}</div>`
+    ? simpleWrapHtml
     : `<div style="background:var(--surface2);border-radius:var(--r);padding:12px 14px">
       <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px">Total set aside (window)</div>
       <div style="font-family:var(--font-d);font-size:20px;font-weight:800">$${sumTot.toLocaleString()}</div>
@@ -9550,11 +9911,13 @@ if (!loadClearpathPersistedState()) {
   paidEvents.clear();
   paycheckPlannerResult = null;
   autoPastBillsPaid = false;
-  plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: '3m', plannerDebtStrategy: 'avalanche', paycheckSimpleView: false };
+  plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON, plannerDebtStrategy: 'avalanche', paycheckSimpleView: false };
   const z = (id) => { const n = document.getElementById(id); if (n) n.value = ''; };
   z('cf-cash-balance');
   z('cf-ef-balance');
   z('cf-ef-months');
+  const fl = document.getElementById('cf-checking-floor');
+  if (fl) fl.value = '500';
   renderCFIncomes();
   renderCFSavings();
   renderCFInvestments();
