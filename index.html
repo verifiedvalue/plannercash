@@ -115,6 +115,31 @@ body{font-family:var(--font-m);background:var(--bg);color:var(--text);min-height
 .dash-inputs-grid .sidebar{overflow:visible;max-height:none;position:static;top:auto;padding:0;border-right:none}
 .dash-cf-inputs .cf-section{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:10px}
 .dash-cf-inputs .cf-section:last-child{margin-bottom:0}
+.dash-cf-inputs .cf-section-title{color:rgba(236,234,228,0.92);letter-spacing:0.08em;margin-bottom:10px}
+.dash-cf-inputs .cf-section-title.cf-section-title--split{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dash-cf-inputs .cf-field label{color:rgba(203,200,194,0.98)}
+.dash-cf-inputs .cf-section-add{margin-top:12px}
+.dash-cf-inputs .btn-cf-add{
+  width:100%;
+  font-family:var(--font-d);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  color:var(--text);
+  background:linear-gradient(180deg,rgba(79,156,249,0.42),rgba(79,156,249,0.2));
+  border:1px solid rgba(79,156,249,0.55);
+  box-shadow:0 1px 0 rgba(255,255,255,0.08) inset,0 6px 20px rgba(79,156,249,0.18);
+  transition:filter 0.15s,transform 0.12s,border-color 0.15s;
+}
+.dash-cf-inputs .btn-cf-add:hover{
+  filter:brightness(1.06);
+  border-color:rgba(79,156,249,0.75);
+}
+.dash-cf-inputs .btn-cf-add:active{transform:scale(0.99)}
 .debt-page-hero{padding:22px 24px 0;border-bottom:1px solid var(--border);max-width:1200px;margin:0 auto}
 .debt-page-hero .page-title{margin-bottom:6px}
 .debt-page-scroll{padding:0}
@@ -292,6 +317,16 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.25)}
 .loan-tab.active{color:var(--text);border-color:var(--border3);background:var(--surface2)}
 .loan-tab .lt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .table-wrap{overflow-x:auto}
+.sg-goal-grid{display:grid;grid-template-columns:minmax(140px,1fr) 120px 120px 170px 130px auto;gap:8px;align-items:end}
+@media (max-width: 1100px){
+  .sg-goal-grid{grid-template-columns:1fr 1fr 1fr;align-items:stretch}
+}
+@media (max-width: 740px){
+  .sg-goal-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 520px){
+  .sg-goal-grid{grid-template-columns:1fr}
+}
 table{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto}
 th{font-family:var(--font-d);font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:9px 12px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg);position:sticky;top:0;z-index:1}
 th:first-child{text-align:left}
@@ -302,8 +337,10 @@ tr.milestone td{background:rgba(82,201,138,0.05)!important}
 tr.milestone td:first-child{color:var(--green);font-weight:500}
 .td-red{color:var(--red)}
 .td-green{color:var(--green)}
+.td-good{color:var(--green)}
 .td-muted{color:var(--muted)}
 .td-amber{color:var(--amber)}
+.td-warn{color:var(--amber)}
 .milestone-banner-row td{padding:5px 12px;font-size:10px;color:var(--green);background:var(--green-dim)!important;border-bottom:none;text-align:left!important;letter-spacing:0.04em}
 
 /* ─── ABOUT PAGE ─── */
@@ -497,56 +534,56 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title">
-          Income sources
-          <button type="button" onclick="cfAddIncome()">+ Add</button>
-        </div>
+        <div class="cf-section-title">Income sources</div>
         <div id="cf-income-list"></div>
+        <div class="cf-section-add">
+          <button type="button" class="btn-cf-add" onclick="cfAddIncome()">+ Add income</button>
+        </div>
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title">
-          Savings transfers
-          <button type="button" onclick="cfAddSavings()">+ Add</button>
-        </div>
+        <div class="cf-section-title">Savings transfers</div>
         <div id="cf-savings-list"></div>
         <div style="font-size:9px;color:var(--muted);margin-top:4px">Fixed amounts to savings / EF (calendar). Default timing is each payday; or set weekly, biweekly, or monthly. Paused while an optimized paycheck plan is active.</div>
+        <div class="cf-section-add">
+          <button type="button" class="btn-cf-add" onclick="cfAddSavings()">+ Add savings transfer</button>
+        </div>
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title">
-          Investment transfers
-          <button type="button" onclick="cfAddInvestment()">+ Add</button>
-        </div>
+        <div class="cf-section-title">Investment transfers</div>
         <div id="cf-investments-list"></div>
         <div style="font-size:9px;color:var(--muted);margin-top:4px">Fixed amounts from checking into investments (same timing options as savings). Paused while an optimized paycheck plan is active.</div>
+        <div class="cf-section-add">
+          <button type="button" class="btn-cf-add" onclick="cfAddInvestment()">+ Add investment transfer</button>
+        </div>
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title">
-          Monthly bills
-          <button type="button" onclick="cfAddBill()">+ Add</button>
-        </div>
-        <div style="font-size:9px;color:var(--muted);margin:-8px 0 10px">Pick a typical expense type or <strong style="color:var(--muted2)">Custom</strong> to name your own.</div>
+        <div class="cf-section-title">Monthly bills</div>
+        <div style="font-size:9px;color:var(--muted);margin:0 0 10px">Pick a typical expense type or <strong style="color:var(--muted2)">Custom</strong> to name your own.</div>
         <div id="cf-bill-list"></div>
         <div style="font-size:9px;color:var(--muted);margin-top:4px">Rent, utilities, subscriptions, insurance, etc.</div>
+        <div class="cf-section-add">
+          <button type="button" class="btn-cf-add" onclick="cfAddBill()">+ Add bill</button>
+        </div>
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title" style="justify-content:space-between">
-          Loans (from dashboard)
-          <span style="font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">Synced balances</span>
+        <div class="cf-section-title cf-section-title--split">
+          <span>Loans (from dashboard)</span>
+          <span style="font-size:9px;font-weight:400;color:var(--muted2);text-transform:none;letter-spacing:0">Synced balances</span>
         </div>
         <div id="cf-dashboard-loans-list"></div>
       </div>
 
       <div class="cf-section">
-        <div class="cf-section-title">
-          Other debts
-          <button type="button" onclick="cfAddDebt()">+ Add</button>
-        </div>
+        <div class="cf-section-title">Other debts</div>
         <div id="cf-debt-list"></div>
         <div style="font-size:9px;color:var(--muted);margin-top:4px">Credit cards, personal loans not on the dashboard, etc.</div>
+        <div class="cf-section-add">
+          <button type="button" class="btn-cf-add" onclick="cfAddDebt()">+ Add other debt</button>
+        </div>
       </div>
 
       <div class="cf-section" style="border-bottom:none">
@@ -678,6 +715,62 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
         <div id="month-snapshot" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px"></div>
 
         <div id="per-loan-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:24px"></div>
+
+        <div class="section-head" style="margin-top:8px">Savings goals</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px;margin-bottom:14px">
+          <div class="sg-goal-grid">
+            <div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Goal name</div>
+              <input type="text" id="sg-name" placeholder="House down payment"
+                style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:11px;padding:7px 8px;outline:none;width:100%">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Target ($)</div>
+              <input type="number" id="sg-target" min="1" step="100" placeholder="10000"
+                style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:11px;padding:7px 8px;outline:none;width:100%">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Current ($)</div>
+              <input type="number" id="sg-current" min="0" step="100" placeholder="0"
+                style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:11px;padding:7px 8px;outline:none;width:100%">
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Priority timing</div>
+              <select id="sg-priority" onchange="toggleSavingsGoalMinInput()"
+                style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:11px;padding:7px 8px;outline:none;width:100%">
+                <option value="before_debt">Before debt</option>
+                <option value="during_debt" selected>During debt</option>
+                <option value="after_debt">After debt</option>
+              </select>
+            </div>
+            <div id="sg-min-wrap">
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">During debt / mo ($)</div>
+              <input type="number" id="sg-min" min="0" step="25" placeholder="250"
+                style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--font-m);font-size:11px;padding:7px 8px;outline:none;width:100%">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addSavingsGoalFromInputs()">Add goal</button>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:8px">Goals are modeled inside the payoff engine. Excess cash goes to goals based on timing: before debt, during debt (monthly amount), or after debt.</div>
+        </div>
+
+        <div id="savings-goal-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:14px"></div>
+        <div class="table-wrap" style="margin-bottom:24px">
+          <table>
+            <thead>
+              <tr>
+                <th>Goal</th>
+                <th>Priority</th>
+                <th>Target</th>
+                <th>Saved by month</th>
+                <th>Avg/mo</th>
+                <th>Completion</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="savings-goal-body"></tbody>
+          </table>
+        </div>
 
         <div class="section-head" style="margin-top:8px">Loan overview</div>
         <table>
@@ -853,6 +946,8 @@ let activeBreakdownLoan = 0;
 let selectedMonth = 1;
 let currentResult = null;
 let charts = {};
+let savingsGoals = [];
+let savingsGoalCounter = 0;
 
 // ═══════════════════════════════════════════════
 // LOAN MANAGEMENT
@@ -992,7 +1087,7 @@ function onPaycheckOptimizeClick() {
 // ═══════════════════════════════════════════════
 // SIMULATION ENGINE
 // ═══════════════════════════════════════════════
-function simulateStrategy(loansInput, extra, invRate, months, strategy, startPortfolio) {
+function simulateStrategy(loansInput, extra, invRate, months, strategy, startPortfolio, goalInputs) {
   const mr = invRate / 100 / 12;
   let debtArr = loansInput.map(l => ({
     id: l.id, name: l.name, color: l.color,
@@ -1001,6 +1096,30 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
     paidOff: false, payoffMonth: null,
     totalInterestPaid: 0, totalPaid: 0
   }));
+  const srcGoals = Array.isArray(goalInputs) ? goalInputs : [];
+  const goalStates = srcGoals.map((g, idx) => {
+    const pri = String(g && g.priority ? g.priority : (g && g.mode ? g.mode : 'during_debt'));
+    const mappedPri = pri === 'before_debt' || pri === 'max'
+      ? 'before_debt'
+      : pri === 'after_debt'
+        ? 'after_debt'
+        : 'during_debt';
+    const duringMonthly = Math.max(0, Number(g && (g.duringMonthly != null ? g.duringMonthly : g.minMonthly)) || 0);
+    const target = Math.max(0, Number(g && g.target) || 0);
+    const current = Math.max(0, Number(g && g.current) || 0);
+    return {
+      id: Number(g && g.id) || (idx + 1),
+      order: idx,
+      name: String((g && g.name) || '').trim() || ('Goal ' + (idx + 1)),
+      target,
+      current,
+      saved: Math.min(target, current),
+      priority: mappedPri,
+      duringMonthly,
+      totalAdded: 0,
+      completionMonth: current >= target - 0.5 ? 0 : null
+    };
+  }).filter(g => g.target > 0.5);
 
   let port = Math.max(0, parseFloat(startPortfolio) || 0);
   let totalInterest = 0;
@@ -1008,15 +1127,16 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
   const monthlyRows = [];
 
   for (let m = 1; m <= months; m++) {
-    // accrue interest, snapshot pre-payment balances
     const loanSnapshots = debtArr.map(d => {
       const interest = d.balance > 0 ? d.balance * d.rate / 100 / 12 : 0;
-      if (d.balance > 0) { d.balance += interest; d.totalInterestPaid += interest; }
+      if (d.balance > 0) {
+        d.balance += interest;
+        d.totalInterestPaid += interest;
+      }
       totalInterest += interest;
       return { id: d.id, interestThisMonth: interest, balBeforePayment: d.balance };
     });
 
-    // pay minimums on still-active loans only
     let cashUsed = 0;
     const loanPayments = debtArr.map(d => ({ id: d.id, minPaid: 0, plannedExtraPaid: 0, extraPaid: 0, freedPaid: 0, balAfter: d.balance }));
     debtArr.forEach((d, i) => {
@@ -1034,24 +1154,74 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
           cashUsed += planned;
           loanPayments[i].plannedExtraPaid = planned;
         }
-        if (d.balance <= 0.01) { d.balance = 0; if (!d.paidOff) { d.paidOff = true; d.payoffMonth = m; } }
+        if (d.balance <= 0.01) {
+          d.balance = 0;
+          if (!d.paidOff) {
+            d.paidOff = true;
+            d.payoffMonth = m;
+          }
+        }
       }
     });
 
-    // available extra = slider extra + freed minimums from every already-paid-off loan
-    // (a loan that paid off THIS month still has its minimum freed for next month,
-    //  but this month its minimum was already spent paying it off — so only count
-    //  loans that were fully paid off BEFORE this month)
     const freedMinimums = debtArr
       .filter(d => d.paidOff && d.payoffMonth < m)
       .reduce((sum, d) => sum + d.minPay + (Number(d.extraPay) || 0), 0);
     let extraLeft = extra + freedMinimums;
     let targetIdx = -1;
+    let goalsThisMonth = 0;
+    const goalPayments = goalStates.map(g => ({
+      id: g.id,
+      name: g.name,
+      priority: g.priority,
+      duringMonthly: g.duringMonthly,
+      addedThisMonth: 0,
+      savedTotal: Math.round(g.saved),
+      remaining: Math.round(Math.max(0, g.target - g.saved)),
+      completionMonth: g.completionMonth,
+      isComplete: g.saved >= g.target - 0.5
+    }));
 
-    // Loop: when a loan is fully paid off mid-month, cascade remaining extra to next target
+    const goalOrder = goalStates.slice().sort((a, b) => a.order - b.order);
+    const findGp = (id) => goalPayments.find(x => x.id === id);
+    const allocGoal = (g, amount) => {
+      if (!g || amount <= 0.01 || extraLeft <= 0.01) return 0;
+      const rem = Math.max(0, g.target - g.saved);
+      if (rem <= 0.01) return 0;
+      const alloc = Math.min(extraLeft, amount, rem);
+      if (alloc <= 0.01) return 0;
+      g.saved += alloc;
+      g.totalAdded += alloc;
+      if (!g.completionMonth && g.saved >= g.target - 0.5) g.completionMonth = m;
+      const gp = findGp(g.id);
+      if (gp) {
+        gp.addedThisMonth += alloc;
+        gp.savedTotal = Math.round(Math.min(g.target, g.saved));
+        gp.remaining = Math.round(Math.max(0, g.target - g.saved));
+        gp.completionMonth = g.completionMonth;
+        gp.isComplete = g.saved >= g.target - 0.5;
+      }
+      extraLeft -= alloc;
+      goalsThisMonth += alloc;
+      cashUsed += alloc;
+      return alloc;
+    };
+
+    const debtActiveAtStart = debtArr.some(d => d.balance > 0.01);
+    if (debtActiveAtStart) {
+      goalOrder.filter(g => g.priority === 'before_debt').forEach(g => {
+        const rem = Math.max(0, g.target - g.saved);
+        if (rem > 0.01) allocGoal(g, rem);
+      });
+      goalOrder.filter(g => g.priority === 'during_debt').forEach(g => {
+        const monthlyNeed = Math.max(0, g.duringMonthly);
+        if (monthlyNeed > 0.01) allocGoal(g, monthlyNeed);
+      });
+    }
+
     if (strategy !== 'minimum') {
       while (extraLeft > 0.01) {
-        const activeIndices = debtArr.map((d,i) => d.balance > 0 ? i : -1).filter(i => i >= 0);
+        const activeIndices = debtArr.map((d, i) => d.balance > 0 ? i : -1).filter(i => i >= 0);
         if (activeIndices.length === 0) break;
 
         let currentTarget = -1;
@@ -1068,8 +1238,6 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
           }
         }
         if (currentTarget < 0) break;
-
-        // remember the first target for card badge labeling
         if (targetIdx < 0) targetIdx = currentTarget;
 
         const d = debtArr[currentTarget];
@@ -1079,8 +1247,6 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
         cashUsed += extra_pay;
         extraLeft -= extra_pay;
 
-        // split slider vs freed for display on each loan card
-        const alreadyExtraPaid = loanPayments[currentTarget].extraPaid + loanPayments[currentTarget].freedPaid;
         const sliderRemaining = Math.max(0, extra - loanPayments[currentTarget].extraPaid);
         const sliderPortion = Math.min(sliderRemaining, extra_pay);
         const freedPortion = extra_pay - sliderPortion;
@@ -1089,24 +1255,33 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
 
         if (d.balance <= 0.01) {
           d.balance = 0;
-          if (!d.paidOff) { d.paidOff = true; d.payoffMonth = m; }
-          // loan cleared — loop continues, attacking next target with remaining extraLeft
+          if (!d.paidOff) {
+            d.paidOff = true;
+            d.payoffMonth = m;
+          }
         } else {
-          break; // extra exhausted on this loan, stop
+          break;
         }
       }
     }
 
-    // update balAfter
+    const debtActiveAfter = debtArr.some(d => d.balance > 0.01);
+    if (!debtActiveAfter) {
+      goalOrder.filter(g => g.priority === 'after_debt').forEach(g => {
+        const rem = Math.max(0, g.target - g.saved);
+        if (rem > 0.01) allocGoal(g, rem);
+      });
+    }
+
     debtArr.forEach((d, i) => { loanPayments[i].balAfter = Math.round(d.balance); });
 
-    // invest remaining
     const invested = extraLeft;
     const prevPort = port;
     port = port * (1 + mr) + invested;
     cashUsed += invested;
     totalCash += cashUsed;
 
+    const toDebt = loanPayments.reduce((s, lp) => s + lp.minPaid + lp.plannedExtraPaid + lp.extraPaid + lp.freedPaid, 0);
     const totalDebt = debtArr.reduce((s, d) => s + d.balance, 0);
     monthlyRows.push({
       month: m,
@@ -1116,9 +1291,22 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
       totalInterest: Math.round(totalInterest),
       totalCash: Math.round(totalCash),
       invested: Math.round(invested),
+      goalsContrib: Math.round(goalsThisMonth),
+      toDebt: Math.round(toDebt),
       cashUsed: Math.round(cashUsed),
       freedMinimums: Math.round(freedMinimums),
       invGrowth: prevPort > 0 ? ((port - prevPort - invested) / prevPort) * 100 : 0,
+      goalPayments: goalPayments.map(gp => ({
+        id: gp.id,
+        name: gp.name,
+        priority: gp.priority,
+        duringMonthly: Math.round(gp.duringMonthly),
+        addedThisMonth: Math.round(gp.addedThisMonth),
+        savedTotal: Math.round(gp.savedTotal),
+        remaining: Math.round(gp.remaining),
+        completionMonth: gp.completionMonth,
+        isComplete: gp.isComplete
+      })),
       loanPayments: loanPayments.map((lp, i) => ({
         id: lp.id,
         name: debtArr[i].name,
@@ -1140,10 +1328,20 @@ function simulateStrategy(loansInput, extra, invRate, months, strategy, startPor
   return {
     monthly: monthlyRows,
     loans: debtArr,
-    finalNW: monthlyRows[months-1].nw,
-    finalPort: monthlyRows[months-1].port,
-    totalInterest: monthlyRows[months-1].totalInterest,
-    debtFreeMonth: debtArr.every(d => d.paidOff) ? Math.max(...debtArr.map(d => d.payoffMonth || months+1)) : null
+    goals: goalStates.map(g => ({
+      id: g.id,
+      name: g.name,
+      target: Math.round(g.target),
+      saved: Math.round(Math.min(g.target, g.saved)),
+      priority: g.priority,
+      duringMonthly: Math.round(g.duringMonthly),
+      completionMonth: g.completionMonth,
+      isComplete: g.saved >= g.target - 0.5
+    })),
+    finalNW: monthlyRows[months - 1].nw,
+    finalPort: monthlyRows[months - 1].port,
+    totalInterest: monthlyRows[months - 1].totalInterest,
+    debtFreeMonth: debtArr.every(d => d.paidOff) ? Math.max(...debtArr.map(d => d.payoffMonth || months + 1)) : null
   };
 }
 
@@ -1296,6 +1494,202 @@ function renderPerLoanDetail() {
       `}
     </div>`;
   }).join('');
+
+  renderSavingsGoalProjections();
+}
+
+function toggleSavingsGoalMinInput() {
+  const mode = document.getElementById('sg-priority')?.value || 'during_debt';
+  const wrap = document.getElementById('sg-min-wrap');
+  if (!wrap) return;
+  wrap.style.display = mode === 'during_debt' ? '' : 'none';
+}
+
+function savingsGoalPriorityLabel(p) {
+  if (p === 'before_debt') return 'Before debt';
+  if (p === 'after_debt') return 'After debt';
+  return 'During debt';
+}
+
+function addSavingsGoalFromInputs() {
+  const nameEl = document.getElementById('sg-name');
+  const targetEl = document.getElementById('sg-target');
+  const currentEl = document.getElementById('sg-current');
+  const modeEl = document.getElementById('sg-priority');
+  const minEl = document.getElementById('sg-min');
+  if (!nameEl || !targetEl || !modeEl) return;
+
+  const name = String(nameEl.value || '').trim();
+  const target = Math.max(0, Number(targetEl.value) || 0);
+  const current = Math.max(0, Number(currentEl?.value) || 0);
+  const priority = modeEl.value === 'before_debt' || modeEl.value === 'after_debt' ? modeEl.value : 'during_debt';
+  const duringMonthly = Math.max(0, Number(minEl?.value) || 0);
+  if (!name || target <= 0.5) return;
+  if (priority === 'during_debt' && duringMonthly <= 0.5) return;
+
+  savingsGoals.push({
+    id: ++savingsGoalCounter,
+    name,
+    target,
+    current,
+    priority,
+    duringMonthly
+  });
+  nameEl.value = '';
+  targetEl.value = '';
+  if (currentEl) currentEl.value = '';
+  if (minEl) minEl.value = '';
+  toggleSavingsGoalMinInput();
+  recalc();
+}
+
+function removeSavingsGoal(id) {
+  savingsGoals = savingsGoals.filter(g => g.id !== id);
+  recalc();
+}
+
+function normalizeSavingsGoalItem(g) {
+  const pri = String(g && g.priority ? g.priority : (g && g.mode ? g.mode : 'during_debt'));
+  const priority = pri === 'before_debt' || pri === 'max'
+    ? 'before_debt'
+    : pri === 'after_debt'
+      ? 'after_debt'
+      : 'during_debt';
+  return {
+    id: Number(g && g.id) || 0,
+    name: String((g && g.name) || '').trim(),
+    target: Math.max(0, Number(g && g.target) || 0),
+    current: Math.max(0, Number(g && g.current) || 0),
+    priority,
+    duringMonthly: Math.max(0, Number(g && (g.duringMonthly != null ? g.duringMonthly : g.minMonthly)) || 0)
+  };
+}
+
+function estimateGoalCompletionDate(monthNumber) {
+  if (!monthNumber || monthNumber < 1) return '';
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth() + (monthNumber - 1), 1);
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+function renderSavingsGoalProjections() {
+  const cardsEl = document.getElementById('savings-goal-cards');
+  const bodyEl = document.getElementById('savings-goal-body');
+  if (!cardsEl || !bodyEl) return;
+  if (!savingsGoals.length) {
+    cardsEl.innerHTML = '<div style="grid-column:1/-1;font-size:11px;color:var(--muted);padding:4px 0">No savings goals yet. Add one above to model completion beside debt payoff.</div>';
+    bodyEl.innerHTML = '<tr><td colspan="8" class="td-muted">No savings goals added.</td></tr>';
+    return;
+  }
+  if (!currentResult || !currentResult.monthly || !currentResult.monthly.length) {
+    cardsEl.innerHTML = '<div style="grid-column:1/-1;font-size:11px;color:var(--muted);padding:4px 0">Run a simulation to view goal progress.</div>';
+    bodyEl.innerHTML = '<tr><td colspan="8" class="td-muted">No modeled goal data yet.</td></tr>';
+    return;
+  }
+
+  const selIdx = Math.max(0, Math.min(currentResult.monthly.length - 1, (selectedMonth || 1) - 1));
+  const row = currentResult.monthly[selIdx];
+  const horizon = currentResult.monthly.length;
+  const finalGoals = currentResult.goals || [];
+  const finalById = new Map(finalGoals.map(g => [Number(g.id), g]));
+  const rowGoals = row.goalPayments || [];
+  const byIdAtMonth = new Map(rowGoals.map(g => [Number(g.id), g]));
+
+  cardsEl.innerHTML = savingsGoals.map((srcGoal) => {
+    const id = Number(srcGoal.id);
+    const gAtMonth = byIdAtMonth.get(id) || {
+      id,
+      name: srcGoal.name,
+      priority: srcGoal.priority || 'during_debt',
+      duringMonthly: srcGoal.duringMonthly || 0,
+      addedThisMonth: 0,
+      savedTotal: Math.round(Math.max(0, Number(srcGoal.current) || 0)),
+      remaining: Math.round(Math.max(0, (Number(srcGoal.target) || 0) - (Number(srcGoal.current) || 0))),
+      completionMonth: null,
+      isComplete: false
+    };
+    const finalG = finalById.get(id) || gAtMonth;
+    const target = Math.round(Number(srcGoal.target) || 0);
+    const totalSaved = Math.round(gAtMonth.savedTotal || 0);
+    const rem = Math.max(0, target - totalSaved);
+    const thisMonth = Math.round(gAtMonth.addedThisMonth || 0);
+    const done = !!finalG.isComplete;
+    const completionMonth = finalG.completionMonth;
+    const compTxt = done
+      ? (completionMonth ? `M${completionMonth} · ${estimateGoalCompletionDate(completionMonth)}` : 'Completed')
+      : `Beyond ${horizon} mo horizon`;
+    const avgMo = completionMonth && completionMonth > 0
+      ? (Math.max(0, (finalG.saved || 0) - (Number(srcGoal.current) || 0)) / Math.max(1, completionMonth))
+      : (Math.max(0, (finalG.saved || 0) - (Number(srcGoal.current) || 0)) / Math.max(1, horizon));
+    const priority = gAtMonth.priority || srcGoal.priority || 'during_debt';
+
+    return `
+    <div style="background:var(--surface);border:1px solid ${done ? 'rgba(82,201,138,0.35)' : priority === 'before_debt' ? 'rgba(79,156,249,0.35)' : priority === 'after_debt' ? 'rgba(167,139,250,0.35)' : 'var(--border2)'};border-radius:var(--rl);padding:16px;position:relative">
+      <div style="position:absolute;top:10px;right:10px;font-size:9px;padding:2px 8px;border-radius:100px;background:${done ? 'var(--green-dim)' : priority === 'before_debt' ? 'var(--blue-dim)' : priority === 'after_debt' ? 'var(--purple-dim)' : 'var(--surface2)'};color:${done ? 'var(--green)' : priority === 'before_debt' ? 'var(--blue)' : priority === 'after_debt' ? 'var(--purple)' : 'var(--muted2)'};font-weight:600;letter-spacing:0.05em;text-transform:uppercase">${done ? 'Complete' : savingsGoalPriorityLabel(priority)}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-right:120px">
+        <span style="width:10px;height:10px;border-radius:50%;background:${priority === 'before_debt' ? 'var(--blue)' : priority === 'after_debt' ? 'var(--purple)' : 'var(--amber)'};flex-shrink:0"></span>
+        <span style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--text)">${srcGoal.name}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:2px">Added this month</div>
+          <div style="font-family:var(--font-d);font-size:16px;font-weight:700;color:${thisMonth > 0 ? 'var(--blue)' : 'var(--muted2)'}">${thisMonth > 0 ? '$' + thisMonth.toLocaleString() : '—'}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:2px">Total saved</div>
+          <div style="font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--green)">$${totalSaved.toLocaleString()}</div>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px;font-size:11px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="color:var(--muted)">Target</span>
+          <span>$${target.toLocaleString()}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="color:var(--muted)">Remaining</span>
+          <span style="color:${rem <= 0 ? 'var(--green)' : 'var(--amber)'}">$${Math.round(rem).toLocaleString()}</span>
+        </div>
+        ${priority === 'during_debt' ? `<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--muted)">During-debt setting</span><span>$${Math.round(Number(srcGoal.duringMonthly) || 0).toLocaleString()}/mo</span></div>` : ''}
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="color:var(--muted)">Average added</span>
+          <span style="color:var(--green)">$${Math.round(avgMo).toLocaleString()}/mo</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:5px 0"></div>
+        <div style="display:flex;justify-content:space-between">
+          <span style="color:var(--muted)">Modeled completion</span>
+          <span style="color:${done ? 'var(--green)' : 'var(--muted2)'}">${compTxt}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  bodyEl.innerHTML = savingsGoals.map((srcGoal) => {
+    const id = Number(srcGoal.id);
+    const finalG = finalById.get(id);
+    const gAtMonth = byIdAtMonth.get(id);
+    const target = Math.round(Number(srcGoal.target) || 0);
+    const savedAtMonth = Math.round((gAtMonth && gAtMonth.savedTotal) || Number(srcGoal.current) || 0);
+    const rem = Math.max(0, target - savedAtMonth);
+    const done = !!(finalG && finalG.isComplete);
+    const completionMonth = finalG && finalG.completionMonth;
+    const avgMo = completionMonth && completionMonth > 0
+      ? (Math.max(0, (finalG.saved || 0) - (Number(srcGoal.current) || 0)) / Math.max(1, completionMonth))
+      : (Math.max(0, ((finalG && finalG.saved) || savedAtMonth) - (Number(srcGoal.current) || 0)) / Math.max(1, horizon));
+    const compTxt = done
+      ? (completionMonth ? `M${completionMonth} · ${estimateGoalCompletionDate(completionMonth)}` : 'Completed')
+      : `> ${horizon} months`;
+    const priority = (srcGoal.priority || 'during_debt');
+    return `<tr>
+      <td>${srcGoal.name}</td>
+      <td>${savingsGoalPriorityLabel(priority)}${priority === 'during_debt' ? ' ($' + Math.round(Number(srcGoal.duringMonthly) || 0).toLocaleString() + '/mo)' : ''}</td>
+      <td>$${target.toLocaleString()}</td>
+      <td>$${savedAtMonth.toLocaleString()}</td>
+      <td>$${Math.round(avgMo).toLocaleString()}</td>
+      <td>${compTxt}</td>
+      <td class="${done ? 'td-good' : 'td-warn'}">${done ? 'On track' : '$' + Math.round(rem).toLocaleString() + ' left'}</td>
+      <td><button type="button" class="btn-icon" onclick="removeSavingsGoal(${id})" title="Remove goal">✕</button></td>
+    </tr>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════════
@@ -1335,7 +1729,7 @@ function recalc() {
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('dashboard-content').style.display = 'block';
 
-  const result = simulateStrategy(loans, extra, invRate, months, activeStrategy, startPort);
+  const result = simulateStrategy(loans, extra, invRate, months, activeStrategy, startPort, savingsGoals);
   currentResult = result;
 
   // init month slider range and jump menu
@@ -1347,10 +1741,10 @@ function recalc() {
   renderPerLoanDetail();
 
   const allResults = {
-    avalanche: simulateStrategy(loans, extra, invRate, months, 'avalanche', startPort),
-    snowball:  simulateStrategy(loans, extra, invRate, months, 'snowball', startPort),
-    hybrid:    simulateStrategy(loans, extra, invRate, months, 'hybrid', startPort),
-    minimum:   simulateStrategy(loans, extra, invRate, months, 'minimum', startPort)
+    avalanche: simulateStrategy(loans, extra, invRate, months, 'avalanche', startPort, savingsGoals),
+    snowball:  simulateStrategy(loans, extra, invRate, months, 'snowball', startPort, savingsGoals),
+    hybrid:    simulateStrategy(loans, extra, invRate, months, 'hybrid', startPort, savingsGoals),
+    minimum:   simulateStrategy(loans, extra, invRate, months, 'minimum', startPort, savingsGoals)
   };
 
   updateDashboard(result, extra, months, invRate, yrs);
@@ -1392,10 +1786,10 @@ function updateDashboard(result, extra, months, invRate, yrs) {
 
   // winner banner
   const allResults = {
-    avalanche: simulateStrategy(loans, extra, invRate, months, 'avalanche', startPort),
-    snowball:  simulateStrategy(loans, extra, invRate, months, 'snowball', startPort),
-    hybrid:    simulateStrategy(loans, extra, invRate, months, 'hybrid', startPort),
-    minimum:   simulateStrategy(loans, extra, invRate, months, 'minimum', startPort)
+    avalanche: simulateStrategy(loans, extra, invRate, months, 'avalanche', startPort, savingsGoals),
+    snowball:  simulateStrategy(loans, extra, invRate, months, 'snowball', startPort, savingsGoals),
+    hybrid:    simulateStrategy(loans, extra, invRate, months, 'hybrid', startPort, savingsGoals),
+    minimum:   simulateStrategy(loans, extra, invRate, months, 'minimum', startPort, savingsGoals)
   };
   const bestKey = Object.entries(allResults).sort((a,b) => b[1].finalNW - a[1].finalNW)[0][0];
   const bestNW = allResults[bestKey].finalNW;
@@ -1702,7 +2096,7 @@ function setBreakdownTab(idx) {
   const extra = parseFloat(document.getElementById('i-extra').value) || 0;
   const invRate = parseFloat(document.getElementById('i-inv').value) || 7;
   const months = parseInt(document.getElementById('i-yrs').value) * 12 || 240;
-  const result = simulateStrategy(loans, extra, invRate, months, activeStrategy, getDashStartingPortfolio());
+  const result = simulateStrategy(loans, extra, invRate, months, activeStrategy, getDashStartingPortfolio(), savingsGoals);
   renderBreakdownTable(result, loans, extra, invRate, months);
 }
 
@@ -1715,13 +2109,13 @@ function renderBreakdownTable(result, loans, extra, invRate, months) {
     const wasJustDebtFree = r.totalDebt === 0 && (i === 0 || result.monthly[i-1].totalDebt > 0);
     if (wasJustDebtFree && !lastDebtFreeShown) {
       lastDebtFreeShown = true;
-      html += `<tr class="milestone-banner-row"><td colspan="8">— All debt paid off at month ${r.month} — full budget now goes to investments</td></tr>`;
+      html += `<tr class="milestone-banner-row"><td colspan="8">— All debt paid off at month ${r.month} — remaining excess now shifts to goals (after-debt) and investments</td></tr>`;
     }
     const milestoneClass = r.totalDebt === 0 && !wasJustDebtFree ? '' : (wasJustDebtFree ? 'milestone' : '');
     html += `<tr class="${milestoneClass}">
       <td>M${r.month}</td>
       <td>$${r.cashUsed.toLocaleString()}</td>
-      <td class="${r.cashUsed - r.invested > 0 ? '' : 'td-muted'}">${r.cashUsed - r.invested > 0 ? '$' + (r.cashUsed - r.invested).toLocaleString() : '—'}</td>
+      <td class="${r.toDebt > 0 ? '' : 'td-muted'}">${r.toDebt > 0 ? '$' + r.toDebt.toLocaleString() : '—'}</td>
       <td class="${r.totalDebt === 0 ? 'td-green' : ''}">${r.totalDebt === 0 ? 'Paid off' : '$' + r.totalDebt.toLocaleString()}</td>
       <td class="${r.invested > 0 ? '' : 'td-muted'}">${r.invested > 0 ? '$' + r.invested.toLocaleString() : '—'}</td>
       <td>$${r.port.toLocaleString()}</td>
@@ -3254,7 +3648,9 @@ function saveClearpathPersistedState() {
         inv: parseFloat(el('i-inv')?.value) || 7,
         yrs: parseInt(el('i-yrs')?.value) || 20,
         activeStrategy,
-        portfolioBalance: parseFloat(el('dash-portfolio-balance')?.value) || 0
+        portfolioBalance: parseFloat(el('dash-portfolio-balance')?.value) || 0,
+        savingsGoals,
+        savingsGoalCounter
       },
       cf: {
         incomes: cfIncomes,
@@ -3366,6 +3762,11 @@ function loadClearpathPersistedState() {
       if (data.dash.activeStrategy) activeStrategy = data.dash.activeStrategy;
       const dp = document.getElementById('dash-portfolio-balance');
       if (dp && data.dash.portfolioBalance != null) dp.value = data.dash.portfolioBalance;
+      if (Array.isArray(data.dash.savingsGoals)) {
+        savingsGoals = data.dash.savingsGoals.map(normalizeSavingsGoalItem).filter(g => g.name && g.target > 0.5);
+      }
+      if (data.dash.savingsGoalCounter != null) savingsGoalCounter = Number(data.dash.savingsGoalCounter) || 0;
+      if (!savingsGoalCounter) savingsGoals.forEach(g => { if ((Number(g.id) || 0) > savingsGoalCounter) savingsGoalCounter = Number(g.id) || 0; });
     }
 
     cfIncomes = dedupeCfIncomesBySignature(data.cf.incomes || []);
@@ -7854,6 +8255,8 @@ if (!loadClearpathPersistedState()) {
   cfDebts = [];
   cfSavings = [];
   cfInvestments = [];
+  savingsGoals = [];
+  savingsGoalCounter = 0;
   cfCounter = 0;
   paidEvents.clear();
   paycheckPlannerResult = null;
@@ -7869,6 +8272,7 @@ if (!loadClearpathPersistedState()) {
   renderCFBills();
   renderCFDebts();
 }
+toggleSavingsGoalMinInput();
 if (typeof recalc === 'function') recalc();
 cfRecalc();
 </script>
