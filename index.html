@@ -278,6 +278,17 @@ body.onb-open{overflow:hidden}
 .onb-btn-add{width:100%;margin-top:12px}
 .onb-summary-list{margin:0 0 14px;padding-left:1.1rem;font-size:12px;color:var(--muted);line-height:1.6}
 .onb-summary-list li{margin-bottom:4px}
+.onb-sum-wrap{margin:4px 0 18px;font-family:var(--font-m);font-size:12px;color:var(--muted2)}
+.onb-sum-hd-row,.onb-sum-data-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(76px,auto) minmax(108px,auto);gap:10px 12px;align-items:baseline;padding:9px 0}
+.onb-sum-hd-row{font-family:var(--font-d);font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.onb-sum-hd-row .onb-sum-cell--amt,.onb-sum-hd-row .onb-sum-cell--due{text-align:right}
+.onb-sum-cell--name{color:var(--text);font-weight:600;font-family:var(--font-d);font-size:12px;line-height:1.35;min-width:0}
+.onb-sum-cell--amt{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap}
+.onb-sum-cell--due{text-align:right;font-size:11px;color:var(--muted);line-height:1.35;white-space:normal;word-break:break-word}
+.onb-sum-data-row--total .onb-sum-cell--name{color:var(--muted2);font-weight:700}
+.onb-sum-data-row--total .onb-sum-cell--amt{color:var(--muted2)}
+.onb-sum-sec{margin:16px 0 6px;font-family:var(--font-d);font-size:9px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.onb-sum-sec:first-of-type{margin-top:2px}
 .onb-ledger{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
 .onb-ledger-card{border:1px solid var(--border2);border-radius:10px;background:var(--surface3);padding:10px}
 .onb-ledger-k{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted2);margin:0 0 6px}
@@ -754,7 +765,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
             <div class="dash-asset-card__label">Checking</div>
             <div class="cf-field">
               <label>Available balance ($)</label>
-              <input type="number" id="cf-cash-balance" value="" min="0" step="100" placeholder="0" oninput="cfRecalc()">
+              <input type="number" id="cf-cash-balance" value="" min="0" step="100" placeholder="0" oninput="cfRecalc();cfRequestOptimizerRefreshAfterCashflowEdit()">
             </div>
             <div class="cf-field">
               <label>Minimum buffer ($)</label>
@@ -766,11 +777,11 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
             <div class="dash-asset-card__label">Emergency fund</div>
             <div class="cf-field">
               <label>Balance ($)</label>
-              <input type="number" id="cf-ef-balance" value="" min="0" step="100" placeholder="0" oninput="cfRecalc()">
+              <input type="number" id="cf-ef-balance" value="" min="0" step="100" placeholder="0" oninput="cfRecalc();cfRequestOptimizerRefreshAfterCashflowEdit()">
             </div>
             <div class="cf-field">
               <label>Target (months of spend)</label>
-              <input type="number" id="cf-ef-months" value="" min="1" max="12" step="0.5" placeholder="e.g. 3" oninput="cfRecalc()">
+              <input type="number" id="cf-ef-months" value="" min="1" max="12" step="0.5" placeholder="e.g. 3" oninput="cfRecalc();cfRequestOptimizerRefreshAfterCashflowEdit()">
             </div>
           </div>
           <div class="dash-asset-card">
@@ -1251,6 +1262,7 @@ function addLoan(name, balance, rate, minPay) {
   recalc();
   if (typeof renderCFBills === 'function') renderCFBills();
   if (typeof cfRecalc === 'function') cfRecalc();
+  if (typeof cfRequestOptimizerRefreshAfterCashflowEdit === 'function') cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function removeLoan(id) {
@@ -1259,6 +1271,7 @@ function removeLoan(id) {
   recalc();
   if (typeof renderCFBills === 'function') renderCFBills();
   if (typeof cfRecalc === 'function') cfRecalc();
+  if (typeof cfRequestOptimizerRefreshAfterCashflowEdit === 'function') cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function updateLoan(id, field, value) {
@@ -1273,6 +1286,7 @@ function updateLoan(id, field, value) {
   recalc();
   if (typeof renderCFBills === 'function') renderCFBills();
   if (typeof cfRecalc === 'function') cfRecalc();
+  if (typeof cfRequestOptimizerRefreshAfterCashflowEdit === 'function') cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function getDashStartingPortfolio() {
@@ -1329,7 +1343,7 @@ function renderLoans() {
       <div class="loan-grid5">
         <div class="loan-cell">
           <label>Balance</label>
-          <input type="number" value="${l.balance}" min="0" step="100" oninput="updateLoan(${l.id},'balance',this.value)">
+          <input type="number" value="${l.balance}" min="0" step="100" oninput="updateLoan(${l.id},'balance',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div class="loan-cell">
           <label>APR %</label>
@@ -1337,11 +1351,11 @@ function renderLoans() {
         </div>
         <div class="loan-cell">
           <label>Min/mo</label>
-          <input type="number" value="${l.minPay}" min="0" step="5" oninput="updateLoan(${l.id},'minPay',this.value)">
+          <input type="number" value="${l.minPay}" min="0" step="5" oninput="updateLoan(${l.id},'minPay',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div class="loan-cell">
           <label>Extra</label>
-          <input type="number" value="${Number(l.extraPay) || 0}" min="0" step="25" oninput="updateLoan(${l.id},'extraPay',this.value)">
+          <input type="number" value="${Number(l.extraPay) || 0}" min="0" step="25" oninput="updateLoan(${l.id},'extraPay',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div class="loan-cell">
           <label>Due</label>
@@ -2900,7 +2914,7 @@ document.addEventListener('keydown', function (ev) {
   text-align: center;
 }
 .cal-month-title { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.2; }
-/* Horizontal scroll on narrow viewports so seven columns stay readable */
+/* Calendar grid uses the full width; horizontal scroll only if a parent constrains width */
 .cal-scroll-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -2910,12 +2924,14 @@ document.addEventListener('keydown', function (ev) {
 }
 .cal-scroll-wrap .cal-grid {
   width: 100%;
-  min-width: max(100%, 640px);
+  min-width: 100%;
 }
 .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(3px, 0.5vw, 6px); }
 #cal-grid.cal-day-grid {
   min-height: 0;
   align-content: start;
+  /* One row height for every week so every tile matches; body scrolls inside busy days */
+  grid-auto-rows: clamp(108px, min(20vw, 22vh), 200px);
 }
 .cal-dow { font-size: 10px; color: var(--muted); text-align: center; padding: 6px 2px; text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-d); font-weight: 700; }
 .cal-day {
@@ -2923,12 +2939,17 @@ document.addEventListener('keydown', function (ev) {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 5px 5px 0;
-  min-height: clamp(96px, 11vw, 148px);
+  box-sizing: border-box;
+  min-height: 0;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
   position: relative;
   transition: border-color 0.15s, box-shadow 0.15s;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  container-type: inline-size;
+  container-name: calday;
 }
 .cal-day[role="button"] { cursor: pointer; }
 .cal-day:hover { border-color: var(--border2); box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
@@ -2936,7 +2957,7 @@ document.addEventListener('keydown', function (ev) {
   border-color: rgba(79,156,249,0.48);
   box-shadow: 0 0 0 1px rgba(79,156,249,0.28), 0 8px 26px rgba(0,0,0,0.2);
 }
-.cal-day.other-month { opacity: 0.35; }
+.cal-day.other-month { opacity: 0.35; min-height: 0; height: 100%; }
 .cal-day.today { border-color: rgba(79,156,249,0.55); box-shadow: 0 0 0 1px rgba(79,156,249,0.12); }
 .cal-day.payday { border-color: rgba(82,201,138,0.4); background: linear-gradient(180deg, rgba(82,201,138,0.07) 0%, var(--surface2) 42%); }
 .cal-day.negative-balance { border-color: rgba(240,96,96,0.45); background: linear-gradient(180deg, rgba(240,96,96,0.06) 0%, var(--surface2) 40%); }
@@ -2946,7 +2967,6 @@ document.addEventListener('keydown', function (ev) {
 .cal-day-body {
   flex: 1 1 auto;
   min-height: 0;
-  max-height: min(168px, 26vh);
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
@@ -3034,17 +3054,44 @@ document.addEventListener('keydown', function (ev) {
   gap: 3px;
   text-align: left;
 }
-.cal-ev-truncate {
+.cal-ev-name-lines {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: block;
+}
+.cal-day-body .cal-event .cal-ev-name > .cal-ev-name-lines,
+.cal-day-body .cal-event .cal-ev-name > .cal-ev-truncate {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* Calendar grid chips: always one line; tight cells swap to compact label via @container */
+.cal-day-body .cal-ev-truncate {
   min-width: 0;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  white-space: normal;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
   font-weight: 600;
   letter-spacing: 0.01em;
+}
+.cal-ev-name-lines .cal-ev-label-tight {
+  display: none;
+}
+@container calday (max-width: 128px) {
+  .cal-ev-name-lines .cal-ev-label-wide {
+    display: none !important;
+  }
+  .cal-ev-name-lines .cal-ev-label-tight {
+    display: block !important;
+  }
+}
+@supports not (container-type: inline-size) {
+  .cal-ev-name-lines .cal-ev-label-tight {
+    display: none !important;
+  }
+  .cal-ev-name-lines .cal-ev-label-wide {
+    display: block !important;
+  }
 }
 .cal-ev-plan-tag {
   display: inline-block;
@@ -3968,6 +4015,51 @@ document.addEventListener('keydown', function (ev) {
   width: 100%;
   justify-content: flex-start;
   align-items: flex-start;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) #pp-paycheck-compare-wrap.pp-paycheck-plan-row-collapsed .pp-paycheck-plan-row-body {
+  display: none !important;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-paycheck-row-collapse-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-paycheck-row-collapse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--muted2);
+  font-family: var(--font-d);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-paycheck-row-collapse-btn:hover {
+  border-color: rgba(79, 156, 249, 0.45);
+  color: var(--text);
+  background: var(--surface3);
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-paycheck-row-collapse-lbl {
+  color: var(--muted);
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-paycheck-row-collapse-chev {
+  display: block;
+  font-size: 10px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+  opacity: 0.9;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) #pp-paycheck-compare-wrap.pp-paycheck-plan-row-collapsed .pp-paycheck-row-collapse-chev {
+  transform: rotate(-90deg);
 }
 :is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-active-planner-routing-wrap {
   margin-left: auto;
@@ -4996,7 +5088,7 @@ let paycheckOptimizedPreviewDebtStrategy = null;
 /** All paycheck engine runs (manual preview, shadow compare, persisted optimization) use this horizon. */
 const PAYCHECK_PLANNER_MODEL_HORIZON = '12m';
 
-let plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON, plannerDebtStrategy: 'avalanche', hideOldOneTimeEvents: false };
+let plannerUiDefaults = { checkingFloat: 500, postEfGoal: 'surplus_debt', plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON, plannerDebtStrategy: 'avalanche', hideOldOneTimeEvents: false, paycheckPlanRowCollapsed: false };
 
 /** Premium: optimized 1-year plan apply. Free tier: set localStorage.clearpathPlannerPremium to '0' to hide (manual 12-mo preview stays). */
 function isPaycheckPlannerPremium() {
@@ -5016,6 +5108,7 @@ function onDashboardCheckingFloorInput() {
   syncPlannerCheckingFloatFromDom();
   if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
   if (typeof cfRecalc === 'function') cfRecalc();
+  if (typeof cfRequestOptimizerRefreshAfterCashflowEdit === 'function') cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function refreshPaycheckPlannerHeadUi() {
@@ -5039,13 +5132,15 @@ function refreshPaycheckPlannerHeadUi() {
 /**
  * Runs / refreshes the persisted 12-month optimized plan with a concrete debt routing strategy.
  * @param {string} debtStrat avalanche | snowball | minimum
- * @param {{ resetPreview?: boolean }} options resetPreview: clear preview-row overrides (default true for first apply)
+ * @param {{ resetPreview?: boolean, closeInputsFlyout?: boolean, refreshExistingOptimizedPlan?: boolean }} options resetPreview: clear preview-row overrides (default true for first apply); closeInputsFlyout: close side inputs panel (default true; false when refreshing plan after inline edits); refreshExistingOptimizedPlan: re-run math for an already-applied plan after Dashboard edits (allows recompute even if Premium flag is off, so saved plans stay aligned with bills/income)
  */
 function runPaycheckPlannerAnalysisWithDebtStrategy(debtStrat, options) {
   const opts = options || {};
   const resetPreview = opts.resetPreview !== false;
-  if (typeof closePaycheckInputsFlyout === 'function') closePaycheckInputsFlyout();
-  if (!isPaycheckPlannerPremium()) {
+  if (opts.closeInputsFlyout !== false && typeof closePaycheckInputsFlyout === 'function') closePaycheckInputsFlyout();
+  const hadAppliedPlan = !!(typeof paycheckPlannerResult !== 'undefined' && paycheckPlannerResult);
+  const allowWithoutPremium = opts.refreshExistingOptimizedPlan === true && hadAppliedPlan;
+  if (!isPaycheckPlannerPremium() && !allowWithoutPremium) {
     const st = document.getElementById('pp-export-status');
     if (st) {
       st.style.color = 'var(--amber)';
@@ -5083,9 +5178,13 @@ function runPaycheckPlannerAnalysisWithDebtStrategy(debtStrat, options) {
   const st = document.getElementById('pp-export-status');
   if (st) {
     st.style.color = 'var(--green)';
-    st.textContent = resetPreview
-      ? 'Optimized 12-month plan applied.'
-      : 'Active plan updated to ' + labelForPreviewPlannerDebtStrategy(strat) + '.';
+    if (opts.refreshExistingOptimizedPlan === true && !resetPreview) {
+      st.textContent = 'Active plan recomputed from your income, bills, and balances.';
+    } else {
+      st.textContent = resetPreview
+        ? 'Optimized 12-month plan applied.'
+        : 'Active plan updated to ' + labelForPreviewPlannerDebtStrategy(strat) + '.';
+    }
   }
   if (typeof cfRecalc === 'function') cfRecalc();
   return true;
@@ -5103,6 +5202,44 @@ function onAppliedPlannerDebtStrategyChange(el) {
   if (!runPaycheckPlannerAnalysisWithDebtStrategy(strat, { resetPreview: false })) {
     el.value = prev;
   }
+}
+
+/**
+ * After bills, income, internal transfers, or paid/unpaid toggles change, refresh the applied optimized plan
+ * so set-asides stay coordinated and overdraft-safe. Debounced to avoid re-running on every keystroke.
+ */
+let cfOptimizerCashflowRefreshTimer = null;
+
+function cfRunAppliedPlanOptimizerRefreshCore() {
+  if (typeof paycheckPlannerResult === 'undefined' || !paycheckPlannerResult) return;
+  if (typeof runPaycheckPlannerAnalysisWithDebtStrategy !== 'function') return;
+  const strat = (paycheckPlannerResult.plannerDebtStrategy != null && typeof normalizePlannerDebtStrategy === 'function')
+    ? normalizePlannerDebtStrategy(paycheckPlannerResult.plannerDebtStrategy)
+    : (typeof getEffectiveOptimizedPreviewDebtStrategy === 'function' ? getEffectiveOptimizedPreviewDebtStrategy() : 'avalanche');
+  runPaycheckPlannerAnalysisWithDebtStrategy(strat, {
+    resetPreview: false,
+    closeInputsFlyout: false,
+    refreshExistingOptimizedPlan: true
+  });
+}
+
+/** Run immediately (cancels pending debounced refresh). Call from amount field `blur` so the plan updates as soon as you leave the field. */
+function cfFlushAppliedPlanOptimizerRefresh() {
+  if (typeof paycheckPlannerResult === 'undefined' || !paycheckPlannerResult) return;
+  if (cfOptimizerCashflowRefreshTimer) {
+    clearTimeout(cfOptimizerCashflowRefreshTimer);
+    cfOptimizerCashflowRefreshTimer = null;
+  }
+  cfRunAppliedPlanOptimizerRefreshCore();
+}
+
+function cfRequestOptimizerRefreshAfterCashflowEdit() {
+  if (typeof paycheckPlannerResult === 'undefined' || !paycheckPlannerResult) return;
+  if (cfOptimizerCashflowRefreshTimer) clearTimeout(cfOptimizerCashflowRefreshTimer);
+  cfOptimizerCashflowRefreshTimer = setTimeout(function () {
+    cfOptimizerCashflowRefreshTimer = null;
+    cfRunAppliedPlanOptimizerRefreshCore();
+  }, 200);
 }
 
 let paycheckOptimizedAutoPickKey = '';
@@ -6112,6 +6249,10 @@ function loadClearpathPersistedState() {
       if (data.cf.checkingFloat != null) plannerUiDefaults.checkingFloat = parseFloat(data.cf.checkingFloat) || 500;
     }
     if (data.cf.plannerUiDefaults) plannerUiDefaults = { ...plannerUiDefaults, ...data.cf.plannerUiDefaults };
+    if (plannerUiDefaults.paycheckPlanRowCollapsed == null && plannerUiDefaults.activeOptimizedPlanCollapsed != null) {
+      plannerUiDefaults.paycheckPlanRowCollapsed = !!plannerUiDefaults.activeOptimizedPlanCollapsed;
+    }
+    delete plannerUiDefaults.activeOptimizedPlanCollapsed;
     delete plannerUiDefaults.paycheckSimpleView;
     plannerUiDefaults.plannerProjection = PAYCHECK_PLANNER_MODEL_HORIZON;
     plannerUiDefaults.plannerDebtStrategy = normalizePlannerDebtStrategy(plannerUiDefaults.plannerDebtStrategy);
@@ -6176,6 +6317,7 @@ function cfAddIncome(name='', amount=0, freq='biweekly', day1=1, day2=15, nextDa
   cfIncomes.push(row);
   renderCFIncomes();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfAddBill(name = '', amount = 0, day = 1, category = 'rent', mode = 'monthly', oneTimeYm = null, anchorDate = null) {
@@ -6191,6 +6333,7 @@ function cfAddBill(name = '', amount = 0, day = 1, category = 'rent', mode = 'mo
   cfEnsureBillDefaults(b);
   renderCFBills();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
   return id;
 }
 
@@ -6209,6 +6352,7 @@ function cfAddLoanOneTimeExtra(loanId, amount, year, month, day) {
   renderCFBills();
   if (typeof renderLoans === 'function') renderLoans();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
   return true;
 }
 
@@ -6253,6 +6397,7 @@ function cfBillSetCategory(id, cat) {
   }
   renderCFBills();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfAddSavings(name = 'Savings transfer', amount = 0, mode = 'payday') {
@@ -6267,6 +6412,7 @@ function cfAddSavings(name = 'Savings transfer', amount = 0, mode = 'payday') {
   });
   renderCFInternalTransfers();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfAddInvestment(name = 'Investment transfer', amount = 0, mode = 'payday') {
@@ -6281,6 +6427,7 @@ function cfAddInvestment(name = 'Investment transfer', amount = 0, mode = 'payda
   });
   renderCFInternalTransfers();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfXferFindBucket(id) {
@@ -6302,6 +6449,7 @@ function cfInternalXferMoveToKind(id, newKind) {
   else cfInvestments.push(item);
   renderCFInternalTransfers();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfAddInternalTransfer() {
@@ -6340,7 +6488,7 @@ function renderXferCard(sv, listKind) {
         <div>
           <div class="cf-tile-lbl">Amount ($)</div>
           <input type="number" class="cf-tile-input" placeholder="0" value="${sv.amount || ''}"
-            oninput="cfUpdate('${listKind}',${sv.id},'amount',this.value)">
+            oninput="cfUpdate('${listKind}',${sv.id},'amount',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div>
           <div class="cf-tile-lbl">When</div>
@@ -6392,6 +6540,7 @@ function cfRemove(list, id) {
   renderCFBills();
   refreshCfOneTimeModalIfOpen();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfIsOneTimeIncome(inc) {
@@ -6458,6 +6607,7 @@ function cfApplyOneTimeDateFromPicker(kind, id, isoDateStr) {
   renderCFOneTimeStrip();
   refreshCfOneTimeModalIfOpen();
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function cfSetHideOldOneTime(on) {
@@ -6527,7 +6677,7 @@ function buildCfOneTimeModalListHtml() {
           <div>
             <div class="cf-onetime-modal-lbl">Amount ($)</div>
             <input type="number" class="cf-onetime-modal-inp" placeholder="0" value="${inc.amount || ''}"
-              oninput="cfUpdate('income',${inc.id},'amount',this.value)">
+              oninput="cfUpdate('income',${inc.id},'amount',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
           </div>
         </div>
         <div style="margin-top:8px">
@@ -6569,7 +6719,7 @@ function buildCfOneTimeModalListHtml() {
           <div>
             <div class="cf-onetime-modal-lbl">Amount ($)</div>
             <input type="number" class="cf-onetime-modal-inp" placeholder="0" value="${b.amount || ''}"
-              oninput="cfUpdate('bill',${b.id},'amount',this.value)">
+              oninput="cfUpdate('bill',${b.id},'amount',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
           </div>
           <div>
             <div class="cf-onetime-modal-lbl">Date</div>
@@ -6654,7 +6804,8 @@ function cfAddOneTimeBillForModal() {
 function cfUpdate(list, id, field, val) {
   const arr = list === 'income' ? cfIncomes : list === 'bill' ? cfBills : list === 'savings' ? cfSavings : list === 'investments' ? cfInvestments : null;
   if (!arr) return;
-  const item = arr.find(x => x.id === id);
+  const numId = parseInt(String(id), 10);
+  const item = arr.find(x => x.id === id || (Number.isFinite(numId) && x.id === numId) || String(x.id) === String(id).trim());
   if (!item) return;
   if (list === 'bill' && field === 'category') {
     cfBillSetCategory(id, val);
@@ -6683,6 +6834,7 @@ function cfUpdate(list, id, field, val) {
     renderCFBills();
   }
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function renderCFBills() {
@@ -6758,7 +6910,7 @@ function renderCFBills() {
         <div>
           <div class="cf-tile-lbl">Amount</div>
           <input type="number" class="cf-tile-input" placeholder="0" aria-label="Amount in dollars" value="${b.amount || ''}"
-            oninput="cfUpdate('bill',${b.id},'amount',this.value)">
+            oninput="cfUpdate('bill',${b.id},'amount',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div>
           <div class="cf-tile-lbl">Repeat</div>
@@ -6849,7 +7001,7 @@ function renderCFIncomes() {
         <div>
           <div class="cf-tile-lbl">Amount ($)</div>
           <input type="number" class="cf-tile-input" placeholder="0" value="${inc.amount || ''}"
-            oninput="cfUpdate('income',${inc.id},'amount',this.value)">
+            oninput="cfUpdate('income',${inc.id},'amount',this.value)" onblur="cfFlushAppliedPlanOptimizerRefresh()">
         </div>
         <div>
           <div class="cf-tile-lbl">Frequency</div>
@@ -6911,12 +7063,14 @@ function togglePaid(key, year, month, day, type) {
     const chk = document.getElementById('cf-auto-past-paid');
     if (chk) chk.checked = false;
     cfRecalc();
+    cfRequestOptimizerRefreshAfterCashflowEdit();
     return;
   }
 
   if (paidEvents.has(k)) paidEvents.delete(k);
   else paidEvents.add(k);
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function setAutoPastBillsPaid(on) {
@@ -6924,6 +7078,7 @@ function setAutoPastBillsPaid(on) {
   const el = document.getElementById('cf-auto-past-paid');
   if (el) el.checked = autoPastBillsPaid;
   cfRecalc();
+  cfRequestOptimizerRefreshAfterCashflowEdit();
 }
 
 function clearClearpathStoredDataWithConfirm() {
@@ -6964,7 +7119,8 @@ function clearClearpathStoredDataWithConfirm() {
     postEfGoal: 'surplus_debt',
     plannerProjection: PAYCHECK_PLANNER_MODEL_HORIZON,
     plannerDebtStrategy: 'avalanche',
-    hideOldOneTimeEvents: false
+    hideOldOneTimeEvents: false,
+    paycheckPlanRowCollapsed: false
   };
 
   const z = function (id) {
@@ -7966,7 +8122,6 @@ function onbRender() {
   } else if (onbStepIdx === 11) {
     title = 'Review summary';
     onbCaptureStepInputs();
-    var summaryIncome = '$' + Math.round(parseFloat(onbDraft.incomeAmt) || 0).toLocaleString();
     var summaryBills = (onbDraft.billEntries || []).filter(function (b) { return (parseFloat(b.amt) || 0) > 0; });
     var summaryBillTotal = Math.round(summaryBills.reduce(function (sum, b) {
       var n = Math.round(parseFloat(b.amt) || 0);
@@ -7986,6 +8141,85 @@ function onbRender() {
     var ef = Math.round(parseFloat(onbDraft.efBal) || 0);
     var port = Math.round(parseFloat(onbDraft.port) || 0);
     var fm = function (n) { return '$' + Math.round(n).toLocaleString(); };
+    var tr = function (name, amt, due, extraCls) {
+      return (
+        '<div class="onb-sum-data-row' + (extraCls ? ' ' + extraCls : '') + '" role="row">' +
+        '<span class="onb-sum-cell--name">' + name + '</span>' +
+        '<span class="onb-sum-cell--amt">' + amt + '</span>' +
+        '<span class="onb-sum-cell--due">' + due + '</span>' +
+        '</div>'
+      );
+    };
+    var billMoEq = function (b) {
+      var n = parseFloat(b.amt) || 0;
+      var mode = ['monthly', 'weekly', 'biweekly'].includes(b.mode) ? b.mode : 'monthly';
+      if (mode === 'weekly') return n * (52 / 12);
+      if (mode === 'biweekly') return n * (26 / 12);
+      return n;
+    };
+    var billDueTxt = function (b) {
+      var mode = ['monthly', 'weekly', 'biweekly'].includes(b.mode) ? b.mode : 'monthly';
+      if (mode === 'monthly') return 'Day ' + onbEscAttr(String(b.day == null || b.day === '' ? '1' : b.day));
+      return onbWeekdayLabel(b.dow || '1') + ', ' + (mode === 'weekly' ? 'weekly' : 'biweekly');
+    };
+    var incFreqLabelMap = { monthly: 'Monthly', biweekly: 'Biweekly', weekly: 'Weekly', 'twice/month': 'Twice / month' };
+    var fqKey = onbDraft.freq || 'biweekly';
+    var incFreqLabel = incFreqLabelMap[fqKey] || String(fqKey).replace(/-/g, ' ');
+    var incDueTxt =
+      fqKey === 'monthly'
+        ? incFreqLabel
+        : incFreqLabel + ' · next ' + onbEscAttr(onbDraft.incomeNextDate || onbDefaultIncomeNextDate());
+    var sumParts = [];
+    sumParts.push(
+      '<div class="onb-sum-hd-row" role="row">' +
+      '<span>Commitment</span>' +
+      '<span class="onb-sum-cell--amt">Amount</span>' +
+      '<span class="onb-sum-cell--due">Due / timing</span>' +
+      '</div>'
+    );
+    sumParts.push('<div class="onb-sum-sec">Income</div>');
+    sumParts.push(tr('Take-home pay (monthly est.)', fm(incomeEq), incDueTxt));
+    sumParts.push('<div class="onb-sum-sec">Bills &amp; expenses</div>');
+    if (summaryBills.length) {
+      summaryBills.forEach(function (b) {
+        var name = b.category === 'custom' ? onbEscAttr((b.customName || '').trim() || 'Custom bill') : onbEscAttr(billCategoryLabel(b.category || 'other'));
+        sumParts.push(tr(name, fm(billMoEq(b)), billDueTxt(b)));
+      });
+      sumParts.push(tr('Bills — monthly total', fm(summaryBillTotal), '—', 'onb-sum-data-row--total'));
+    } else {
+      sumParts.push(tr('Recurring bills', '—', 'None added'));
+    }
+    sumParts.push('<div class="onb-sum-sec">Contributions (est. monthly)</div>');
+    if ((parseFloat(c.savingsAmt) || 0) > 0.01) {
+      sumParts.push(
+        tr(
+          'Savings transfer',
+          fm(savingsEq),
+          onbContributionModeLabel(c.savingsMode || 'payday') + ' · ' + onbContributionWhenLabel(c.savingsMode || 'payday', c.savingsDay, c.savingsDow)
+        )
+      );
+    }
+    if ((parseFloat(c.investAmt) || 0) > 0.01) {
+      sumParts.push(
+        tr(
+          'Investment transfer',
+          fm(investEq),
+          onbContributionModeLabel(c.investMode || 'payday') + ' · ' + onbContributionWhenLabel(c.investMode || 'payday', c.investDay, c.investDow)
+        )
+      );
+    }
+    if ((parseFloat(c.savingsAmt) || 0) <= 0.01 && (parseFloat(c.investAmt) || 0) <= 0.01) {
+      sumParts.push(tr('Savings / investing', '—', 'None'));
+    }
+    sumParts.push('<div class="onb-sum-sec">Debt minimums</div>');
+    if (summaryLoans.length) {
+      summaryLoans.forEach(function (l) {
+        sumParts.push(tr(onbEscAttr(l.name || 'Loan'), fm(Math.max(0, parseFloat(l.min) || 0)), 'Day ' + onbEscAttr(String(l.due == null || l.due === '' ? '1' : l.due))));
+      });
+    } else {
+      sumParts.push(tr('Loans &amp; cards', '—', 'None'));
+    }
+    var sumHtml = '<div class="onb-sum-wrap">' + sumParts.join('') + '</div>';
     body =
       '<p class="onb-lead">Review before saving. This snapshot estimates your monthly ledger using what you entered.</p>' +
       '<div class="onb-ledger">' +
@@ -7996,38 +8230,7 @@ function onbRender() {
       '<div class="onb-ledger-card"><p class="onb-ledger-k">Emergency fund</p><p class="onb-ledger-v">' + fm(ef) + '</p></div>' +
       '<div class="onb-ledger-card"><p class="onb-ledger-k">Investments balance</p><p class="onb-ledger-v">' + fm(port) + '</p></div>' +
       '</div>' +
-      '<p class="onb-subh">Income</p>' +
-      '<ul class="onb-summary-list"><li>' + summaryIncome + ' on a <strong>' + onbEscAttr(onbDraft.freq || 'biweekly') + '</strong> schedule.' +
-      ((onbDraft.freq || 'biweekly') !== 'monthly' ? ' Next paycheck: <strong>' + onbEscAttr(onbDraft.incomeNextDate || onbDefaultIncomeNextDate()) + '</strong>.' : '') +
-      '</li></ul>' +
-      '<p class="onb-subh">Bills</p>' +
-      '<ul class="onb-summary-list">' +
-      (summaryBills.length
-        ? summaryBills.map(function (b) {
-            var mode = ['monthly', 'weekly', 'biweekly'].includes(b.mode) ? b.mode : 'monthly';
-            var when = mode === 'monthly'
-              ? 'day ' + onbEscAttr(b.day || '1')
-              : onbWeekdayLabel(b.dow || '1');
-            var modeLabel = mode === 'monthly' ? 'monthly' : (mode === 'weekly' ? 'weekly' : 'biweekly');
-            var name = b.category === 'custom' ? onbEscAttr((b.customName || '').trim() || 'Custom bill') : onbEscAttr(billCategoryLabel(b.category || 'other'));
-            return '<li><strong>' + name + '</strong>: $' + Math.round(parseFloat(b.amt) || 0).toLocaleString() + ' ' + modeLabel + ' on ' + when + '</li>';
-          }).join('')
-        : '<li>No bills entered.</li>') +
-      '<li><strong>Total bills:</strong> $' + summaryBillTotal.toLocaleString() + ' / month</li>' +
-      '</ul>' +
-      '<p class="onb-subh">Contributions</p>' +
-      '<ul class="onb-summary-list">' +
-      '<li><strong>Savings:</strong> ' + fm(c.savingsAmt || 0) + ' ' + onbContributionModeLabel(c.savingsMode || 'payday') + ' on ' + onbContributionWhenLabel(c.savingsMode || 'payday', c.savingsDay, c.savingsDow) + ' (approx ' + fm(savingsEq) + '/mo)</li>' +
-      '<li><strong>Investing:</strong> ' + fm(c.investAmt || 0) + ' ' + onbContributionModeLabel(c.investMode || 'payday') + ' on ' + onbContributionWhenLabel(c.investMode || 'payday', c.investDay, c.investDow) + ' (approx ' + fm(investEq) + '/mo)</li>' +
-      '</ul>' +
-      '<p class="onb-subh">Debts</p>' +
-      '<ul class="onb-summary-list">' +
-      (summaryLoans.length
-        ? summaryLoans.map(function (l) {
-            return '<li><strong>' + onbEscAttr(l.name || 'Loan') + '</strong>: $' + Math.round(parseFloat(l.bal) || 0).toLocaleString() + ' balance, ' + onbEscAttr(l.apr || '0') + '% APR, min $' + Math.round(parseFloat(l.min) || 0).toLocaleString() + ', due day ' + onbEscAttr(l.due || '1') + '</li>';
-          }).join('')
-        : '<li>No debts included.</li>') +
-      '</ul>';
+      sumHtml;
   } else if (onbStepIdx === 12) {
     title = 'You are set';
     showBack = false;
@@ -10530,6 +10733,8 @@ function refreshPaycheckCurrentMonthSideCard() {
 
 function applyActivePlanFixedCardHeight(p) {
   if (!p || !p.plannerActive) return;
+  const wrap = document.getElementById('pp-paycheck-compare-wrap');
+  if (wrap && wrap.classList.contains('pp-paycheck-plan-row-collapsed')) return;
   const row = document.querySelector('#pp-compare-global-mount .pp-active-plan-row--fixed');
   if (!row) return;
   row.style.removeProperty('--pp-active-card-h');
@@ -11667,6 +11872,98 @@ function calendarDedupSaveRows(rows) {
   return out;
 }
 
+/** Maps bill category `v` to a short calendar chip label (custom → no preset). */
+const CALENDAR_BILL_CAT_COMPACT = {
+  rent: 'Housing',
+  utilities: 'Utilities',
+  internet: 'Internet',
+  phone: 'Phone',
+  insurance: 'Insurance',
+  subscriptions: 'Subs',
+  groceries: 'Food',
+  transport: 'Transit',
+  childcare: 'Care',
+  pets: 'Pets',
+  medical: 'Med',
+  gym: 'Gym',
+  student_loans: 'Loans',
+  other: 'Other',
+};
+
+const CALENDAR_INCOME_COMPACT = {
+  'primary paycheck': 'Pay',
+  'secondary paycheck': 'Pay 2',
+  paycheck: 'Pay',
+  bonus: 'Bonus',
+  'side income': 'Side',
+  'side gig': 'Side',
+  'savings transfer': 'Save',
+  'investment transfer': 'Inv',
+  investment: 'Inv',
+};
+
+const CALENDAR_SAVE_ACCOUNT_COMPACT = {
+  'emergency fund': 'EF',
+  debt: 'Debt',
+  investment: 'Inv',
+};
+
+function calendarNormalizeLabelKey(s) {
+  return String(s || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/\s*\/\s*/g, ' / ');
+}
+
+function calendarCompactLookupKnownBill(full) {
+  const k = calendarNormalizeLabelKey(full);
+  for (let i = 0; i < BILL_CATEGORY_OPTIONS.length; i++) {
+    const o = BILL_CATEGORY_OPTIONS[i];
+    if (calendarNormalizeLabelKey(o.label) === k) {
+      const sh = CALENDAR_BILL_CAT_COMPACT[o.v];
+      return sh == null ? null : sh;
+    }
+  }
+  return null;
+}
+
+/** Shorter label for narrow day tiles; unknown names stay full (ellipsis via CSS). */
+function calendarCompactShortLabel(raw) {
+  const t = String(raw || '').trim();
+  if (!t) return t;
+  const saveWrap = t.match(/^\+\s*\(([^)]+)\)\s*$/);
+  if (saveWrap) {
+    const inner = saveWrap[1].trim();
+    const ik = calendarNormalizeLabelKey(inner);
+    const innerShort =
+      CALENDAR_SAVE_ACCOUNT_COMPACT[ik] ||
+      calendarCompactLookupKnownBill(inner) ||
+      CALENDAR_INCOME_COMPACT[ik];
+    if (innerShort && String(innerShort).trim() !== inner) return '+ (' + innerShort + ')';
+    return t;
+  }
+  const billShort = calendarCompactLookupKnownBill(t);
+  if (billShort) return billShort;
+  const incShort = CALENDAR_INCOME_COMPACT[calendarNormalizeLabelKey(t)];
+  if (incShort) return incShort;
+  return t;
+}
+
+function calendarChipNameHtml(raw, escHtml) {
+  const full = String(raw || '').trim();
+  const compact = calendarCompactShortLabel(full);
+  if (calendarNormalizeLabelKey(compact) === calendarNormalizeLabelKey(full)) {
+    return '<span class="cal-ev-truncate">' + escHtml(full) + '</span>';
+  }
+  return (
+    '<span class="cal-ev-name-lines">' +
+      '<span class="cal-ev-truncate cal-ev-label-wide">' + escHtml(full) + '</span>' +
+      '<span class="cal-ev-truncate cal-ev-label-tight">' + escHtml(compact) + '</span>' +
+    '</span>'
+  );
+}
+
 function renderCalendar(explicitBalance, monthlyOut) {
   if (calMonth===undefined) calInit();
   clampCalendarPastDisplayedPlanWindow();
@@ -11729,13 +12026,10 @@ function renderCalendar(explicitBalance, monthlyOut) {
     const title = isSave && e.saveEvent
       ? (e.label + ': ' + titleDetail + (paid ? ' (paid)' : ''))
       : (`${e.label}: ${e.amount !== 0 ? (e.amount >= 0 ? '+' : '') + '$' + Math.abs(e.amount).toLocaleString() : 'allocation'}${paid ? ' (paid)' : billLoanToggleable ? ' — click to mark paid / unpaid' : ''}`);
-    const nameInner = isSave
-      ? (
-          e.saveRow
-            ? '<span class="cal-ev-truncate">+ (' + escHtml(e.saveRow.account) + ')</span>'
-            : '<span class="cal-ev-truncate">' + escHtml(e.label) + '</span>'
-        )
-      : '<span class="cal-ev-truncate">' + escHtml(e.label) + '</span>';
+    const rawChipName = isSave
+      ? (e.saveRow ? '+ (' + String(e.saveRow.account || 'Allocation') + ')' : String(e.label || ''))
+      : String(e.label || '');
+    const nameInner = calendarChipNameHtml(rawChipName, escHtml);
     const menuId = 'm' + (++menuEventSeq);
     menuEventMap[menuId] = e;
     const evClick = ' onclick="openCalendarEventMenuById(event,\'' + menuId + '\',' + calYear + ',' + calMonth + ',' + e.day + ')" oncontextmenu="openCalendarEventMenuById(event,\'' + menuId + '\',' + calYear + ',' + calMonth + ',' + e.day + ')"';
@@ -13635,7 +13929,27 @@ function buildOptimizedPlanPreviewSelectHtml() {
     '</select></div>';
 }
 
-/** Dropdown on the active optimized plan card — re-runs the persisted optimizer with a new routing strategy. */
+/** Collapse / expand the full paycheck plan row (month card + manual or optimized panels). */
+function togglePaycheckPlanRowCollapse(ev) {
+  if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+  plannerUiDefaults.paycheckPlanRowCollapsed = !plannerUiDefaults.paycheckPlanRowCollapsed;
+  if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
+  const wrap = document.getElementById('pp-paycheck-compare-wrap');
+  if (wrap) {
+    wrap.classList.toggle('pp-paycheck-plan-row-collapsed', !!plannerUiDefaults.paycheckPlanRowCollapsed);
+    const btn = wrap.querySelector('.pp-paycheck-row-collapse-btn');
+    if (btn) {
+      btn.setAttribute('aria-expanded', plannerUiDefaults.paycheckPlanRowCollapsed ? 'false' : 'true');
+      btn.title = plannerUiDefaults.paycheckPlanRowCollapsed ? 'Show paycheck plan overview' : 'Hide paycheck plan overview';
+    }
+    const body = document.getElementById('pp-paycheck-plan-row-body');
+    if (body) body.setAttribute('aria-hidden', plannerUiDefaults.paycheckPlanRowCollapsed ? 'true' : 'false');
+  }
+  if (typeof unifiedPlan !== 'undefined' && unifiedPlan && unifiedPlan.plannerActive && typeof applyActivePlanFixedCardHeight === 'function') {
+    applyActivePlanFixedCardHeight(unifiedPlan);
+  }
+}
+
 function buildAppliedPlannerDebtStrategySelectHtml(currentStrat) {
   const selVal = normalizePlannerDebtStrategy(currentStrat);
   const prem = isPaycheckPlannerPremium();
@@ -13974,11 +14288,27 @@ function renderPaycheckPlan() {
       ? 'Free Cash Allocated <span class="pp-compare-lbl-note">(active plan)</span>'
       : 'Free Cash Allocated <span class="pp-compare-lbl-note">(your schedule)</span>'
   });
+  const rowCollapsed = !!plannerUiDefaults.paycheckPlanRowCollapsed;
+  const rowCollapseCls = rowCollapsed ? ' pp-paycheck-plan-row-collapsed' : '';
+  const collapseBtnTitle = rowCollapsed ? 'Show paycheck plan overview' : 'Hide paycheck plan overview';
+  const collapseAriaExp = rowCollapsed ? 'false' : 'true';
+  const collapseBodyHidden = rowCollapsed ? 'true' : 'false';
+  const collapseBar =
+    '<div class="pp-paycheck-row-collapse-bar">' +
+    '<button type="button" class="pp-paycheck-row-collapse-btn" aria-expanded="' + collapseAriaExp + '" aria-controls="pp-paycheck-plan-row-body" title="' + collapseBtnTitle.replace(/"/g, '&quot;') + '" onclick="togglePaycheckPlanRowCollapse(event)">' +
+    '<span class="pp-paycheck-row-collapse-lbl">Paycheck plan overview</span>' +
+    '<span class="pp-paycheck-row-collapse-chev" aria-hidden="true">&#9660;</span>' +
+    '</button></div>';
+  const rowBodyOpen = '<div id="pp-paycheck-plan-row-body" class="pp-paycheck-plan-row-body" aria-hidden="' + collapseBodyHidden + '">';
+  const rowBodyClose = '</div>';
+
   let simpleWrapHtml = '';
   if (p.plannerActive) {
     const monthSide = renderPaycheckCurrentCalendarMonthSideCard(p);
     simpleWrapHtml =
-      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare pp-active-plan-with-month">' +
+      '<div id="pp-paycheck-compare-wrap" class="pp-simple-summary-wrap pp-simple-summary-wrap--compare pp-active-plan-with-month' + rowCollapseCls + '">' +
+      collapseBar +
+      rowBodyOpen +
       '<div class="pp-active-plan-row pp-active-plan-row--fixed">' +
       '<div id="pp-current-month-side-mount">' + monthSide + '</div>' +
       '<section class="pp-compare-panel pp-compare-panel--planner" aria-labelledby="pp-compare-active-h">' +
@@ -13995,10 +14325,13 @@ function renderPaycheckPlan() {
       '</div>' +
       '</section>' +
       '</div>' +
+      rowBodyClose +
       '</div>';
   } else if (compareStripHtml) {
     simpleWrapHtml =
-      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare">' +
+      '<div id="pp-paycheck-compare-wrap" class="pp-simple-summary-wrap pp-simple-summary-wrap--compare' + rowCollapseCls + '">' +
+      collapseBar +
+      rowBodyOpen +
       '<div class="pp-compare-deck" role="region" aria-label="Twelve month manual plan compared to optimized preview">' +
       '<section class="pp-compare-panel pp-compare-panel--manual" aria-labelledby="pp-compare-manual-h">' +
       '<header class="pp-compare-panel-hd">' +
@@ -14013,10 +14346,13 @@ function renderPaycheckPlan() {
       '</section>' +
       compareStripHtml +
       '</div>' +
+      rowBodyClose +
       '</div>';
   } else {
     simpleWrapHtml =
-      '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare">' +
+      '<div id="pp-paycheck-compare-wrap" class="pp-simple-summary-wrap pp-simple-summary-wrap--compare' + rowCollapseCls + '">' +
+      collapseBar +
+      rowBodyOpen +
       '<section class="pp-compare-panel pp-compare-panel--manual pp-compare-panel--solo" aria-labelledby="pp-compare-manual-solo-h">' +
       '<header class="pp-compare-panel-hd">' +
       '<div class="pp-compare-panel-title-row pp-compare-panel-title-row--deck">' +
@@ -14028,6 +14364,7 @@ function renderPaycheckPlan() {
       '</header>' +
       manualRows +
       '</section>' +
+      rowBodyClose +
       '</div>';
   }
   setPaycheckCompareGlobalMount(simpleWrapHtml);
