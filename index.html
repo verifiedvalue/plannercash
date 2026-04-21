@@ -54,8 +54,7 @@ body{font-family:var(--font-m);background:var(--bg);color:var(--text);min-height
 .nav-flex-spacer{flex:1;min-width:6px}
 .nav-paycheck-only{display:none!important}
 .nav.nav--paycheck .nav-paycheck-only{display:inline-flex!important;align-items:center}
-.nav-paycheck-heading{display:none!important;font-family:var(--font-d);font-size:15px;font-weight:800;letter-spacing:-0.025em;line-height:1;color:var(--text);white-space:nowrap}
-.nav-paycheck-heading span{color:var(--blue)}
+.nav-paycheck-heading{display:none!important;font-family:var(--font-d);font-size:15px;font-weight:800;letter-spacing:0.06em;line-height:1;color:var(--blue);white-space:nowrap;text-transform:uppercase}
 .nav.nav--paycheck .nav-paycheck-heading{display:block!important}
 .nav.nav--paycheck .nav-paycheck-edit{font-family:var(--font-d);font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;flex-shrink:0}
 .nav-tabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:3px;flex-shrink:0;margin-left:2px}
@@ -232,9 +231,13 @@ body{font-family:var(--font-m);background:var(--bg);color:var(--text);min-height
 .cf-summary-onboarding-cta{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 .btn-summary-get-started{width:100%;font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:9px 12px;border-radius:8px;border:1px solid rgba(82,201,138,0.45);background:rgba(82,201,138,0.18);color:var(--green);cursor:pointer;transition:background 0.15s,border-color 0.15s}
 .btn-summary-get-started:hover{background:rgba(82,201,138,0.32);border-color:rgba(82,201,138,0.65)}
+.btn-summary-get-started.btn-checkin-warn{border-color:rgba(245,166,35,0.55);background:rgba(245,166,35,0.2);color:var(--amber)}
+.btn-summary-get-started.btn-checkin-overdue{border-color:rgba(240,96,96,0.62);background:rgba(240,96,96,0.24);color:#ffb3b3}
 .dash-gl-get-started-wrap{margin-top:12px;display:none;flex-wrap:wrap;align-items:center;gap:10px}
 .btn-dash-gl-get-started{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;border-radius:999px;border:1px solid rgba(82,201,138,0.45);background:rgba(82,201,138,0.16);color:var(--green);cursor:pointer;transition:background 0.15s}
 .btn-dash-gl-get-started:hover{background:rgba(82,201,138,0.28)}
+.btn-dash-gl-get-started.btn-checkin-warn{border-color:rgba(245,166,35,0.58);background:rgba(245,166,35,0.22);color:var(--amber)}
+.btn-dash-gl-get-started.btn-checkin-overdue{border-color:rgba(240,96,96,0.62);background:rgba(240,96,96,0.24);color:#ffb3b3}
 body.onb-open{overflow:hidden}
 .onb-overlay{position:fixed;inset:0;background:rgba(8,9,12,0.88);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px 16px;backdrop-filter:blur(6px)}
 .onb-card{width:100%;max-width:440px;height:min(92vh,820px);background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.55);overflow:hidden;display:flex;flex-direction:column}
@@ -331,6 +334,14 @@ body.onb-open{overflow:hidden}
 .pf-inputs-flyout-body{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0}
 .pf-inputs-flyout-body .dash-cf-inputs{border:none;max-height:none;position:static}
 body.pf-flyout-open{overflow:hidden}
+.pf-flyout-nav{display:flex;flex-direction:column;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.pf-flyout-nav-row{display:flex;flex-wrap:wrap;gap:6px}
+.pf-flyout-nav-btn{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:6px 9px;border-radius:8px;border:1px solid var(--border2);background:var(--surface3);color:var(--muted);cursor:pointer}
+.pf-flyout-nav-btn:hover{border-color:var(--blue);color:var(--text)}
+.pf-flyout-nav-sub{display:flex;flex-wrap:wrap;gap:6px}
+.pf-flyout-nav-subbtn{font-size:10px;padding:4px 7px;border-radius:7px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);cursor:pointer}
+.pf-flyout-nav-subbtn:hover{border-color:var(--blue);color:var(--text)}
+.pf-focus-flash{box-shadow:0 0 0 2px rgba(79,156,249,0.45),0 0 0 4px rgba(79,156,249,0.18);border-radius:10px;transition:box-shadow 0.2s ease}
 .dash-loans-portfolio-row{display:flex;flex-direction:column;gap:12px;align-items:stretch;width:100%}
 .portfolio-dash-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;width:100%}
 .portfolio-dash-card .loan-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
@@ -520,9 +531,70 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
 
 /* ─── ABOUT PAGE ─── */
 .about-wrap{max-width:780px;margin:0 auto;padding:48px 36px}
+.about-wrap.hiw-page{max-width:960px;padding-bottom:64px}
 .about-wrap h2{font-family:var(--font-d);font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px}
 .about-wrap p{font-size:13px;color:var(--muted2);line-height:1.8;margin-bottom:20px}
 .about-wrap h3{font-family:var(--font-d);font-size:14px;font-weight:700;margin-bottom:8px;margin-top:32px;color:var(--text)}
+.hiw-kicker{font-size:10px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.hiw-lead{font-size:14px;color:var(--muted2);line-height:1.55;max-width:52ch;margin:0 0 8px}
+.hiw-section{margin-top:40px}
+.hiw-section:first-of-type{margin-top:28px}
+.hiw-section-title{font-family:var(--font-d);font-size:17px;font-weight:800;letter-spacing:-0.02em;color:var(--text);margin:0 0 6px}
+.about-wrap .hiw-section-title{margin-top:0}
+.hiw-blurb{font-size:12px;color:var(--muted2);line-height:1.55;max-width:60ch}
+.about-wrap .hiw-blurb{margin:0 0 14px}
+.about-wrap .hiw-lead{margin-bottom:4px}
+.about-wrap .hiw-foot{margin:0}
+.hiw-flow{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+.hiw-flow-arr{display:flex;align-items:center;color:var(--muted);font-size:18px;font-weight:300;padding:0 2px;user-select:none}
+.hiw-step{flex:1 1 160px;min-width:148px;max-width:220px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:16px 14px;text-align:center}
+.hiw-step-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface3);color:var(--text);font-size:11px;font-weight:800;margin-bottom:10px;font-family:var(--font-d)}
+.hiw-step h4{margin:0 0 6px;font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--text)}
+.hiw-step p{margin:0;font-size:11px;color:var(--muted2);line-height:1.5}
+.hiw-figure{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:18px 16px;margin-top:4px}
+.hiw-fig-cap{font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:0.02em}
+.hiw-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+@media(max-width:720px){.hiw-split{grid-template-columns:1fr}}
+.hiw-mini{background:var(--surface2);border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
+.hiw-mini h5{margin:0 0 6px;font-size:11px;font-weight:700;color:var(--text);font-family:var(--font-d)}
+.hiw-mini p{margin:0;font-size:11px;color:var(--muted2);line-height:1.45}
+.hiw-cal-strip{display:flex;align-items:flex-end;justify-content:center;gap:5px;flex-wrap:wrap;padding:8px 0}
+.hiw-cal-d{width:32px;height:40px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:700;color:var(--muted2)}
+.hiw-cal-d span{font-size:8px;font-weight:600;color:var(--muted);margin-top:2px}
+.hiw-cal-d--flat{background:rgba(255,255,255,0.03);border-style:dashed;color:var(--muted)}
+.hiw-cal-d--anchor{border-color:rgba(79,156,249,0.7);background:rgba(79,156,249,0.12);color:var(--blue);box-shadow:0 0 0 2px rgba(79,156,249,0.15)}
+.hiw-cal-d--fwd{background:var(--surface3);border-color:var(--border)}
+.hiw-cal-gap{display:flex;align-items:flex-end;padding:0 2px 10px;color:var(--muted);font-size:14px;font-weight:700;letter-spacing:1px}
+.hiw-pin{font-size:9px;font-weight:800;color:var(--blue);margin-top:4px;letter-spacing:0.06em}
+.hiw-day-flow{display:flex;flex-direction:column;align-items:center;gap:0;max-width:240px;margin:0 auto;padding:4px 0}
+.hiw-day-node{width:100%;padding:10px 12px;border-radius:8px;font-size:11px;font-weight:700;text-align:center;font-family:var(--font-d);border:1px solid transparent}
+.hiw-day-node--out{background:rgba(240,96,96,0.1);color:#f09090;border-color:rgba(240,96,96,0.2)}
+.hiw-day-node--in{background:rgba(82,201,138,0.12);color:#6ee7a0;border-color:rgba(82,201,138,0.22)}
+.hiw-day-node--move{background:rgba(167,139,250,0.14);color:#c4b5fd;border-color:rgba(167,139,250,0.3)}
+.hiw-day-join{color:var(--muted);font-size:16px;line-height:0.4;padding:2px 0}
+.hiw-day-mock{max-width:240px;margin:12px auto 0;border:1px solid var(--border2);border-radius:10px;overflow:hidden;background:var(--surface2);font-family:var(--font-m);text-align:left}
+.hiw-day-mock-hd{padding:7px 10px;font-size:9px;font-weight:700;color:var(--muted2);border-bottom:1px solid var(--border2);font-family:var(--font-d)}
+.hiw-day-mock-body{padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.hiw-day-mock-line{display:flex;justify-content:space-between;align-items:center;padding:5px 7px;border-radius:6px;font-size:9px;font-weight:600;gap:8px}
+.hiw-day-mock-line--in{background:rgba(82,201,138,0.12);color:#6ee7a0}
+.hiw-day-mock-line--out{background:rgba(240,96,96,0.1);color:#f09090}
+.hiw-day-mock-line--plan{background:rgba(167,139,250,0.12);color:#c4b5fd}
+.hiw-day-mock-ft{display:flex;justify-content:space-between;align-items:flex-end;padding:8px 10px;border-top:1px solid var(--border2);background:rgba(0,0,0,0.14);font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+.hiw-day-mock-ft b{color:#7ee0b0;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;text-transform:none;letter-spacing:0}
+.hiw-planner-tabs{margin-top:4px}
+.hiw-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.hiw-pill{font-size:10px;font-weight:700;padding:5px 10px;border-radius:100px;border:1px solid var(--border2);color:var(--muted2)}
+.hiw-pill--on{background:rgba(82,201,138,0.12);border-color:rgba(82,201,138,0.25);color:var(--green)}
+.hiw-pill--off{background:rgba(245,166,35,0.1);border-color:rgba(245,166,35,0.25);color:var(--amber)}
+.hiw-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:4px}
+.hiw-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:14px 16px}
+.hiw-card svg{display:block;margin-bottom:8px;opacity:0.9}
+.hiw-card h4{margin:0 0 4px;font-size:12px;font-weight:700;color:var(--text);font-family:var(--font-d)}
+.hiw-card p{margin:0;font-size:11px;color:var(--muted2);line-height:1.45}
+.hiw-strat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:820px){.hiw-strat-grid{grid-template-columns:1fr}}
+.hiw-strat-grid .strategy-explain{margin-bottom:0;padding:16px 18px}
+.hiw-foot{font-size:11px;color:var(--muted2);line-height:1.5;margin-top:28px;padding-top:20px;border-top:1px solid var(--border2)}
 .strategy-explain{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);padding:20px 24px;margin-bottom:12px}
 .strategy-explain h4{font-family:var(--font-d);font-size:13px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .strategy-explain p{font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:0}
@@ -562,14 +634,14 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
 
 <nav class="nav nav--paycheck" id="site-nav" aria-label="Main">
   <div class="nav-logo">planner<span>.cash</span></div>
-  <div class="nav-paycheck-heading" id="nav-paycheck-heading" aria-hidden="false">Paycheck <span>planner</span></div>
+  <div class="nav-paycheck-heading" id="nav-paycheck-heading" aria-hidden="false">Planner</div>
   <div class="nav-flex-spacer" aria-hidden="true"></div>
   <button type="button" class="btn btn-ghost nav-paycheck-edit nav-paycheck-only" onclick="openPaycheckInputsFlyout()">Edit inputs</button>
   <div class="nav-tabs">
     <button type="button" class="nav-tab" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</button>
     <!-- TEMP: re-enable Debt payoff — remove `hidden` and the showPage('debt') guard below -->
     <button type="button" class="nav-tab" data-page="debt" onclick="showPage('debt')" hidden>Debt payoff</button>
-    <button type="button" class="nav-tab active" data-page="paycheck" onclick="showPage('paycheck')">Paycheck planner</button>
+    <button type="button" class="nav-tab active" data-page="paycheck" onclick="showPage('paycheck')">Planner</button>
     <button type="button" class="nav-tab" data-page="about" onclick="showPage('about')">How it works</button>
   </div>
 </nav>
@@ -721,10 +793,10 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
 
       <div class="dash-stack-section">
         <h3 class="dash-stack-heading" id="dash-pay-heading">Cash flow &amp; calendar</h3>
-        <p class="dash-stack-lead">Income, transfers from checking, and bills (including loan lines). The <strong>Paycheck planner</strong> tab can open this same block in a side panel.</p>
+        <p class="dash-stack-lead">Income, transfers from checking, and bills (including loan lines). <strong>Planner</strong> can open this same block in a side panel.</p>
         <div id="dash-paycheck-inputs-anchor">
         <div class="cf-sidebar dash-cf-inputs" id="dash-cf-inputs-mount">
-      <div class="dash-sec">
+      <div class="dash-sec" id="dash-sec-income">
         <div class="dash-sec__title">Income</div>
         <p class="dash-sec__lead" style="margin-top:0;margin-bottom:10px">Recurring pay here (biweekly, monthly, etc.). One-off income is listed under <strong>One-time events</strong> at the bottom.</p>
         <div id="cf-income-list"></div>
@@ -733,7 +805,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
         </div>
       </div>
 
-      <div class="dash-sec">
+      <div class="dash-sec" id="dash-sec-transfers">
         <div class="dash-sec__title">Internal transfers</div>
         <p class="dash-sec__lead">From checking into savings (including emergency fund) or investments. Paused while an optimized paycheck plan is active.</p>
         <div id="cf-internal-xfers-list"></div>
@@ -742,7 +814,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
         </div>
       </div>
 
-      <div class="dash-sec">
+      <div class="dash-sec" id="dash-sec-bills">
         <div class="dash-sec__title">Monthly bills</div>
         <p class="dash-sec__lead">Loan payments are listed first from your <strong>Debts</strong> cards (minimum + extra; due day editable here or on the loan). Below that, add rent, utilities, subscriptions, and other expenses — each can repeat monthly, weekly, or biweekly. One-off bills live in <strong>One-time events</strong> below.</p>
         <div id="cf-bill-list"></div>
@@ -751,7 +823,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
         </div>
       </div>
 
-      <div class="dash-sec dash-sec--onetime">
+      <div class="dash-sec dash-sec--onetime" id="dash-sec-onetime">
         <div class="dash-sec__title">One-time events</div>
         <p class="dash-sec__lead">One-off income and bills stay out of the main cards. Open <strong>Manage</strong> to view, edit, remove, or add them.</p>
         <div id="cf-onetime-dash-body"></div>
@@ -759,7 +831,7 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
 
       <div class="dash-sec" style="border-bottom:none">
         <p class="cf-hint" style="margin:0;line-height:1.65">
-          Data stays in this browser. On <strong>Paycheck planner</strong>, use <strong>Edit inputs</strong> to open this same block in a side panel.
+          Data stays in this browser. On <strong>Planner</strong>, use <strong>Edit inputs</strong> to open this same block in a side panel.
         </p>
       </div>
 
@@ -998,52 +1070,149 @@ tr.milestone td:first-child{color:var(--green);font-weight:500}
      ABOUT PAGE
 ═══════════════════════════════════════════════ -->
 <div id="page-about" class="page">
-  <div class="about-wrap">
-    <h2>How planner.cash works</h2>
-    <p>planner.cash is two planners that share one set of numbers: a long-range <strong>debt vs. invest</strong> simulator and a <strong>paycheck-level</strong> cash calendar. Nothing is double-entered—you set loans, checking, income, and bills on the Dashboard; budget/strategy controls on Debt payoff use that same state.</p>
+  <div class="about-wrap hiw-page">
+    <p class="hiw-kicker">How it works</p>
+    <h2>Enter once, then live in Planner</h2>
+    <p class="hiw-lead">Build your profile on the <strong>Dashboard</strong>, snap balances with <strong>Check in</strong>, then use <strong>Planner</strong> for the month view, paycheck timeline, and optional optimize run—same inputs everywhere.</p>
 
-    <h3>Where each tab fits</h3>
-    <p><strong>Dashboard</strong> is the control room: loan balances/minimums and investments on one side, auto-filled monthly obligations on the other, plus checking, emergency fund targets, income, bills, manual savings, and manual investment transfers. The overview at the top highlights cash flow and debt, with investments, savings, and a single health score; savings pace follows your paycheck plan (optimized when you have run analysis).</p>
-    <p><strong>Debt payoff</strong> is for charts and controls—extra cash, return, horizon, strategy comparison, net worth/debt trajectories, per-loan detail, and month-by-month breakdown.</p>
-    <p><strong>Paycheck planner</strong> is for timing: calendar, paycheck-by-paycheck set-asides, budget overview, and insights. Your <strong>manual plan</strong> always previews <strong>12 months</strong> from the Dashboard inputs (including your checking cash floor). <strong>Apply optimized plan (1 year)</strong> (Premium) runs the lookahead optimizer without a separate dialog; <strong>Optimize</strong> in the header is reserved for a future subscriber workflow and does not change behavior yet.</p>
-
-    <h3>The three strategies</h3>
-
-    <div class="strategy-explain">
-      <h4><span class="pill pill-blue">Avalanche</span> Highest interest rate first</h4>
-      <p>Pay the minimum on every loan. Put all extra cash toward the loan with the highest interest rate. Once it's paid off, redirect to the next highest rate. This is mathematically optimal — it minimizes total interest paid.</p>
-      <div class="pro-con">
-        <div class="pro">Saves the most money in interest<br>Fastest net worth growth</div>
-        <div class="con">May take longer to see first payoff<br>Requires discipline without early wins</div>
+    <section class="hiw-section" aria-labelledby="hiw-flow-title">
+      <h3 class="hiw-section-title" id="hiw-flow-title">The usual path</h3>
+      <p class="hiw-blurb">Most people loop these three steps. You are not maintaining two different plans—the planner always reads the same inputs.</p>
+      <div class="hiw-flow">
+        <div class="hiw-step">
+          <div class="hiw-step-num">1</div>
+          <h4>Dashboard</h4>
+          <p>Loans, checking, EF, income, bills, transfers. This is your source of truth.</p>
+        </div>
+        <span class="hiw-flow-arr" aria-hidden="true">→</span>
+        <div class="hiw-step">
+          <div class="hiw-step-num">2</div>
+          <h4>Check in</h4>
+          <p>Refresh real balances and set the <strong>plan checkpoint</strong> so the engine’s “today” matches you.</p>
+        </div>
+        <span class="hiw-flow-arr" aria-hidden="true">→</span>
+        <div class="hiw-step">
+          <div class="hiw-step-num">3</div>
+          <h4>Planner</h4>
+          <p>Calendar, tabs for plan and overview, insights. <strong>Apply optimized plan</strong> (Premium) writes coordinated set-asides.</p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="strategy-explain">
-      <h4><span class="pill pill-green">Snowball</span> Smallest balance first</h4>
-      <p>Pay the minimum on every loan. Put all extra cash toward the loan with the smallest balance. Paying off loans quickly creates psychological momentum — proven to help people stay on track.</p>
-      <div class="pro-con">
-        <div class="pro">Quick early wins feel motivating<br>Simplifies your number of loans fast</div>
-        <div class="con">Costs more in total interest<br>Slower net worth growth mathematically</div>
+    <section class="hiw-section" aria-labelledby="hiw-dash-title">
+      <h3 class="hiw-section-title" id="hiw-dash-title">Dashboard — what goes in</h3>
+      <p class="hiw-blurb">Four buckets cover almost everything the calendar needs.</p>
+      <div class="hiw-card-grid">
+        <div class="hiw-card">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.4" aria-hidden="true"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h4"/></svg>
+          <h4>Debts</h4>
+          <p>Balance, APR, minimum, extra, due day. Feeds loan lines on the calendar and totals.</p>
+        </div>
+        <div class="hiw-card">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.4" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h8"/></svg>
+          <h4>Cash &amp; buffer</h4>
+          <p>Checking balance plus a <strong>minimum buffer</strong>. The planner keeps modeled cash at or above that after deposits in a window (never below $0).</p>
+        </div>
+        <div class="hiw-card">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.4" aria-hidden="true"><path d="M12 3v18"/><path d="M7 8h10M7 12h8M7 16h6"/></svg>
+          <h4>Income &amp; bills</h4>
+          <p>Recurring pay and expenses (monthly, weekly, biweekly, etc.) plus <strong>one-time</strong> events.</p>
+        </div>
+        <div class="hiw-card">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.4" aria-hidden="true"><path d="M7 17l10-10M9 7h8v8"/></svg>
+          <h4>EF, invest, transfers</h4>
+          <p>EF target (months of spend), portfolio start + yield, manual internal transfers. Transfers pause while an optimized plan is applied.</p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="strategy-explain">
-      <h4><span class="pill pill-amber">Minimum only</span> Invest first</h4>
-      <p>Pay only the minimums on all loans. Invest all extra cash immediately. Bets that investment returns will outpace interest costs. Works best when loan rates are significantly below market returns.</p>
-      <div class="pro-con">
-        <div class="pro">Portfolio compounds from day one<br>Wins when rate spread favors markets</div>
-        <div class="con">Pays maximum total interest<br>Debt lingers longer; higher monthly stress</div>
+    <section class="hiw-section" aria-labelledby="hiw-planner-tabs-title">
+      <h3 class="hiw-section-title" id="hiw-planner-tabs-title">Planner — four tabs</h3>
+      <p class="hiw-blurb">Same row of tabs at the top of Planner. <strong>Edit inputs</strong> in the nav opens your Dashboard numbers in a side panel.</p>
+      <div class="hiw-card-grid hiw-planner-tabs">
+        <div class="hiw-card">
+          <h4>Calendar</h4>
+          <p>Month grid of scheduled income, bills, loans, and plan moves. Click a line for paid/unpaid or a menu; click a day to add something.</p>
+        </div>
+        <div class="hiw-card">
+          <h4>Paycheck plan</h4>
+          <p>Deposit timeline with set-asides (EF, debt extra, invest). Run <strong>Apply optimized plan</strong> here when you want the engine to fill the year.</p>
+        </div>
+        <div class="hiw-card">
+          <h4>Budget overview</h4>
+          <p>Rollups of income vs fixed costs and how the active plan compares to a manual pass—sanity check before you apply.</p>
+        </div>
+        <div class="hiw-card">
+          <h4>Insights</h4>
+          <p>Short health readouts and outlook tied to the same schedule (surplus, EF gap, buffer risk, etc.).</p>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <h3>The math behind net worth</h3>
-    <p>Net worth = portfolio value minus remaining debt. Each month, every dollar is allocated: first to loan minimums, then to the target loan (per strategy) or investments. Once a loan hits zero, its freed-up minimum payment is redirected. The minimum-only strategy shows what happens when extra cash compounds in the market while debt decays slowly—whether that wins depends on rates, balances, and horizon.</p>
+    <section class="hiw-section" aria-labelledby="hiw-planner-title">
+      <h3 class="hiw-section-title" id="hiw-planner-title">Reading the calendar</h3>
+      <p class="hiw-blurb">Each day shows <strong>what is scheduled</strong> and <strong>where the model thinks you land</strong> after that day. Green rows are income; red/pink are bills and loan payments; purple rows are plan set-asides.</p>
+      <div class="hiw-figure">
+        <div class="hiw-day-mock" role="img" aria-label="Sample day: scheduled lines and cash footer">
+          <div class="hiw-day-mock-hd">Tue 15</div>
+          <div class="hiw-day-mock-body">
+            <div class="hiw-day-mock-line hiw-day-mock-line--out"><span>Rent</span><span>−$1.2k</span></div>
+            <div class="hiw-day-mock-line hiw-day-mock-line--in"><span>Paycheck</span><span>+$2.8k</span></div>
+            <div class="hiw-day-mock-line hiw-day-mock-line--plan"><span>→ EF / debt</span><span>−$400</span></div>
+          </div>
+          <div class="hiw-day-mock-ft"><span>Cash end of day</span><b>$1.9k</b></div>
+        </div>
+        <p class="hiw-fig-cap"><strong>Cash</strong> is end-of-day checking after that day’s items. Same-day math is conservative: <strong>outs (bills &amp; loans) run before income</strong>, then plan transfers—so the footer matches a “worst dip first” path. <strong>EF</strong> shows emergency fund after any modeled save to the fund that day (when shown).</p>
+      </div>
+      <p class="hiw-blurb" style="margin-top:14px">After <strong>Check in</strong>, your balance is tied to the <strong>checkpoint date</strong>: earlier days in that month are not replayed as a long chain (so a paycheck from last week does not stack on top of what you typed). From the checkpoint forward, the calendar steps day by day. If you mark an older bill <strong>unpaid</strong>, that hit is still applied at the checkpoint so forward numbers stay honest.</p>
+      <div class="hiw-figure" style="margin-top:14px">
+        <h4 class="hiw-section-title" style="font-size:13px;margin:0 0 8px">Bills up to date</h4>
+        <p class="hiw-blurb" style="margin-bottom:10px">Default <strong>on</strong>: past calendar dates before real “today” count as paid unless you click a line to flip it. <strong>Off</strong> = model catch-up on older due items.</p>
+        <div class="hiw-split" style="margin-top:0">
+          <div class="hiw-mini">
+            <h5><span class="hiw-pill hiw-pill--on">On</span> Typical</h5>
+            <p>Past lines stay settled in the model until you say otherwise.</p>
+          </div>
+          <div class="hiw-mini">
+            <h5><span class="hiw-pill hiw-pill--off">Off</span> Catch-up</h5>
+            <p>See unpaid history; mark paid as you clear them.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h3>Why the payoff order matters on multi-loan debt</h3>
-    <p>With a single loan, avalanche and snowball are the same. With multiple loans, the order of payoff changes how quickly freed-up minimums compound into your extra cash — which changes how aggressively you can attack remaining debt. A $50/mo minimum on a paid-off loan becomes extra firepower for the next one. planner.cash models this cascade precisely.</p>
+    <section class="hiw-section" aria-labelledby="hiw-strat-title">
+      <h3 class="hiw-section-title" id="hiw-strat-title">Extra debt routing</h3>
+      <p class="hiw-blurb">Optimized plans send “extra” principal using one of these orders. Paid-off minimums roll into the next target.</p>
+      <div class="hiw-strat-grid">
+        <div class="strategy-explain">
+          <h4><span class="pill pill-blue">Avalanche</span> High APR first</h4>
+          <p>Lowest total interest; mathematically lean.</p>
+          <div class="pro-con">
+            <div class="pro">Least interest</div>
+            <div class="con">Slower first payoff</div>
+          </div>
+        </div>
+        <div class="strategy-explain">
+          <h4><span class="pill pill-green">Snowball</span> Small balance first</h4>
+          <p>Frees whole minimums sooner; motivating early wins.</p>
+          <div class="pro-con">
+            <div class="pro">Quick wins</div>
+            <div class="con">More interest vs avalanche</div>
+          </div>
+        </div>
+        <div class="strategy-explain">
+          <h4><span class="pill pill-amber">Minimum only</span> Invest surplus</h4>
+          <p>Stress-test when you only pay mins and push the rest to markets.</p>
+          <div class="pro-con">
+            <div class="pro">Portfolio grows</div>
+            <div class="con">Debt lingers</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h3>Data &amp; privacy</h3>
-    <p>Figures stay in this browser unless you export them yourself. There is no account system in this file—treat saved state as local to the machine you are on.</p>
+    <p class="hiw-foot">Data stays in this browser (no sign-in here). <strong>Clear saved data</strong> wipes local state; <strong>Copy troubleshoot export</strong> grabs JSON for backup or support.</p>
   </div>
 </div>
 
@@ -2498,7 +2667,76 @@ function showPage(name) {
   if (name === 'debt' || name === 'paycheck') resizeAllCharts();
 }
 
-function openPaycheckInputsFlyout() {
+let paycheckFlyoutPendingTarget = null;
+
+function paycheckFlyoutEsc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+}
+
+function refreshPaycheckInputsFlyoutNav() {
+  const nav = document.getElementById('paycheck-inputs-flyout-nav');
+  if (!nav) return;
+  const otIn = cfIncomes.filter(cfIsOneTimeIncome).slice(0, 8);
+  const otBl = cfBills.filter(cfIsOneTimeBill).slice(0, 8);
+  const oneTimeButtons = [
+    ...otIn.map(i => '<button type="button" class="pf-flyout-nav-subbtn" onclick="openPaycheckInputsFlyout({ section: \'onetime\', oneTimeKind: \'income\', oneTimeId: ' + i.id + ' })">' + paycheckFlyoutEsc(i.name || 'One-time income') + '</button>'),
+    ...otBl.map(b => '<button type="button" class="pf-flyout-nav-subbtn" onclick="openPaycheckInputsFlyout({ section: \'onetime\', oneTimeKind: \'bill\', oneTimeId: ' + b.id + ' })">' + paycheckFlyoutEsc(b.name || billCategoryLabel(b.category || 'other')) + '</button>')
+  ].join('');
+  nav.innerHTML =
+    '<div class="pf-flyout-nav-row">' +
+    '<button type="button" class="pf-flyout-nav-btn" onclick="openPaycheckInputsFlyout({ section: \'income\' })">Income</button>' +
+    '<button type="button" class="pf-flyout-nav-btn" onclick="openPaycheckInputsFlyout({ section: \'transfers\' })">Transfers</button>' +
+    '<button type="button" class="pf-flyout-nav-btn" onclick="openPaycheckInputsFlyout({ section: \'bills\' })">Bills</button>' +
+    '<button type="button" class="pf-flyout-nav-btn" onclick="openPaycheckInputsFlyout({ section: \'onetime\' })">One-time events</button>' +
+    '</div>' +
+    '<div class="pf-flyout-nav-sub">' +
+    '<button type="button" class="pf-flyout-nav-subbtn" onclick="openPaycheckInputsFlyout({ section: \'onetime\' })">Manage one-time events</button>' +
+    oneTimeButtons +
+    '</div>';
+}
+
+function paycheckFlyoutHighlight(el) {
+  if (!el) return;
+  el.classList.add('pf-focus-flash');
+  setTimeout(function () { el.classList.remove('pf-focus-flash'); }, 1600);
+}
+
+function paycheckFlyoutResolveTarget(target) {
+  if (!target) return;
+  const mount = document.getElementById('dash-cf-inputs-mount');
+  const body = document.getElementById('paycheck-inputs-flyout-body');
+  if (!mount || !body) return;
+  const sectionMap = {
+    income: '#dash-sec-income',
+    transfers: '#dash-sec-transfers',
+    bills: '#dash-sec-bills',
+    onetime: '#dash-sec-onetime'
+  };
+  if (target.section && sectionMap[target.section]) {
+    const sec = mount.querySelector(sectionMap[target.section]);
+    if (sec) {
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      paycheckFlyoutHighlight(sec);
+    }
+  }
+  if (target.kind && target.id != null) {
+    const row = mount.querySelector('[data-cf-kind="' + target.kind + '"][data-cf-id="' + target.id + '"]');
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      paycheckFlyoutHighlight(row);
+      const inp = row.querySelector('input,select,button');
+      if (inp && typeof inp.focus === 'function') setTimeout(function () { inp.focus(); }, 120);
+    }
+  }
+  if (target.section === 'onetime' || (target.oneTimeKind && target.oneTimeId != null)) {
+    setTimeout(function () {
+      openCfOneTimeEventsModal(target.oneTimeKind, target.oneTimeId);
+    }, 220);
+  }
+}
+
+function openPaycheckInputsFlyout(target) {
+  paycheckFlyoutPendingTarget = target || paycheckFlyoutPendingTarget;
   const page = document.getElementById('page-paycheck');
   if (!page || !page.classList.contains('active')) return;
   const mount = document.getElementById('dash-cf-inputs-mount');
@@ -2506,6 +2744,7 @@ function openPaycheckInputsFlyout() {
   const flyout = document.getElementById('paycheck-inputs-flyout');
   const backdrop = document.getElementById('paycheck-inputs-backdrop');
   if (!mount || !body || !flyout || !backdrop) return;
+  refreshPaycheckInputsFlyoutNav();
   body.appendChild(mount);
   requestAnimationFrame(() => {
     flyout.classList.add('is-open');
@@ -2516,6 +2755,11 @@ function openPaycheckInputsFlyout() {
   });
   const first = mount.querySelector('input, button, select');
   if (first && typeof first.focus === 'function') requestAnimationFrame(() => first.focus());
+  if (paycheckFlyoutPendingTarget) {
+    const t = paycheckFlyoutPendingTarget;
+    paycheckFlyoutPendingTarget = null;
+    setTimeout(function () { paycheckFlyoutResolveTarget(t); }, 140);
+  }
 }
 
 function closePaycheckInputsFlyout() {
@@ -2725,6 +2969,62 @@ document.addEventListener('keydown', function (ev) {
   gap: 6px;
   min-height: 22px;
   border: 1px solid transparent;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease,
+    border-color 0.14s ease,
+    background-color 0.14s ease,
+    filter 0.12s ease,
+    opacity 0.14s ease;
+}
+/* Hover / active only on grid chips — day modal reuses .cal-event on small type badges */
+.cal-day-body .cal-event:hover {
+  z-index: 2;
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  filter: brightness(1.07);
+}
+.cal-day-body .cal-event:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+  transition-duration: 0.06s;
+}
+.cal-day-body .cal-event.paid:hover {
+  opacity: 0.95 !important;
+  filter: brightness(1.12);
+}
+.cal-day-body .cal-event.income:hover {
+  background: rgba(82, 201, 138, 0.22);
+  border-color: rgba(82, 201, 138, 0.42);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(82, 201, 138, 0.25);
+}
+.cal-day-body .cal-event.bill:hover {
+  background: rgba(240, 96, 96, 0.16);
+  border-color: rgba(240, 96, 96, 0.38);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(240, 96, 96, 0.22);
+}
+.cal-day-body .cal-event.loan:hover {
+  background: rgba(79, 156, 249, 0.2);
+  border-color: rgba(79, 156, 249, 0.42);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(79, 156, 249, 0.22);
+}
+.cal-day-body .cal-event.efund:hover {
+  background: rgba(245, 166, 35, 0.18);
+  border-color: rgba(245, 166, 35, 0.4);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(245, 166, 35, 0.2);
 }
 .cal-event .cal-ev-name {
   flex: 1;
@@ -2777,8 +3077,6 @@ document.addEventListener('keydown', function (ev) {
 .cal-event.loan { background: rgba(79,156,249,0.1); color: #7eb6fc; border-color: rgba(79,156,249,0.15); }
 .cal-event.efund { background: rgba(245,166,35,0.1); color: #f0b84d; border-color: rgba(245,166,35,0.14); }
 .cal-event.paid { opacity: 0.42; }
-.cal-event:not(.income):not(.save) { cursor: pointer; }
-.cal-event:not(.income):not(.save):hover { filter: brightness(1.12); }
 .cal-day.past-day { opacity: 0.62; }
 /* Plan / free-cash allocations — slightly louder than bills & income */
 .cal-event.save,
@@ -2792,21 +3090,53 @@ document.addEventListener('keydown', function (ev) {
   border-color: rgba(167,139,250,0.35);
   border-left-width: 3px;
   border-left-color: #a78bfa;
-  cursor: default !important;
+  cursor: pointer;
 }
+.cal-day-body .cal-event.save:hover,
+.cal-day-body .cal-event.cal-event--plan:hover {
+  background: rgba(167, 139, 250, 0.26);
+  border-color: rgba(167, 139, 250, 0.55);
+  border-left-color: #c4b5fd;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(167, 139, 250, 0.28);
+}
+.cal-event.cal-event--save-child{margin-left:10px}
+.cal-item-menu{
+  position:fixed;z-index:2200;min-width:210px;max-width:min(90vw,280px);
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.45);padding:8px
+}
+.cal-item-menu-title{font-size:11px;color:var(--muted2);margin:2px 4px 8px}
+.cal-item-menu-btn{
+  width:100%;text-align:left;padding:8px 9px;margin:0 0 6px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface3);color:var(--text);
+  font-size:12px;cursor:pointer
+}
+.cal-item-menu-btn:last-child{margin-bottom:0}
+.cal-item-menu-btn:hover{border-color:var(--blue)}
 .cal-overflow-btn {
   font-size: 9px;
   color: var(--blue);
   cursor: pointer;
-  padding: 2px 5px;
-  border-radius: 4px;
+  padding: 3px 7px;
+  border-radius: 5px;
   background: rgba(79,156,249,0.1);
   font-weight: 600;
   align-self: flex-start;
   margin-top: 1px;
-  border: 1px solid rgba(79,156,249,0.2);
+  border: 1px solid rgba(79,156,249,0.22);
+  transition: background 0.14s ease, border-color 0.14s ease, transform 0.12s ease, box-shadow 0.14s ease;
 }
-.cal-overflow-btn:hover { background: rgba(79,156,249,0.18); }
+.cal-overflow-btn:hover {
+  background: rgba(79, 156, 249, 0.22);
+  border-color: rgba(79, 156, 249, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+}
+.cal-overflow-btn:active {
+  transform: translateY(0);
+}
 .cal-day-footer {
   flex-shrink: 0;
   margin-top: auto;
@@ -3522,6 +3852,14 @@ document.addEventListener('keydown', function (ev) {
   gap: 14px 16px;
   align-items: stretch;
   width: 100%;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-active-plan-row--fixed > #pp-current-month-side-mount {
+  display: flex;
+}
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-active-plan-row--fixed > #pp-current-month-side-mount > .pp-month-side-card,
+:is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-active-plan-row--fixed > .pp-compare-panel--planner {
+  min-height: var(--pp-active-card-h);
+  height: var(--pp-active-card-h);
 }
 :is(#page-paycheck.pp-mode-simple #cft-paycheckplan, #page-paycheck.pp-mode-simple #pp-compare-global-mount) .pp-active-plan-with-month .pp-compare-panel--planner {
   max-width: none;
@@ -4544,28 +4882,6 @@ document.addEventListener('keydown', function (ev) {
         <div id="cal-month-report-mount"></div>
         <div id="cal-calendar-hint" style="margin-top:12px;font-size:10px;color:var(--muted)">Footer <strong style="color:var(--text)">Cash</strong> is projected end-of-day checking (emphasized). <strong style="color:var(--text)">EF</strong> is emergency fund after any plan set-asides that day. Red / amber footers flag negative or below-cushion lows. <strong style="color:var(--text)">Bills up to date</strong> is on by default (past-dated bills treated paid); turn off to model them, or click a bill/loan row to toggle individually. On the Paycheck plan tab, <strong style="color:var(--text)">Apply optimized plan (1 year)</strong> (Premium) installs coordinated moves that respect your cash floor.</div>
 
-        <!-- Balance chart below calendar -->
-        <div style="margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
-            <div>
-              <div style="font-family:var(--font-d);font-size:12px;font-weight:700;margin-bottom:2px">Balance &amp; goals projection</div>
-              <div style="font-size:11px;color:var(--muted)">Daily cash flow aligned with calendar</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <span style="font-size:11px;color:var(--muted)">View:</span>
-              <div style="display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:2px">
-                <button class="cal-range-btn active" onclick="setCalRange(1,this)">1mo</button>
-                <button class="cal-range-btn" onclick="setCalRange(3,this)">3mo</button>
-                <button class="cal-range-btn" onclick="setCalRange(6,this)">6mo</button>
-                <button class="cal-range-btn" onclick="setCalRange(12,this)">1yr</button>
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px" id="cal-chart-legend"></div>
-          <div style="position:relative;width:100%;height:240px">
-            <canvas id="cal-balance-chart" role="img" aria-label="Balance and goals projection chart">Balance projection.</canvas>
-          </div>
-        </div>
       </div>
 
       <!-- PAYCHECK PLAN TAB -->
@@ -4648,6 +4964,7 @@ document.addEventListener('keydown', function (ev) {
         <h2 id="pf-inputs-flyout-title" class="pf-inputs-flyout-title">Planner inputs</h2>
         <button type="button" class="btn btn-ghost" onclick="closePaycheckInputsFlyout()">Close</button>
       </div>
+      <div id="paycheck-inputs-flyout-nav" class="pf-flyout-nav"></div>
       <div class="pf-inputs-flyout-body" id="paycheck-inputs-flyout-body"></div>
     </div>
 </div>
@@ -4665,6 +4982,9 @@ let cfCounter = 0;
 let calViewDate = new Date();
 /** Local YYYY-MM-DD when cash-flow inputs were last aligned to the plan (checkpoint). Paycheck/outflow windows start from this day, not wall-clock “today”. */
 let planCheckpointDate = null;
+let planProgressDays = 0;
+let planProgressLastCheckinYmd = null;
+let planProgressBaseline = null;
 let cfCharts = {};
 /** Budget overview tab: scale recurring dashboard figures ('monthly' | 'yearly'). */
 let cfOverviewBudgetPeriod = 'monthly';
@@ -5039,6 +5359,75 @@ function planCheckpointYmdFromDate(d) {
   const m = String(x.getMonth() + 1).padStart(2, '0');
   const da = String(x.getDate()).padStart(2, '0');
   return y + '-' + m + '-' + da;
+}
+
+function daysBetweenYmd(a, b) {
+  if (!a || !b) return 0;
+  const da = new Date(String(a) + 'T12:00:00');
+  const db = new Date(String(b) + 'T12:00:00');
+  if (isNaN(da.getTime()) || isNaN(db.getTime())) return 0;
+  return Math.max(0, Math.round((db - da) / 86400000));
+}
+
+function buildPlanProgressSnapshot() {
+  const checking = Math.max(0, Number(document.getElementById('cf-cash-balance')?.value) || 0);
+  const ef = Math.max(0, Number(document.getElementById('cf-ef-balance')?.value) || 0);
+  const inv = Math.max(0, Number(document.getElementById('dash-portfolio-balance')?.value) || 0);
+  const debt = Math.max(0, (typeof loans !== 'undefined' && loans ? loans.reduce((s, l) => s + Math.max(0, Number(l.balance) || 0), 0) : 0));
+  const billsMo = Math.max(0, typeof sumCfBillsMonthlyEquivalent === 'function' ? sumCfBillsMonthlyEquivalent() : 0);
+  return { checking, ef, inv, debt, billsMo };
+}
+
+function checkinPayWindowDays() {
+  const recurring = (cfIncomes || []).filter(function (i) { return i && i.freq && i.freq !== 'one-time' && (Number(i.amount) || 0) > 0; });
+  if (!recurring.length) return 14;
+  const primary = recurring[0];
+  const f = primary.freq || 'biweekly';
+  if (f === 'weekly') return 7;
+  if (f === 'biweekly') return 14;
+  if (f === 'twice/month') return 15;
+  return 30;
+}
+
+function checkinUrgencyClass() {
+  const ref = planProgressLastCheckinYmd || planCheckpointDate;
+  if (!ref || !/^\d{4}-\d{2}-\d{2}$/.test(String(ref))) return '';
+  const today = planCheckpointYmdFromDate(new Date());
+  const days = daysBetweenYmd(ref, today);
+  const w = Math.max(1, checkinPayWindowDays());
+  if (days > w * 2) return 'btn-checkin-overdue';
+  if (days > w) return 'btn-checkin-warn';
+  return '';
+}
+
+function assessMajorCheckinDeviation(base, nowSnap) {
+  if (!base || !nowSnap) return { major: false, reasons: [] };
+  const reasons = [];
+  const drop = function (from, to) {
+    if (from <= 0) return 0;
+    return (from - to) / from;
+  };
+  if ((base.checking - nowSnap.checking) > 500 && drop(base.checking, nowSnap.checking) >= 0.3) reasons.push('Checking is down materially vs baseline.');
+  if ((base.ef - nowSnap.ef) > 250 && drop(base.ef, nowSnap.ef) >= 0.2) reasons.push('Emergency fund dropped below expected pace.');
+  if ((base.inv - nowSnap.inv) > 400 && drop(base.inv, nowSnap.inv) >= 0.2) reasons.push('Investments are behind the prior baseline.');
+  if ((nowSnap.debt - base.debt) > 300) reasons.push('Debt increased above the prior baseline.');
+  if (base.billsMo > 0 && nowSnap.billsMo > base.billsMo * 1.2) reasons.push('Monthly bills increased significantly.');
+  return { major: reasons.length > 0, reasons };
+}
+
+function renderPlanProgressCta(container, isEmpty, compact) {
+  if (!container) return;
+  const days = Math.max(0, Number(planProgressDays) || 0);
+  const urgency = checkinUrgencyClass();
+  if (isEmpty) {
+    container.innerHTML = compact
+      ? '<button type="button" class="btn-summary-get-started" onclick="openOnboardingWizard()">Get started</button>'
+      : '<button type="button" class="btn-dash-gl-get-started" onclick="openOnboardingWizard()">Get started</button><span style="font-size:10px;color:var(--muted2);line-height:1.4">Guided setup — no account required.</span>';
+    return;
+  }
+  container.innerHTML = compact
+    ? '<button type="button" class="btn-summary-get-started ' + urgency + '" onclick="openCheckinWizard()">Check in</button><div style="font-size:10px;color:var(--muted2);margin-top:6px">Days on plan: <strong style="color:var(--text)">' + days + '</strong></div>'
+    : '<button type="button" class="btn-dash-gl-get-started ' + urgency + '" onclick="openCheckinWizard()">Check in</button><span style="font-size:10px;color:var(--muted2);line-height:1.4">Refresh your snapshot. Days on plan: <strong style="color:var(--text)">' + days + '</strong></span>';
 }
 
 /**
@@ -5502,7 +5891,10 @@ function saveClearpathPersistedState() {
         autoPastBillsPaid,
         plannerUiDefaults,
         paycheckPlannerResult: serializePlannerResult(paycheckPlannerResult),
-        planCheckpointDate
+        planCheckpointDate,
+        planProgressDays,
+        planProgressLastCheckinYmd,
+        planProgressBaseline
       }
     };
     localStorage.setItem(CLEARPATH_STORAGE_KEY, JSON.stringify(payload));
@@ -5597,12 +5989,12 @@ function cfEachBillOccurrenceInCalendarMonth(b, year, month, daysInMonth, fn) {
     if (!b.nextDate) return;
     const interval = mode === 'weekly' ? 7 : 14;
     let cur = new Date(b.nextDate + 'T12:00:00');
-    const monthStart = new Date(year, month, 1);
-    const monthEnd = new Date(year, month, daysInMonth);
-    while (cfStartOfDay(cur) > cfStartOfDay(monthEnd)) cur.setDate(cur.getDate() - interval);
-    while (cfStartOfDay(cur) < cfStartOfDay(monthStart)) cur.setDate(cur.getDate() + interval);
+    const monthStart0 = cfStartOfDay(new Date(year, month, 1));
+    const monthEnd0 = cfStartOfDay(new Date(year, month, daysInMonth));
+    while (cfStartOfDay(cur) > monthEnd0) cur.setDate(cur.getDate() - interval);
+    while (cfStartOfDay(cur) < monthStart0) cur.setDate(cur.getDate() + interval);
     let nth = 0;
-    while (cur <= monthEnd) {
+    while (cfStartOfDay(cur) <= monthEnd0) {
       if (cur.getMonth() === month && cur.getFullYear() === year) {
         fn({ day: cur.getDate(), nth: nth++ });
       }
@@ -5737,6 +6129,13 @@ function loadClearpathPersistedState() {
     } else {
       planCheckpointDate = planCheckpointYmdFromDate(new Date());
     }
+    planProgressDays = Math.max(0, Number(data.cf.planProgressDays) || 0);
+    planProgressLastCheckinYmd = (data.cf.planProgressLastCheckinYmd && /^\d{4}-\d{2}-\d{2}$/.test(data.cf.planProgressLastCheckinYmd))
+      ? data.cf.planProgressLastCheckinYmd
+      : null;
+    planProgressBaseline = data.cf.planProgressBaseline && typeof data.cf.planProgressBaseline === 'object'
+      ? data.cf.planProgressBaseline
+      : null;
 
     paidEvents.clear();
     (data.cf.paidKeys || []).forEach(k => paidEvents.add(k));
@@ -5917,7 +6316,7 @@ function renderXferCard(sv, listKind) {
     `<option value="${i.id}" ${sv.linkIncId === i.id ? 'selected' : ''}>${(i.name || 'Income').replace(/"/g, '&quot;')}</option>`).join('');
   const toSel = `<select class="cf-tile-select" aria-label="Transfer to" onchange="cfInternalXferMoveToKind(${sv.id},this.value)"><option value="savings" ${listKind === 'savings' ? 'selected' : ''}>Savings / emergency fund</option><option value="investments" ${listKind === 'investments' ? 'selected' : ''}>Investments</option></select>`;
   return `
-    <div class="cf-tile cf-tile--xfer">
+    <div class="cf-tile cf-tile--xfer" data-cf-kind="${listKind}" data-cf-id="${sv.id}">
       <button type="button" class="cf-tile-del cf-tile-del--overlay" onclick="cfRemove('${listKind}',${sv.id})" aria-label="Remove transfer">✕</button>
       <div class="cf-tile-top cf-tile-top--inset">
         <span class="cf-tile-pill">Transfer</span>
@@ -5976,9 +6375,11 @@ function renderCFInternalTransfers() {
   ].sort((a, b) => a.sv.id - b.sv.id);
   if (!rows.length) {
     c.innerHTML = '<div class="cf-empty-inline">No internal transfers yet. Default timing is <strong>on each payday</strong> when you add one.</div>';
+    if (typeof refreshPaycheckInputsFlyoutNav === 'function') refreshPaycheckInputsFlyoutNav();
     return;
   }
   c.innerHTML = rows.map(({ sv, kind }) => renderXferCard(sv, kind)).join('');
+  if (typeof refreshPaycheckInputsFlyoutNav === 'function') refreshPaycheckInputsFlyoutNav();
 }
 
 function cfRemove(list, id) {
@@ -6092,6 +6493,7 @@ function renderCFOneTimeStrip() {
       <p class="cf-onetime-strip-count">${countLine}</p>
       <button type="button" class="btn-cf-add" onclick="openCfOneTimeEventsModal()">Manage one-time events</button>
     </div>`;
+  if (typeof refreshPaycheckInputsFlyoutNav === 'function') refreshPaycheckInputsFlyoutNav();
 }
 
 function closeCfOneTimeEventsModal() {
@@ -6111,7 +6513,7 @@ function buildCfOneTimeModalListHtml() {
     rows.push({
       sort: inc.oneTimeYm != null ? -inc.oneTimeYm : 0,
       lab: (inc.name || 'Income').toLowerCase(),
-      html: `<div class="cf-onetime-modal-tile">
+      html: `<div class="cf-onetime-modal-tile" data-onetime-kind="income" data-onetime-id="${inc.id}">
         <div class="cf-onetime-modal-tile-h">
           <span class="cf-onetime-modal-tile-pill in">Income</span>
           <button type="button" class="cf-tile-del" onclick="cfRemove('income',${inc.id});refreshCfOneTimeModalIfOpen();" aria-label="Remove">✕</button>
@@ -6148,7 +6550,7 @@ function buildCfOneTimeModalListHtml() {
     rows.push({
       sort: b.oneTimeYm != null ? -b.oneTimeYm : 0,
       lab: (b.name || 'Bill').toLowerCase(),
-      html: `<div class="cf-onetime-modal-tile">
+      html: `<div class="cf-onetime-modal-tile" data-onetime-kind="bill" data-onetime-id="${b.id}">
         <div class="cf-onetime-modal-tile-h">
           <span class="cf-onetime-modal-tile-pill out">Bill</span>
           <button type="button" class="cf-tile-del" onclick="cfRemove('bill',${b.id});refreshCfOneTimeModalIfOpen();" aria-label="Remove">✕</button>
@@ -6196,7 +6598,19 @@ function refreshCfOneTimeModalIfOpen() {
   if (cb) cb.checked = !!plannerUiDefaults.hideOldOneTimeEvents;
 }
 
-function openCfOneTimeEventsModal() {
+function focusCfOneTimeModalItem(kind, id) {
+  const root = document.getElementById('cf-onetime-modal-list');
+  if (!root) return;
+  const sel = '.cf-onetime-modal-tile[data-onetime-kind="' + kind + '"][data-onetime-id="' + id + '"]';
+  const tile = root.querySelector(sel);
+  if (!tile) return;
+  tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  paycheckFlyoutHighlight(tile);
+  const inp = tile.querySelector('input,select,button');
+  if (inp && typeof inp.focus === 'function') setTimeout(function () { inp.focus(); }, 120);
+}
+
+function openCfOneTimeEventsModal(focusKind, focusId) {
   closeCfOneTimeEventsModal();
   const modal = document.createElement('div');
   modal.id = 'cf-onetime-modal-overlay';
@@ -6224,6 +6638,7 @@ function openCfOneTimeEventsModal() {
     </div>`;
   modal.addEventListener('click', () => closeCfOneTimeEventsModal());
   document.body.appendChild(modal);
+  if (focusKind && focusId != null) setTimeout(function () { focusCfOneTimeModalItem(focusKind, focusId); }, 60);
 }
 
 function cfAddOneTimeIncomeForModal() {
@@ -6284,7 +6699,7 @@ function renderCFBills() {
     const sched = Math.round((Number(l.minPay) || 0) + Math.max(0, Number(l.extraPay) || 0));
     const due = l.cfDueDay != null && Number(l.cfDueDay) >= 1 && Number(l.cfDueDay) <= 31 ? Number(l.cfDueDay) : 1;
     const intMo = Math.round((Number(l.balance) || 0) * (Number(l.rate) || 0) / 100 / 12);
-    return `<div class="cf-tile cf-tile--loan" style="--loan-accent:${safeC}">
+    return `<div class="cf-tile cf-tile--loan" data-cf-kind="loan" data-cf-id="${l.id}" style="--loan-accent:${safeC}">
       <div class="cf-tile-top cf-tile-top--loanhead cf-tile-top--loan-bill">
         <span class="cf-tile-pill">Loan</span>
         <span class="cf-tile-title">${nm}</span>
@@ -6329,7 +6744,7 @@ function renderCFBills() {
           <input type="date" class="cf-tile-input" aria-label="Next bill date" value="${String(b.nextDate || '').replace(/"/g, '&quot;')}" style="color-scheme:dark"
             onchange="cfUpdate('bill',${b.id},'nextDate',this.value)">
         </div>`;
-    return `<div class="cf-tile cf-tile--bill">
+    return `<div class="cf-tile cf-tile--bill" data-cf-kind="bill" data-cf-id="${b.id}">
       <div class="cf-bill-head">
         <div class="cf-bill-head-row">
           <select class="cf-tile-select cf-bill-cat-select" aria-label="Bill category" onchange="cfBillSetCategory(${b.id},this.value)">${BILL_CATEGORY_OPTIONS.map(o =>
@@ -6371,6 +6786,7 @@ function renderCFBills() {
   c.innerHTML = html;
   renderCFOneTimeStrip();
   refreshCfOneTimeModalIfOpen();
+  if (typeof refreshPaycheckInputsFlyoutNav === 'function') refreshPaycheckInputsFlyoutNav();
 }
 
 function renderCFIncomes() {
@@ -6422,7 +6838,7 @@ function renderCFIncomes() {
     }
 
     return `
-    <div class="cf-tile cf-tile--income">
+    <div class="cf-tile cf-tile--income" data-cf-kind="income" data-cf-id="${inc.id}">
       <button type="button" class="cf-tile-del cf-tile-del--overlay" onclick="cfRemove('income',${inc.id})" aria-label="Remove income">✕</button>
       <div class="cf-tile-top cf-tile-top--inset">
         <span class="cf-tile-pill">Income</span>
@@ -6447,6 +6863,7 @@ function renderCFIncomes() {
   }).join('') : '<div class="cf-empty-inline">No recurring income yet. One-time deposits are managed under <strong>One-time events</strong> below.</div>';
   renderCFOneTimeStrip();
   refreshCfOneTimeModalIfOpen();
+  if (typeof refreshPaycheckInputsFlyoutNav === 'function') refreshPaycheckInputsFlyoutNav();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -6454,9 +6871,51 @@ function renderCFIncomes() {
 // ═══════════════════════════════════════════════════════
 const paidEvents = new Set(); // keys: "YYYY-M-D:type:id:nth"
 
-function togglePaid(key) {
-  if (paidEvents.has(key)) paidEvents.delete(key);
-  else paidEvents.add(key);
+function snapshotAutoPastAsManualPaid(exceptKey) {
+  const today = cfStartOfDay(new Date());
+  const nowYm = today.getFullYear() * 12 + today.getMonth();
+  const start = planCheckpointDate && /^\d{4}-\d{2}-\d{2}$/.test(planCheckpointDate)
+    ? new Date(planCheckpointDate + 'T12:00:00')
+    : new Date(today.getFullYear(), today.getMonth() - 24, 1);
+  let startYm = start.getFullYear() * 12 + start.getMonth();
+  if (!Number.isFinite(startYm)) startYm = nowYm - 24;
+  const firstYm = Math.max(nowYm - 60, Math.min(startYm, nowYm));
+  for (let ym = firstYm; ym <= nowYm; ym++) {
+    const y = Math.floor(ym / 12);
+    const m = ym % 12;
+    const ev = buildMonthlyEvents(y, m);
+    ev.forEach(e => {
+      if ((e.type !== 'bill' && e.type !== 'loan') || !e.key) return;
+      if (e.key === exceptKey) return;
+      if (cashflowBillOrLoanBeforeToday(y, m, e.day)) paidEvents.add(e.key);
+    });
+  }
+}
+
+function togglePaid(key, year, month, day, type) {
+  const k = String(key || '');
+  const y = Number.isFinite(Number(year)) ? Number(year) : null;
+  const m = Number.isFinite(Number(month)) ? Number(month) : null;
+  const d = Number.isFinite(Number(day)) ? Number(day) : null;
+  const t = String(type || '');
+  const isBillLoan = t === 'bill' || t === 'loan';
+  const isPast = isBillLoan && y != null && m != null && d != null
+    ? cashflowBillOrLoanBeforeToday(y, m, d)
+    : false;
+  const currentlyPaid = paidEvents.has(k) || (autoPastBillsPaid && isPast && isBillLoan);
+
+  if (autoPastBillsPaid && isPast && isBillLoan && currentlyPaid) {
+    snapshotAutoPastAsManualPaid(k);
+    paidEvents.delete(k);
+    autoPastBillsPaid = false;
+    const chk = document.getElementById('cf-auto-past-paid');
+    if (chk) chk.checked = false;
+    cfRecalc();
+    return;
+  }
+
+  if (paidEvents.has(k)) paidEvents.delete(k);
+  else paidEvents.add(k);
   cfRecalc();
 }
 
@@ -6494,6 +6953,9 @@ function clearClearpathStoredDataWithConfirm() {
   savingsGoals = [];
   savingsGoalCounter = 0;
   savingsGoalEditingId = null;
+  planProgressDays = 0;
+  planProgressLastCheckinYmd = null;
+  planProgressBaseline = null;
   activeStrategy = 'avalanche';
   currentResult = null;
   if (typeof resetPaycheckOptimizedPreviewOverrides === 'function') resetPaycheckOptimizedPreviewOverrides();
@@ -6581,11 +7043,245 @@ function isAppDataEmpty() {
 }
 
 function syncOnboardingEntryPoints() {
-  var show = typeof isAppDataEmpty === 'function' && isAppDataEmpty();
+  var empty = typeof isAppDataEmpty === 'function' && isAppDataEmpty();
   var a = document.getElementById('cf-summary-onboarding-cta');
   var b = document.getElementById('dash-gl-get-started-wrap');
-  if (a) a.style.display = show ? 'block' : 'none';
-  if (b) b.style.display = show ? 'flex' : 'none';
+  if (a) {
+    a.style.display = 'block';
+    renderPlanProgressCta(a, empty, true);
+  }
+  if (b) {
+    b.style.display = 'flex';
+    renderPlanProgressCta(b, empty, false);
+  }
+}
+
+var chkOverlayEl = null;
+var chkStepIdx = 0;
+var chkDraft = {};
+var chkKeyHandler = null;
+
+function closeCheckinWizard() {
+  if (chkKeyHandler) {
+    document.removeEventListener('keydown', chkKeyHandler);
+    chkKeyHandler = null;
+  }
+  if (chkOverlayEl) {
+    chkOverlayEl.remove();
+    chkOverlayEl = null;
+  }
+  document.body.classList.remove('onb-open');
+  chkStepIdx = 0;
+  chkDraft = {};
+}
+
+function openCheckinWizard() {
+  if (chkOverlayEl) return;
+  chkStepIdx = 0;
+  chkDraft = {
+    checking: String(Math.round(Math.max(0, Number(document.getElementById('cf-cash-balance')?.value) || 0))),
+    ef: String(Math.round(Math.max(0, Number(document.getElementById('cf-ef-balance')?.value) || 0))),
+    inv: String(Math.round(Math.max(0, Number(document.getElementById('dash-portfolio-balance')?.value) || 0))),
+    billsChanged: null,
+    billAmounts: {},
+    outcome: null
+  };
+  document.body.classList.add('onb-open');
+  var ov = document.createElement('div');
+  ov.id = 'chk-overlay';
+  ov.className = 'onb-overlay';
+  ov.setAttribute('role', 'dialog');
+  ov.setAttribute('aria-modal', 'true');
+  ov.setAttribute('aria-labelledby', 'chk-title');
+  ov.addEventListener('click', function (e) {
+    if (e.target === ov) {
+      if (window.confirm('Leave check-in? Progress in this session will be lost.')) closeCheckinWizard();
+    }
+  });
+  document.body.appendChild(ov);
+  chkOverlayEl = ov;
+  chkKeyHandler = function (e) {
+    if (e.key !== 'Escape') return;
+    if (window.confirm('Leave check-in? Progress in this session will be lost.')) closeCheckinWizard();
+  };
+  document.addEventListener('keydown', chkKeyHandler);
+  checkinRender();
+}
+
+function checkinRecurringBills() {
+  return (cfBills || []).filter(function (b) { return !cfIsOneTimeBill(b); });
+}
+
+function checkinSetBillsChanged(v) {
+  chkDraft.billsChanged = v;
+  checkinRender();
+}
+
+function checkinCaptureStepInputs() {
+  var el = document.getElementById('chk-inp');
+  if (el) {
+    if (chkStepIdx === 1) chkDraft.checking = el.value;
+    if (chkStepIdx === 2) chkDraft.ef = el.value;
+    if (chkStepIdx === 3) chkDraft.inv = el.value;
+  }
+  if (chkStepIdx === 5) {
+    var bills = checkinRecurringBills();
+    bills.forEach(function (b) {
+      var inp = document.getElementById('chk-bill-' + b.id);
+      if (inp) chkDraft.billAmounts[b.id] = inp.value;
+    });
+  }
+}
+
+function checkinApplyDraft() {
+  var todayYmd = planCheckpointYmdFromDate(new Date());
+  const hadPlanner = !!(paycheckPlannerResult && paycheckPlannerResult.paycheckPlans && paycheckPlannerResult.paycheckPlans.length);
+  // Check-in snapshot is "as of now" — never replay prior-day cashflow into entered balances.
+  planCheckpointDate = todayYmd;
+  var before = planProgressBaseline || buildPlanProgressSnapshot();
+  var setVal = function (id, val) {
+    var n = document.getElementById(id);
+    if (n) n.value = val;
+  };
+  setVal('cf-cash-balance', String(Math.round(Math.max(0, Number(chkDraft.checking) || 0))));
+  setVal('cf-ef-balance', String(Math.round(Math.max(0, Number(chkDraft.ef) || 0))));
+  setVal('dash-portfolio-balance', String(Math.round(Math.max(0, Number(chkDraft.inv) || 0))));
+
+  if (chkDraft.billsChanged === 'yes') {
+    checkinRecurringBills().forEach(function (b) {
+      var raw = chkDraft.billAmounts[b.id];
+      if (raw == null || raw === '') return;
+      b.amount = Math.max(0, Math.round(Number(raw) || 0));
+    });
+  }
+
+  var nowSnap = buildPlanProgressSnapshot();
+  var cmp = assessMajorCheckinDeviation(before, nowSnap);
+  if (!planProgressBaseline) {
+    planProgressBaseline = nowSnap;
+    planProgressDays = 1;
+  } else if (cmp.major) {
+    planProgressBaseline = nowSnap;
+    planProgressDays = 0;
+  } else {
+    var inc = Math.max(1, daysBetweenYmd(planProgressLastCheckinYmd || todayYmd, todayYmd));
+    planProgressDays = Math.max(0, Number(planProgressDays) || 0) + inc;
+  }
+  planProgressLastCheckinYmd = todayYmd;
+
+  if (typeof syncDashPortfolioEstimate === 'function') syncDashPortfolioEstimate();
+  if (hadPlanner) paycheckPlannerResult = null;
+  if (hadPlanner && typeof runPaycheckPlannerAnalysis === 'function') {
+    runPaycheckPlannerAnalysis();
+  } else {
+    if (typeof recalc === 'function') recalc();
+    if (typeof cfRecalc === 'function') cfRecalc();
+  }
+  if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
+  if (typeof syncOnboardingEntryPoints === 'function') syncOnboardingEntryPoints();
+  chkDraft.outcome = {
+    major: cmp.major,
+    reasons: cmp.reasons || [],
+    days: planProgressDays
+  };
+}
+
+function checkinGoNext() {
+  if (chkStepIdx === 6) {
+    closeCheckinWizard();
+    return;
+  }
+  checkinCaptureStepInputs();
+  if (chkStepIdx === 4 && chkDraft.billsChanged !== 'yes' && chkDraft.billsChanged !== 'no') {
+    window.alert('Choose whether your bills changed.');
+    return;
+  }
+  if (chkStepIdx === 4 && chkDraft.billsChanged === 'no') {
+    checkinApplyDraft();
+    chkStepIdx = 6;
+    checkinRender();
+    return;
+  }
+  if (chkStepIdx === 5) {
+    checkinApplyDraft();
+    chkStepIdx = 6;
+    checkinRender();
+    return;
+  }
+  chkStepIdx++;
+  checkinRender();
+}
+
+function checkinGoBack() {
+  checkinCaptureStepInputs();
+  if (chkStepIdx > 0) chkStepIdx--;
+  checkinRender();
+}
+
+function checkinRender() {
+  if (!chkOverlayEl) return;
+  var total = 6;
+  var stepNum = Math.min(chkStepIdx + 1, total);
+  var title = '';
+  var body = '';
+  var showBack = chkStepIdx > 0 && chkStepIdx < 6;
+  var nextLabel = chkStepIdx === 6 ? 'Close' : (chkStepIdx === 4 && chkDraft.billsChanged === 'no') || chkStepIdx === 5 ? 'Apply check-in' : 'Continue';
+
+  if (chkStepIdx === 0) {
+    title = 'Check in';
+    body =
+      '<p class="onb-lead">Welcome back. Let us capture a fresh snapshot, compare against your plan baseline, and update projections.</p>' +
+      '<p class="onb-lead" style="margin-top:0">If things drifted materially, we reset baseline and <strong>Days on plan</strong>. If not, we keep building your streak.</p>';
+  } else if (chkStepIdx === 1) {
+    title = 'Current checking';
+    body = '<p class="onb-lead">What is your current checking balance?</p>' +
+      '<div class="onb-field"><label class="onb-lbl" for="chk-inp">Checking ($)</label><input type="number" id="chk-inp" class="onb-inp" min="0" step="25" value="' + onbEscAttr(chkDraft.checking || '') + '"></div>';
+  } else if (chkStepIdx === 2) {
+    title = 'Current emergency fund';
+    body = '<p class="onb-lead">What is your current emergency fund balance?</p>' +
+      '<div class="onb-field"><label class="onb-lbl" for="chk-inp">Emergency fund ($)</label><input type="number" id="chk-inp" class="onb-inp" min="0" step="25" value="' + onbEscAttr(chkDraft.ef || '') + '"></div>';
+  } else if (chkStepIdx === 3) {
+    title = 'Current investments';
+    body = '<p class="onb-lead">What is your current investment balance?</p>' +
+      '<div class="onb-field"><label class="onb-lbl" for="chk-inp">Investments ($)</label><input type="number" id="chk-inp" class="onb-inp" min="0" step="25" value="' + onbEscAttr(chkDraft.inv || '') + '"></div>';
+  } else if (chkStepIdx === 4) {
+    title = 'Any monthly bills changed?';
+    body = '<div class="onb-choices">' +
+      ['yes', 'no'].map(function (v) {
+        var sel = chkDraft.billsChanged === v ? ' onb-choice--sel' : '';
+        return '<button type="button" class="onb-choice' + sel + '" onclick="checkinSetBillsChanged(\'' + v + '\')">' + (v === 'yes' ? 'Yes, some changed' : 'No, same as before') + '</button>';
+      }).join('') + '</div>';
+  } else if (chkStepIdx === 5) {
+    title = 'Update monthly bills';
+    var bills = checkinRecurringBills();
+    body = '<p class="onb-lead">Update any amounts that changed. Leave as-is otherwise.</p>' +
+      bills.map(function (b) {
+        var v = chkDraft.billAmounts[b.id] != null ? chkDraft.billAmounts[b.id] : (b.amount || 0);
+        return '<div class="onb-bill-cat"><p class="onb-bill-cat-title">' + onbEscAttr(b.name || billCategoryLabel(b.category || 'other')) + '</p><div class="onb-field"><label class="onb-lbl" for="chk-bill-' + b.id + '">Amount ($)</label><input type="number" id="chk-bill-' + b.id + '" class="onb-inp" min="0" step="1" value="' + onbEscAttr(v) + '"></div></div>';
+      }).join('');
+  } else if (chkStepIdx === 6) {
+    title = 'Check-in complete';
+    var out = chkDraft.outcome || { major: false, reasons: [], days: planProgressDays };
+    body = '<p class="onb-lead">' + (out.major
+      ? 'We detected major deviation and established a <strong>new plan baseline</strong>.'
+      : 'You are staying aligned — projections are refreshed and your streak improved.') + '</p>' +
+      (out.reasons && out.reasons.length
+        ? '<ul class="onb-summary-list">' + out.reasons.map(function (r) { return '<li>' + onbEscAttr(r) + '</li>'; }).join('') + '</ul>'
+        : '') +
+      '<p class="onb-lead" style="margin-top:10px">Days on plan: <strong>' + onbEscAttr(out.days) + '</strong></p>';
+  }
+
+  chkOverlayEl.innerHTML =
+    '<div class="onb-card" onclick="event.stopPropagation()">' +
+    '<div class="onb-card-top"><p class="onb-kicker">planner.cash check-in</p><h1 class="onb-title" id="chk-title">' + title + '</h1><div class="onb-progress">' +
+    (chkStepIdx < 6 ? 'Step ' + stepNum + ' of ' + total : 'Complete') +
+    '</div></div><div class="onb-body">' + body + '</div><div class="onb-foot">' +
+    (showBack ? '<button type="button" class="onb-back" onclick="checkinGoBack()">Back</button>' : '<span></span>') +
+    '<button type="button" class="' + (chkStepIdx === 6 ? 'onb-next onb-next--green' : 'onb-next') + '" onclick="checkinGoNext()">' + nextLabel + '</button>' +
+    '</div></div>';
+
+  var inp = chkOverlayEl.querySelector('#chk-inp');
+  if (inp && typeof inp.focus === 'function') setTimeout(function () { inp.focus(); }, 40);
 }
 
 function closeOnboardingWizard() {
@@ -7338,7 +8034,7 @@ function onbRender() {
     body =
       '<p class="onb-lead" style="margin-bottom:12px">Your answers are saved on this device and appear on the <strong>Dashboard</strong> like any other entry. Here is what to try next:</p>' +
       '<ul class="onb-done-list">' +
-      '<li><strong>Paycheck planner → Calendar</strong> — see when money moves month by month.</li>' +
+      '<li><strong>Planner → Calendar</strong> — see when money moves month by month.</li>' +
       '<li><strong>Paycheck plan</strong> tab — preview paycheck windows and what is left after bills.</li>' +
       '<li><strong>Budget overview</strong> — switch monthly / yearly for the big picture.</li>' +
       '<li><strong>Dashboard → Your numbers</strong> — edit loans, income, bills, and balances anytime.</li>' +
@@ -7386,12 +8082,14 @@ function onbRender() {
 }
 
 /** While an optimized plan is applied, manual Dashboard savings/invest rows stay out of the calendar replay so they do not double-count coordinated plan transfers. */
-function shouldPauseManualDashboardGoalTransfersForCalendar() {
+function shouldPauseManualDashboardGoalTransfersForCalendar(planSnapshotForReplay) {
+  const up = planSnapshotForReplay !== undefined ? planSnapshotForReplay : unifiedPlan;
+  if (up && up.plannerActive) return true;
   return !!paycheckPlannerResult;
 }
 
-function appendManualSavingsForMonth(year, month, daysInMonth, events) {
-  if (shouldPauseManualDashboardGoalTransfersForCalendar()) return;
+function appendManualSavingsForMonth(year, month, daysInMonth, events, planSnapshotForReplay) {
+  if (shouldPauseManualDashboardGoalTransfersForCalendar(planSnapshotForReplay)) return;
   const pfx = `${year}-${month}`;
   const today0 = getPlanAnchorDate();
   cfSavings.forEach(sv => {
@@ -7423,12 +8121,12 @@ function appendManualSavingsForMonth(year, month, daysInMonth, events) {
       if (!sv.nextDate) return;
       const step = mode === 'weekly' ? 7 : 14;
       let cur = new Date(sv.nextDate + 'T12:00:00');
-      const ms = new Date(year, month, 1);
-      const me = new Date(year, month, daysInMonth);
-      while (cfStartOfDay(cur) > ms) cur.setDate(cur.getDate() - step);
-      while (cfStartOfDay(cur) < ms) cur.setDate(cur.getDate() + step);
+      const ms0 = cfStartOfDay(new Date(year, month, 1));
+      const me0 = cfStartOfDay(new Date(year, month, daysInMonth));
+      while (cfStartOfDay(cur) > ms0) cur.setDate(cur.getDate() - step);
+      while (cfStartOfDay(cur) < ms0) cur.setDate(cur.getDate() + step);
       let nth = 0;
-      while (cur <= me) {
+      while (cfStartOfDay(cur) <= me0) {
         if (cur.getMonth() === month && cur.getFullYear() === year) pushSave(cur.getDate(), nth++);
         cur.setDate(cur.getDate() + step);
       }
@@ -7436,8 +8134,8 @@ function appendManualSavingsForMonth(year, month, daysInMonth, events) {
   });
 }
 
-function appendManualInvestmentsForMonth(year, month, daysInMonth, events) {
-  if (shouldPauseManualDashboardGoalTransfersForCalendar()) return;
+function appendManualInvestmentsForMonth(year, month, daysInMonth, events, planSnapshotForReplay) {
+  if (shouldPauseManualDashboardGoalTransfersForCalendar(planSnapshotForReplay)) return;
   const pfx = `${year}-${month}`;
   const today0 = getPlanAnchorDate();
   cfInvestments.forEach(sv => {
@@ -7469,12 +8167,12 @@ function appendManualInvestmentsForMonth(year, month, daysInMonth, events) {
       if (!sv.nextDate) return;
       const step = mode === 'weekly' ? 7 : 14;
       let cur = new Date(sv.nextDate + 'T12:00:00');
-      const ms = new Date(year, month, 1);
-      const me = new Date(year, month, daysInMonth);
-      while (cfStartOfDay(cur) > ms) cur.setDate(cur.getDate() - step);
-      while (cfStartOfDay(cur) < ms) cur.setDate(cur.getDate() + step);
+      const ms0 = cfStartOfDay(new Date(year, month, 1));
+      const me0 = cfStartOfDay(new Date(year, month, daysInMonth));
+      while (cfStartOfDay(cur) > ms0) cur.setDate(cur.getDate() - step);
+      while (cfStartOfDay(cur) < ms0) cur.setDate(cur.getDate() + step);
       let nth = 0;
-      while (cur <= me) {
+      while (cfStartOfDay(cur) <= me0) {
         if (cur.getMonth() === month && cur.getFullYear() === year) pushInv(cur.getDate(), nth++);
         cur.setDate(cur.getDate() + step);
       }
@@ -7510,13 +8208,13 @@ function buildMonthlyEvents(year, month, planSnapshotForReplay) {
       if (!inc.nextDate) return;
       const interval = inc.freq === 'biweekly' ? 14 : 7;
       const anchor = new Date(inc.nextDate + 'T12:00:00');
-      const monthStart = new Date(year, month, 1);
-      const monthEnd = new Date(year, month, daysInMonth);
+      const monthStart0 = cfStartOfDay(new Date(year, month, 1));
+      const monthEnd0 = cfStartOfDay(new Date(year, month, daysInMonth));
       let cur = new Date(anchor);
-      while (cur > monthEnd) cur.setDate(cur.getDate() - interval);
-      while (cur < monthStart) cur.setDate(cur.getDate() + interval);
+      while (cfStartOfDay(cur) > monthEnd0) cur.setDate(cur.getDate() - interval);
+      while (cfStartOfDay(cur) < monthStart0) cur.setDate(cur.getDate() + interval);
       let nth = 0;
-      while (cur <= monthEnd) {
+      while (cfStartOfDay(cur) <= monthEnd0) {
         if (cur.getMonth() === month && cur.getFullYear() === year) {
           events.push({ day:cur.getDate(), type:'income', label, amount:inc.amount, key:`${pfx}-${cur.getDate()}:income:${inc.id}:${nth}` });
           nth++;
@@ -7553,8 +8251,8 @@ function buildMonthlyEvents(year, month, planSnapshotForReplay) {
     events.push({ day, type:'loan', label:l.name, amount:-due, key, loanId: l.id });
   });
 
-  appendManualSavingsForMonth(year, month, daysInMonth, events);
-  appendManualInvestmentsForMonth(year, month, daysInMonth, events);
+  appendManualSavingsForMonth(year, month, daysInMonth, events, up);
+  appendManualInvestmentsForMonth(year, month, daysInMonth, events, up);
 
   // Save events from unified plan (non-clickable, informational)
   if (up && planSeCal.length) {
@@ -7646,7 +8344,7 @@ function pessimisticDayCashStep(startBalance, dayEvents, year, month) {
   return { end: s, minDuring };
 }
 
-/** Same ordering as pessimisticDayCashStep; counts sub-step crossings from ≥ $0 to < $0 (overdraft-style). */
+/** Same ordering as pessimisticDayCashStep; counts end-of-day crossings from >= $0 to < $0. */
 function pessimisticDayCashStepWithOd(startBalance, dayEvents, year, month) {
   let bills = 0, income = 0, save = 0;
   if (!dayEvents || !dayEvents.length) {
@@ -7665,28 +8363,22 @@ function pessimisticDayCashStepWithOd(startBalance, dayEvents, year, month) {
   }
   let s = startBalance;
   let minDuring = s;
-  let odCrossings = 0;
-  let wasNeg = s < -1e-6;
-  const mark = (ns) => {
-    const neg = ns < -1e-6;
-    if (neg && !wasNeg) odCrossings++;
-    wasNeg = neg;
-  };
+  const wasNegAtStart = s < -OVERDRAFT_EPSILON;
   s += bills;
   minDuring = Math.min(minDuring, s);
-  mark(s);
   s += income;
   minDuring = Math.min(minDuring, s);
-  mark(s);
   s -= save;
   minDuring = Math.min(minDuring, s);
-  mark(s);
+  const endNeg = s < -OVERDRAFT_EPSILON;
+  const odCrossings = endNeg && !wasNegAtStart ? 1 : 0;
   return { end: s, minDuring, odCrossings };
 }
 
 /**
- * Manual paycheck windows: per-window min checking + overdraft crossings using buildMonthlyEvents
- * (same stack as the calendar) and pessimistic day ordering, forward from today through the last window.
+ * Per-paycheck calendar replay overlay: per-window min checking + overdraft crossings using
+ * buildMonthlyEvents (same stack as the calendar) and pessimistic day ordering, forward from
+ * today through the last window.
  */
 function computeManualPlanPaycheckCalendarOverlay(metas, maxN, cashBalance, provisionalPlan) {
   const planAnchor0 = getPlanAnchorDate();
@@ -7756,6 +8448,24 @@ function computeManualPlanPaycheckCalendarOverlay(metas, maxN, cashBalance, prov
   return { minFull, minNoSv, minPost, minNoSvPost, hits };
 }
 
+/**
+ * Sum of calendar bill/loan `amount` values strictly before `anchorDomDay` in the same month that are
+ * still unpaid (not in paidEvents and not auto-treated as paid). Used at the plan anchor so check-in
+ * cash stays the baseline for settled history, while deliberately unpaid items still hit planning.
+ */
+function sumUnpaidBillLoanCashImpactBeforeAnchorDay(year, month, anchorDomDay, events) {
+  let sum = 0;
+  const ad = Math.max(1, Math.round(Number(anchorDomDay)) || 1);
+  (events || []).forEach(e => {
+    if (e.type !== 'bill' && e.type !== 'loan') return;
+    const day = Math.round(Number(e.day)) || 0;
+    if (day < 1 || day >= ad) return;
+    if (isCashflowBillLoanPaid(e, year, month)) return;
+    sum += Number(e.amount) || 0;
+  });
+  return sum;
+}
+
 function buildDailyBalance(startBalance, events, daysInMonth, year, month) {
   const daily = Array(daysInMonth + 1).fill(0);
   const dailyMin = Array(daysInMonth + 1).fill(0);
@@ -7766,7 +8476,28 @@ function buildDailyBalance(startBalance, events, daysInMonth, year, month) {
     if (!byDay[e.day]) byDay[e.day] = [];
     byDay[e.day].push(e);
   });
-  for (let d = 1; d <= daysInMonth; d++) {
+  const anchor = getPlanAnchorDate();
+  const fromDay =
+    year === anchor.getFullYear() && month === anchor.getMonth()
+      ? Math.max(1, Math.min(anchor.getDate(), daysInMonth))
+      : 1;
+  const priorUnpaidBills =
+    year === anchor.getFullYear() && month === anchor.getMonth() && fromDay > 1
+      ? sumUnpaidBillLoanCashImpactBeforeAnchorDay(year, month, fromDay, events)
+      : 0;
+  const cashStartAnchorDay = startBalance + priorUnpaidBills;
+
+  // Check-in / plan checkpoint: checking balance in the form is "as of" the morning of the anchor day.
+  // Do not fold modeled inflows/outflows from earlier days in that month into the chain for today+.
+  // Exception: bill/loan rows the user left unpaid (or turned off "Bills up to date" for) still apply here.
+  for (let d = 1; d < fromDay; d++) {
+    daily[d] = startBalance;
+    dailyMin[d] = startBalance;
+  }
+  const r0 = pessimisticDayCashStep(cashStartAnchorDay, byDay[fromDay] || [], year, month);
+  daily[fromDay] = r0.end;
+  dailyMin[fromDay] = r0.minDuring;
+  for (let d = fromDay + 1; d <= daysInMonth; d++) {
     const r = pessimisticDayCashStep(daily[d - 1], byDay[d] || [], year, month);
     daily[d] = r.end;
     dailyMin[d] = r.minDuring;
@@ -7807,17 +8538,10 @@ function computeProjectedOverdraftCounts(months) {
   const byOff = {};
   allEvts.forEach(e => { if (!byOff[e.off]) byOff[e.off] = []; byOff[e.off].push(e); });
 
-  const record = (dt, before, after) => {
-    if (before >= -1e-6 && after < -1e-6) {
-      total += 1;
-      const k = dt.getFullYear() * 12 + dt.getMonth();
-      byMonth[k] = (byMonth[k] || 0) + 1;
-    }
-  };
-
   for (let d = 0; d < totalDays; d++) {
     const dt = new Date(now);
     dt.setDate(now.getDate() + d);
+    const dayStart = cash;
     const raw = byOff[d] || [];
     const evts = raw.slice().sort((a, b) => {
       const rk = e => (e.type === 'income' ? 1 : (e.type === 'save' || e.type === 'save_ef') ? 2 : 0);
@@ -7825,13 +8549,10 @@ function computeProjectedOverdraftCounts(months) {
     });
     evts.forEach(e => {
       if (e.type === 'income') {
-        const before = cash;
         cash += e.amount;
-        record(dt, before, cash);
       } else if (e.type === 'loan') {
         if (!isCashflowBillLoanPaid(e, e._yr, e._mth)) {
           const lb = loanBalances.find(l => l.id === e.loanId);
-          const before = cash;
           if (lb && lb.balance > 0) {
             const interest = lb.balance * lb.rate / 100 / 12;
             lb.balance += interest;
@@ -7844,28 +8565,26 @@ function computeProjectedOverdraftCounts(months) {
           } else {
             cash += e.amount; // e.amount is negative
           }
-          record(dt, before, cash);
         }
       } else if (e.type === 'bill') {
         if (!isCashflowBillLoanPaid(e, e._yr, e._mth)) {
-          const before = cash;
           cash += e.amount;
-          record(dt, before, cash);
         }
       } else if (e.type === 'save' && e.saveEvent) {
-        const before = cash;
         const totalSave = (e.saveEvent.toEF || 0) + (e.saveEvent.toDebt || 0) + (e.saveEvent.toInvest || 0);
         cash -= totalSave;
         if (e.saveEvent.toDebt > 0) applyExtraDebtCascade(loanBalances, e.saveEvent.toDebt, chartDebtStrat);
-        record(dt, before, cash);
       } else if (e.type === 'save_ef') {
-        const before = cash;
         const totalSave = (e.toEF || 0) + (e.toDebt || 0) + (e.toInvest || 0);
         cash -= totalSave;
         if (e.toDebt > 0) applyExtraDebtCascade(loanBalances, e.toDebt, chartDebtStrat);
-        record(dt, before, cash);
       }
     });
+    if (dayStart >= -OVERDRAFT_EPSILON && cash < -OVERDRAFT_EPSILON) {
+      total += 1;
+      const k = dt.getFullYear() * 12 + dt.getMonth();
+      byMonth[k] = (byMonth[k] || 0) + 1;
+    }
   }
   return { total, byMonth };
 }
@@ -7875,6 +8594,7 @@ function computeProjectedOverdraftCounts(months) {
 // ═══════════════════════════════════════════════════════
 let unifiedPlan = null; // computed once, used by all tabs
 let calRangeMonths = 1;
+const OVERDRAFT_EPSILON = 0.01;
 
 const STRATEGY_HINTS = {
   surplus_debt:   'After the emergency fund is complete, every safe surplus dollar goes to extra debt payments (Dashboard strategies: avalanche, snowball, etc.).',
@@ -7951,15 +8671,15 @@ function paycheckWindowMinBalance(opening, alloc, meta) {
   return minB;
 }
 
-/** Count projected overdraft hits (crossings from >= $0 to < $0) in one paycheck window. */
+/** Count projected overdraft hits (end-of-day crossings from >= $0 to < $0) in one paycheck window. */
 function paycheckWindowOverdraftHits(opening, alloc, meta) {
   const { deltas, windowDays, depositAmt, depositDay } = meta;
   const depD = depositDay != null ? depositDay : 0;
   let sim = opening;
   let hits = 0;
-  let wasNeg = sim < -1e-6;
-  const mark = () => {
-    const isNeg = sim < -1e-6;
+  let wasNeg = sim < -OVERDRAFT_EPSILON;
+  const markEndOfDay = () => {
+    const isNeg = sim < -OVERDRAFT_EPSILON;
     if (isNeg && !wasNeg) hits += 1;
     wasNeg = isNeg;
   };
@@ -7968,15 +8688,12 @@ function paycheckWindowOverdraftHits(opening, alloc, meta) {
     if (d === depD) {
       const billsPart = raw - depositAmt;
       sim += billsPart;
-      mark();
       sim += depositAmt;
-      mark();
       sim -= alloc;
-      mark();
     } else {
       sim += raw;
-      mark();
     }
+    markEndOfDay();
   }
   return hits;
 }
@@ -8455,6 +9172,19 @@ function computePaycheckOptimization(opts) {
     ir += toInvs[i];
     invRunning.push(ir);
   }
+  const provisionalPlan = {
+    saveEvents,
+    paycheckPlans: metas.map((m, i) => ({ pc: paychecks[i] })),
+    plannerHorizonMonths,
+    plannerProjection,
+    plannerDebtStrategy,
+    manualPaycheckReport: false,
+    plannerActive: true,
+    cashBalance,
+    efBalance,
+    efTarget
+  };
+  const calOverlay = computeManualPlanPaycheckCalendarOverlay(metas, maxN, cashBalance, provisionalPlan);
 
   const paycheckPlans = metas.map((m, idx) => {
     const { pc, windowBills, windowBillTotal } = m;
@@ -8463,17 +9193,24 @@ function computePaycheckOptimization(opts) {
     const maxAllocAtZeroMin = windowGlobalCapZero[idx];
     const maxAllocWithCushion = maxAllocLocalForCushion(openingCash, m, cushionFloor);
     const maxAllocSafe = maxAllocNonNegative;
-    const minNoSave = paycheckWindowMinBalance(openingCash, 0, m);
-    const cannotPayBills = minNoSave < -0.5;
-    const structuralGap = cannotPayBills ? Math.max(0, 0 - minNoSave) : 0;
+    let minNoSave = paycheckWindowMinBalance(openingCash, 0, m);
     const totalAlloc = allocs[idx];
     const toEF = toEFArr[idx];
     const toDebt = toDebts[idx];
     const toInvest = toInvs[idx];
-    const minWithPlan = paycheckWindowMinBalance(openingCash, totalAlloc, m);
-    const overdraftHits = paycheckWindowOverdraftHits(openingCash, totalAlloc, m);
-    const minNoSavePostPay = paycheckWindowMinAfterPaySetAside(openingCash, 0, m);
-    const minWithPlanPostPay = paycheckWindowMinAfterPaySetAside(openingCash, totalAlloc, m);
+    let minWithPlan = paycheckWindowMinBalance(openingCash, totalAlloc, m);
+    let overdraftHits = paycheckWindowOverdraftHits(openingCash, totalAlloc, m);
+    let minNoSavePostPay = paycheckWindowMinAfterPaySetAside(openingCash, 0, m);
+    let minWithPlanPostPay = paycheckWindowMinAfterPaySetAside(openingCash, totalAlloc, m);
+    if (calOverlay) {
+      minNoSave = calOverlay.minNoSv[idx];
+      minWithPlan = calOverlay.minFull[idx];
+      overdraftHits = calOverlay.hits[idx];
+      minNoSavePostPay = calOverlay.minNoSvPost[idx];
+      minWithPlanPostPay = calOverlay.minPost[idx];
+    }
+    const cannotPayBills = minNoSave < -0.5;
+    const structuralGap = cannotPayBills ? Math.max(0, 0 - minNoSave) : 0;
     const balanceAfterDeposit = balanceAfterDepositBeforeAlloc(openingCash, m);
     /** True "no surplus": not even $1 is safe without risking a below-zero balance somewhere in the horizon. */
     const isStrapped = !cannotPayBills && maxAllocAtZeroMin <= 0.5;
@@ -8689,7 +9426,17 @@ function buildUnifiedPlan() {
   }
 
   const totalDashboardDebt = loans.reduce((s, l) => s + (l.balance || 0), 0);
-  const totalProjectedOverdrafts = paycheckPlans.reduce((s, pp) => s + Math.max(0, Number(pp.overdraftHits) || 0), 0);
+  const planReplaySnapshot = {
+    plannerActive: !!paycheckPlannerResult,
+    manualPaycheckReport,
+    paycheckPlans,
+    saveEvents,
+    plannerHorizonMonths,
+    plannerProjection,
+    plannerDebtStrategy,
+    cashBalance
+  };
+  const totalProjectedOverdrafts = computePlanOverdraftCrossingsByCalendarReplay(planReplaySnapshot, paycheckPlans).total;
 
   const invRateDash = parseFloat(document.getElementById('i-inv')?.value) || 7;
   const startPf = typeof getDashStartingPortfolio === 'function' ? getDashStartingPortfolio() : 0;
@@ -8851,7 +9598,7 @@ function computeDashboardHealthBreakdownProjectedForPlan(baseP, planList, replay
   const paceP = { ...baseP, paycheckPlans: planList };
   const fromPlans = sumPaycheckPlansGoalFlowsAvgOverWindow(paceP, paceMo);
   const savingsMo = (Number(fromPlans.efMo) || 0) + (Number(fromPlans.invMo) || 0);
-  const od = planList.reduce((s, pp) => s + Math.max(0, Number(pp.overdraftHits) || 0), 0);
+  const od = computePlanOverdraftCrossingsByCalendarReplay(rP, planList).total;
   const efEnd = emergencyFundTotalAfterDisplayedPlans(baseP, planList);
   const pSnap = {
     ...baseP,
@@ -8861,10 +9608,10 @@ function computeDashboardHealthBreakdownProjectedForPlan(baseP, planList, replay
   return computeDashboardHealthBreakdown(pSnap, svc.mins, svc.interest, savingsMo);
 }
 
-/** Simple-view compare deck: label | value block (headline + optional contributed line). */
+/** Simple-view compare deck: label | value block (headline + optional contribution line). */
 function buildPlanCompareMetricRow(row) {
   const contribN = row.contrib == null || !Number.isFinite(Number(row.contrib)) ? null : Math.round(Number(row.contrib));
-  const contribLblRaw = row.contribLbl != null ? String(row.contribLbl) : 'Contributed';
+  const contribLblRaw = row.contribLbl != null ? String(row.contribLbl) : 'Contribute';
   const contribLblEsc = contribLblRaw.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const tipRaw = row.contribTitle;
   const tipAttr =
@@ -8957,7 +9704,7 @@ function buildPlanCompareMetricRowsHtml(spec) {
   const inv = Math.round(Number(spec.inv) || 0);
   const fc = Math.round(Number(spec.freeCash) || 0);
   const od = Math.max(0, Number(spec.overdrafts) || 0);
-  const freeLbl = spec.freeCashLabel || 'To goals & extra';
+  const freeLbl = spec.freeCashLabel || 'Free Cash Allocated';
   const C = spec.contribs || null;
   const base = spec.compareBaseline || null;
   const beatOn = !!spec.showBeatMarkers && base;
@@ -8996,7 +9743,7 @@ function buildPlanCompareMetricRowsHtml(spec) {
       labelHtml: 'Debt remaining <span class="pp-compare-lbl-note">projected</span>',
       valueTopHtml: '<span class="pp-compare-num">' + fmtSimpleMoney(debt) + '</span>',
       contrib: cDebt,
-      contribLbl: 'Principal (est.)',
+      contribLbl: 'Extra Principal',
       contribTitle: debtContribTitle,
       beatHtml: beatOn && base.debt != null ? planCompareBeatMarker(debt, base.debt, 'lower') : ''
     }) +
@@ -9009,7 +9756,7 @@ function buildPlanCompareMetricRowsHtml(spec) {
     buildPlanCompareMetricRow({
       labelHtml: freeLbl,
       valueTopHtml: '<span class="pp-compare-num pp-compare-num--accent">' + fmtSimpleMoney(fc) + '</span>',
-      contrib: C && C.combined != null ? C.combined : null,
+      contrib: null,
       beatHtml: beatOn && base.freeCash != null ? planCompareBeatMarker(fc, base.freeCash, 'higher') : ''
     }) +
     buildPlanCompareMetricRow({
@@ -9088,6 +9835,56 @@ function filterPaycheckPlansForDisplayedHorizon(p, paycheckPlans) {
     const k = d.getFullYear() * 12 + d.getMonth();
     return k >= b.firstYm && k <= b.lastYmInclusive;
   });
+}
+
+function paycheckListCalendarYmBounds(paycheckPlans) {
+  const list = paycheckPlans || [];
+  let firstYm = null;
+  let lastYm = null;
+  list.forEach(pp => {
+    const raw = pp && pp.pc ? pp.pc.date : null;
+    const d = raw ? (raw instanceof Date ? raw : new Date(raw)) : null;
+    if (!d || isNaN(d.getTime())) return;
+    const ym = d.getFullYear() * 12 + d.getMonth();
+    if (firstYm == null || ym < firstYm) firstYm = ym;
+    if (lastYm == null || ym > lastYm) lastYm = ym;
+  });
+  if (firstYm == null || lastYm == null) return null;
+  return { firstYm, lastYm };
+}
+
+/**
+ * Overdraft crossings from calendar replay (end-of-day only) so cards/health match calendar behavior.
+ * If `paycheckPlansSubset` is provided, counts only months represented by those paycheck cards.
+ */
+function computePlanOverdraftCrossingsByCalendarReplay(p, paycheckPlansSubset) {
+  const out = { total: 0, byMonth: {} };
+  if (!p) return out;
+  const targetBounds = paycheckPlansSubset && paycheckPlansSubset.length
+    ? paycheckListCalendarYmBounds(paycheckPlansSubset)
+    : plannerDisplayedCalendarYmBounds(p);
+  if (!targetBounds) return out;
+  const replayBounds = plannerDisplayedCalendarYmBounds(p) || targetBounds;
+  const replayStart = replayBounds.firstYm;
+  const replayEnd = Math.max(replayStart, targetBounds.lastYm);
+  let runningBal = Number.isFinite(Number(p.cashBalance)) ? Number(p.cashBalance) : 0;
+  for (let ym = replayStart; ym <= replayEnd; ym++) {
+    const y = Math.floor(ym / 12);
+    const mo = ym % 12;
+    const events = buildMonthlyEvents(y, mo, p);
+    const dim = new Date(y, mo + 1, 0).getDate();
+    const { daily } = buildDailyBalance(runningBal, events, dim, y, mo);
+    if (ym >= targetBounds.firstYm && ym <= targetBounds.lastYm) {
+      for (let d = 1; d <= dim; d++) {
+        if (daily[d - 1] >= -OVERDRAFT_EPSILON && daily[d] < -OVERDRAFT_EPSILON) {
+          out.total += 1;
+          out.byMonth[ym] = (out.byMonth[ym] || 0) + 1;
+        }
+      }
+    }
+    runningBal = daily[dim];
+  }
+  return out;
 }
 
 /**
@@ -9590,12 +10387,33 @@ function groupPaycheckPlansByCalendarMonth(plans) {
   return byKey;
 }
 
+/** Month-level lowest checking by calendar replay using end-of-day balances (same event stack as calendar). */
+function buildPlanCalendarMonthEndOfDayLowsMap(p) {
+  const map = {};
+  if (!p) return map;
+  const b = plannerDisplayedCalendarYmBounds(p);
+  if (!b) return map;
+  let runningBal = Number.isFinite(Number(p.cashBalance)) ? Number(p.cashBalance) : 0;
+  for (let ym = b.firstYm; ym <= b.lastYmInclusive; ym++) {
+    const y = Math.floor(ym / 12);
+    const mo = ym % 12;
+    const events = buildMonthlyEvents(y, mo, p);
+    const dim = new Date(y, mo + 1, 0).getDate();
+    const { daily } = buildDailyBalance(runningBal, events, dim, y, mo);
+    let low = daily[0];
+    for (let d = 1; d <= dim; d++) low = Math.min(low, daily[d]);
+    map[ym] = low;
+    runningBal = daily[dim];
+  }
+  return map;
+}
+
 /**
  * One lite month card — same markup as rows in the main paycheck timeline.
  * @param {number} efBeforeMonth Cumulative EF including all toEF from months strictly before (y, mo).
  * @returns {{ html: string, efAfterMonth: number }}
  */
-function renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efBeforeMonth, saveEvents, strat) {
+function renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efBeforeMonth, saveEvents, strat, monthLowOverride) {
   const sorted = list.slice().sort((a, b) => {
     const da = a.pc.date instanceof Date ? a.pc.date : new Date(a.pc.date);
     const db = b.pc.date instanceof Date ? b.pc.date : new Date(b.pc.date);
@@ -9630,14 +10448,16 @@ function renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efBeforeMonth, saveE
   });
   body += '</ul></div></section>';
 
-  let monthLowCheck = null;
-  sorted.forEach(pp => {
-    const post = Number(pp.minWithPlanPostPay);
-    const plain = Number(pp.minWithPlan);
-    const v = Number.isFinite(post) ? post : (Number.isFinite(plain) ? plain : NaN);
-    if (!Number.isFinite(v)) return;
-    if (monthLowCheck === null || v < monthLowCheck) monthLowCheck = v;
-  });
+  let monthLowCheck = Number.isFinite(Number(monthLowOverride)) ? Number(monthLowOverride) : null;
+  if (monthLowCheck === null) {
+    sorted.forEach(pp => {
+      const post = Number(pp.minWithPlanPostPay);
+      const plain = Number(pp.minWithPlan);
+      const v = Number.isFinite(post) ? post : (Number.isFinite(plain) ? plain : NaN);
+      if (!Number.isFinite(v)) return;
+      if (monthLowCheck === null || v < monthLowCheck) monthLowCheck = v;
+    });
+  }
   const floorCk = Math.max(0, Number(p.checkingFloat) || 0);
   let minCls = 'pp-lite-min--ok';
   if (monthLowCheck != null) {
@@ -9669,6 +10489,7 @@ function renderPaycheckCurrentCalendarMonthSideCard(p) {
   const byKey = groupPaycheckPlansByCalendarMonth(plans);
   const keys = [...byKey.keys()].sort((a, b) => a - b);
   const tKey = calYear * 12 + calMonth;
+  const monthLows = buildPlanCalendarMonthEndOfDayLowsMap(p);
   const list = byKey.get(tKey);
   const titleLbl = new Date(calYear, calMonth, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   if (!list || !list.length) {
@@ -9686,7 +10507,7 @@ function renderPaycheckCurrentCalendarMonthSideCard(p) {
       efBefore += Number(pp.toEF) || 0;
     });
   }
-  const r = renderPaycheckLiteMonthArticleHtml(p, calYear, calMonth, list, efBefore, saveEvents, strat);
+  const r = renderPaycheckLiteMonthArticleHtml(p, calYear, calMonth, list, efBefore, saveEvents, strat, monthLows[tKey]);
   return (
     '<aside class="pp-month-side-card" role="complementary" aria-labelledby="pp-month-side-h">' +
     '<h4 id="pp-month-side-h" class="pp-month-side-sr-h">This month in your plan</h4>' +
@@ -9696,12 +10517,71 @@ function renderPaycheckCurrentCalendarMonthSideCard(p) {
   );
 }
 
+function refreshPaycheckCurrentMonthSideCard() {
+  const mount = document.getElementById('pp-current-month-side-mount');
+  if (!mount) return;
+  if (!unifiedPlan || !unifiedPlan.plannerActive) {
+    mount.innerHTML = '';
+    return;
+  }
+  mount.innerHTML = renderPaycheckCurrentCalendarMonthSideCard(unifiedPlan);
+  applyActivePlanFixedCardHeight(unifiedPlan);
+}
+
+function applyActivePlanFixedCardHeight(p) {
+  if (!p || !p.plannerActive) return;
+  const row = document.querySelector('#pp-compare-global-mount .pp-active-plan-row--fixed');
+  if (!row) return;
+  row.style.removeProperty('--pp-active-card-h');
+  const mount = row.querySelector('#pp-current-month-side-mount');
+  if (!mount) return;
+  const plans = filterPaycheckPlansForDisplayedHorizon(p, (p && p.paycheckPlans) || []);
+  if (!plans.length) return;
+  const saveEvents = effectiveUnifiedSaveEventsForCalendarReplay(p);
+  const strat = normalizePlannerDebtStrategy(p.plannerDebtStrategy);
+  const byKey = groupPaycheckPlansByCalendarMonth(plans);
+  const keys = [...byKey.keys()].sort((a, b) => a - b);
+  const monthLows = buildPlanCalendarMonthEndOfDayLowsMap(p);
+  let efCumulativeReal = p.efBalance != null && !isNaN(Number(p.efBalance)) ? Number(p.efBalance) : 0;
+  const plannerPanel = row.querySelector('.pp-compare-panel--planner');
+  let maxH = plannerPanel ? Math.ceil(plannerPanel.getBoundingClientRect().height) : 0;
+  let probeW = Math.ceil(mount.getBoundingClientRect().width || 0);
+  if (!Number.isFinite(probeW) || probeW <= 0) {
+    const rowW = Math.ceil(row.getBoundingClientRect().width || 0);
+    probeW = Math.max(300, window.innerWidth <= 900 ? rowW : Math.round((rowW - 16) / 2));
+  }
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;pointer-events:none;width:' + probeW + 'px';
+  row.appendChild(probe);
+
+  keys.forEach(monthKey => {
+    const y = Math.floor(monthKey / 12);
+    const mo = monthKey % 12;
+    const list = byKey.get(monthKey) || [];
+    const r = renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efCumulativeReal, saveEvents, strat, monthLows[monthKey]);
+    efCumulativeReal = r.efAfterMonth;
+    const titleLbl = new Date(y, mo, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    probe.innerHTML =
+      '<aside class="pp-month-side-card" role="complementary" aria-labelledby="pp-month-side-h">' +
+      '<h4 id="pp-month-side-h" class="pp-month-side-sr-h">This month in your plan</h4>' +
+      '<div class="pp-month-side-card-inner">' + r.html + '</div>' +
+      '<p class="pp-month-side-sync-note">Matches the <strong>Calendar</strong> month (<span class="pp-month-side-sync-lbl">' + escPayName(titleLbl) + '</span>).</p>' +
+      '</aside>';
+    const h = probe.firstElementChild ? Math.ceil(probe.firstElementChild.getBoundingClientRect().height) : 0;
+    if (h > maxH) maxH = h;
+  });
+
+  probe.remove();
+  if (maxH > 0) row.style.setProperty('--pp-active-card-h', maxH + 'px');
+}
+
 /** Simple view: month cards = each paycheck + free-cash actions, then EF / debt / invest totals. */
 function renderPaycheckSimpleMonthlyBlocks(p) {
   const plans = filterPaycheckPlansForDisplayedHorizon(p, (p && p.paycheckPlans) || []);
   const saveEvents = effectiveUnifiedSaveEventsForCalendarReplay(p);
   const strat = normalizePlannerDebtStrategy(p.plannerDebtStrategy);
   if (!plans.length) return '';
+  const monthLows = buildPlanCalendarMonthEndOfDayLowsMap(p);
 
   const byKey = groupPaycheckPlansByCalendarMonth(plans);
   const keys = [...byKey.keys()].sort((a, b) => a - b);
@@ -9718,7 +10598,7 @@ function renderPaycheckSimpleMonthlyBlocks(p) {
       html += '<section class="pp-year-lite" aria-label="' + escPayName(String(y)) + '"><h4 class="pp-year-lite-hd">' + y + '</h4><div class="pp-year-lite-grid">';
     }
     const list = byKey.get(monthKey) || [];
-    const r = renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efCumulativeReal, saveEvents, strat);
+    const r = renderPaycheckLiteMonthArticleHtml(p, y, mo, list, efCumulativeReal, saveEvents, strat, monthLows[monthKey]);
     html += r.html;
     efCumulativeReal = r.efAfterMonth;
   });
@@ -10059,6 +10939,10 @@ function renderCalendarChart() {
   unifiedPlan.efFundedDay   = efFundedDay;
   unifiedPlan.debtFreeDay   = debtFreeDay;
 
+  const legendEl = document.getElementById('cal-chart-legend');
+  const canvasEl = document.getElementById('cal-balance-chart');
+  if (!legendEl || !canvasEl || typeof Chart === 'undefined') return;
+
   // Milestone annotations
   const annotations = {
     zeroLine: { type:'line', scaleID:'y', value:0, borderColor:'rgba(240,96,96,0.3)', borderWidth:1, borderDash:[3,3] }
@@ -10093,7 +10977,7 @@ function renderCalendarChart() {
     { key:'debt',     label:'Total debt',    color:'#f06060', dash:[4,3] },
     { key:'efTarget', label:'Emergency fund target',     color:'#f5a623', dash:[2,3] },
   ];
-  document.getElementById('cal-chart-legend').innerHTML = seriesDefs.map(s =>
+  legendEl.innerHTML = seriesDefs.map(s =>
     `<div class="cal-legend-item${calChartVisibility[s.key]?'':' hidden'}" onclick="toggleCalSeries('${s.key}',this)">
       <span class="cal-legend-sq" style="background:${s.color};opacity:${s.dash.length?0.6:1}"></span>
       ${s.label}
@@ -10102,7 +10986,7 @@ function renderCalendarChart() {
 
   const dataMap = { cash:cashSeries, ef:efSeries, invest:investSeries, debt:debtSeries, efTarget:efTargetSeries };
   if (cfCharts.calBalance) cfCharts.calBalance.destroy();
-  cfCharts.calBalance = new Chart(document.getElementById('cal-balance-chart'), {
+  cfCharts.calBalance = new Chart(canvasEl, {
     type:'line',
     data:{
       labels,
@@ -10201,9 +11085,13 @@ function getEFBalanceForMonth(targetYear, targetMonth) {
   while (y < targetYear || m < targetMonth) {
     const dim = new Date(y, m + 1, 0).getDate();
     const events = buildMonthlyEvents(y, m);
+    const anchorDay =
+      y === anchor.getFullYear() && m === anchor.getMonth()
+        ? Math.max(1, Math.min(anchor.getDate(), dim))
+        : 1;
     let add = 0;
     events.forEach(e => {
-      if (e.type === 'save' && e.saveEvent) add += (e.saveEvent.toEF || 0);
+      if (e.type === 'save' && e.saveEvent && e.day >= anchorDay) add += (e.saveEvent.toEF || 0);
     });
     ef = efTarget > 0 ? Math.min(efTarget, ef + add) : ef + add;
     m++;
@@ -10693,6 +11581,7 @@ function calPrev() {
   calMonth--;
   if (calMonth < 0) { calMonth = 11; calYear--; }
   renderCalendar();
+  refreshPaycheckCurrentMonthSideCard();
   saveClearpathPersistedState();
 }
 
@@ -10700,7 +11589,82 @@ function calNext() {
   calMonth++;
   if (calMonth > 11) { calMonth = 0; calYear++; }
   renderCalendar();
+  refreshPaycheckCurrentMonthSideCard();
   saveClearpathPersistedState();
+}
+
+function calendarYmdFromAny(x, fallbackYear, fallbackMonth, fallbackDay) {
+  const d = x instanceof Date ? x : (x ? new Date(x) : null);
+  if (d && !isNaN(d.getTime())) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  return String(fallbackYear) + '-' + String((fallbackMonth || 0) + 1).padStart(2, '0') + '-' + String(fallbackDay || 1).padStart(2, '0');
+}
+
+function calendarFindPaycheckPlanForSaveEvent(se, planLike, fallbackYear, fallbackMonth, fallbackDay) {
+  const plans = planLike && Array.isArray(planLike.paycheckPlans) ? planLike.paycheckPlans : [];
+  if (!plans.length || !se) return null;
+  const targetYmd = calendarYmdFromAny(se.date, fallbackYear, fallbackMonth, fallbackDay);
+  let best = null;
+  let bestScore = Infinity;
+  for (let i = 0; i < plans.length; i++) {
+    const pp = plans[i];
+    const pd = pp && pp.pc ? pp.pc.date : null;
+    if (!pd) continue;
+    const ymd = calendarYmdFromAny(pd, fallbackYear, fallbackMonth, fallbackDay);
+    if (ymd !== targetYmd) continue;
+    const score =
+      Math.abs((Number(pp.toEF) || 0) - (Number(se.toEF) || 0)) +
+      Math.abs((Number(pp.toDebt) || 0) - (Number(se.toDebt) || 0)) +
+      Math.abs((Number(pp.toInvest) || 0) - (Number(se.toInvest) || 0));
+    if (score < bestScore) {
+      bestScore = score;
+      best = pp;
+    }
+  }
+  return best;
+}
+
+function calendarSaveRowsForEvent(e, planLike, fallbackYear, fallbackMonth, fallbackDay) {
+  if (!e || !e.saveEvent) return [];
+  const se = e.saveEvent;
+  const rows = [];
+  const toEf = Math.round(Number(se.toEF) || 0);
+  const toDebt = Math.round(Number(se.toDebt) || 0);
+  const toInv = Math.round(Number(se.toInvest) || 0);
+  if (toEf > 0) rows.push({ account: 'Emergency Fund', amt: toEf });
+  if (toDebt > 0) {
+    const pp = calendarFindPaycheckPlanForSaveEvent(se, planLike, fallbackYear, fallbackMonth, fallbackDay);
+    const allocs = pp && Array.isArray(pp.debtExtraAllocations) ? pp.debtExtraAllocations : [];
+    if (allocs.length) {
+      const byName = new Map();
+      allocs.forEach(a => {
+        if (!a) return;
+        const n = String(a.name || 'Loan').trim() || 'Loan';
+        byName.set(n, (byName.get(n) || 0) + (Number(a.amount) || 0));
+      });
+      Array.from(byName.entries()).forEach(([name, amt]) => {
+        const n = Math.round(amt);
+        if (n > 0) rows.push({ account: name, amt: n });
+      });
+    } else {
+      rows.push({ account: 'Debt', amt: toDebt });
+    }
+  }
+  if (toInv > 0) rows.push({ account: 'Investment', amt: toInv });
+  return rows.filter(r => (Number(r.amt) || 0) > 0);
+}
+
+function calendarDedupSaveRows(rows) {
+  const seen = new Set();
+  const out = [];
+  (rows || []).forEach(r => {
+    const key = String(r.account || '').trim().toLowerCase() + '|' + Math.round(Number(r.amt) || 0);
+    if (seen.has(key)) return;
+    seen.add(key);
+    out.push(r);
+  });
+  return out;
 }
 
 function renderCalendar(explicitBalance, monthlyOut) {
@@ -10728,22 +11692,30 @@ function renderCalendar(explicitBalance, monthlyOut) {
 
   const escAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  function renderCalendarEventChip(e) {
+  const menuEventMap = {};
+  let menuEventSeq = 0;
+  function renderCalendarEventChip(e, hasIncomeOnDay) {
     const paidBill = (e.type === 'bill' || e.type === 'loan') && isCashflowBillLoanPaid(e, calYear, calMonth);
     const paid = paidBill;
     const billLoanToggleable = (e.type === 'bill' || e.type === 'loan') && e.amount < 0;
     const paidOpacity = paid ? 'opacity:0.45;' : '';
     const isSave = e.type === 'save';
+    const saveRows = isSave ? calendarSaveRowsForEvent(e, unifiedPlan, calYear, calMonth, e.day) : [];
     let amtLine = '';
     let titleDetail = '';
     if (isSave && e.saveEvent) {
-      const p = [];
-      if ((e.saveEvent.toEF || 0) > 0) p.push('Emergency fund $' + Math.round(e.saveEvent.toEF).toLocaleString());
-      if ((e.saveEvent.toDebt || 0) > 0) p.push('Debt $' + Math.round(e.saveEvent.toDebt).toLocaleString());
-      if ((e.saveEvent.toInvest || 0) > 0) p.push('Investment $' + Math.round(e.saveEvent.toInvest).toLocaleString());
-      titleDetail = p.length ? p.join(' · ') : 'Set aside';
-      const tot = (e.saveEvent.toEF || 0) + (e.saveEvent.toDebt || 0) + (e.saveEvent.toInvest || 0);
-      amtLine = '$' + Math.abs(Math.round(tot)).toLocaleString();
+      if (e.saveRow) {
+        const nm = String(e.saveRow.account || 'Allocation');
+        const av = Math.round(Number(e.saveRow.amt) || 0);
+        titleDetail = '+ (' + nm + ') $' + av.toLocaleString();
+        amtLine = '$' + av.toLocaleString();
+      } else {
+        const tot = (e.saveEvent.toEF || 0) + (e.saveEvent.toDebt || 0) + (e.saveEvent.toInvest || 0);
+        amtLine = '$' + Math.abs(Math.round(tot)).toLocaleString();
+        titleDetail = saveRows.length
+          ? saveRows.map(r => '+ (' + r.account + ') $' + Math.round(r.amt).toLocaleString()).join(' · ')
+          : 'Allocation';
+      }
     } else if (e.type === 'income') {
       amtLine = '+$' + Math.abs(Math.round(e.amount)).toLocaleString();
       titleDetail = amtLine;
@@ -10756,16 +11728,20 @@ function renderCalendar(explicitBalance, monthlyOut) {
     }
     const title = isSave && e.saveEvent
       ? (e.label + ': ' + titleDetail + (paid ? ' (paid)' : ''))
-      : (`${e.label}: ${e.amount !== 0 ? (e.amount >= 0 ? '+' : '') + '$' + Math.abs(e.amount).toLocaleString() : 'set aside'}${paid ? ' (paid)' : billLoanToggleable ? ' — click to mark paid / unpaid' : ''}`);
+      : (`${e.label}: ${e.amount !== 0 ? (e.amount >= 0 ? '+' : '') + '$' + Math.abs(e.amount).toLocaleString() : 'allocation'}${paid ? ' (paid)' : billLoanToggleable ? ' — click to mark paid / unpaid' : ''}`);
     const nameInner = isSave
-      ? '<span class="cal-ev-plan-tag">Set-aside</span><span class="cal-ev-truncate">' + escHtml(e.label) + '</span>'
+      ? (
+          e.saveRow
+            ? '<span class="cal-ev-truncate">+ (' + escHtml(e.saveRow.account) + ')</span>'
+            : '<span class="cal-ev-truncate">' + escHtml(e.label) + '</span>'
+        )
       : '<span class="cal-ev-truncate">' + escHtml(e.label) + '</span>';
-    const evClick = billLoanToggleable
-      ? ' onclick="event.stopPropagation();togglePaid(' + JSON.stringify(e.key) + ')"'
-      : ' onclick="event.stopPropagation()"';
+    const menuId = 'm' + (++menuEventSeq);
+    menuEventMap[menuId] = e;
+    const evClick = ' onclick="openCalendarEventMenuById(event,\'' + menuId + '\',' + calYear + ',' + calMonth + ',' + e.day + ')" oncontextmenu="openCalendarEventMenuById(event,\'' + menuId + '\',' + calYear + ',' + calMonth + ',' + e.day + ')"';
     return (
-      '<div class="cal-event ' + (paid ? 'paid ' : '') + e.type + (isSave ? ' cal-event--plan' : '') + '"' +
-      ' style="' + paidOpacity + (billLoanToggleable ? 'cursor:pointer;' : '') + '"' +
+      '<div class="cal-event ' + (paid ? 'paid ' : '') + e.type + (isSave ? ' cal-event--plan' : '') + (e.saveRow && hasIncomeOnDay ? ' cal-event--save-child' : '') + '"' +
+      ' style="' + paidOpacity + '"' +
       ' title="' + escAttr(title) + '"' +
       evClick +
       '><span class="cal-ev-name">' + nameInner + '</span><span class="cal-ev-amt">' + escHtml(amtLine) + '</span></div>'
@@ -10804,12 +11780,21 @@ function renderCalendar(explicitBalance, monthlyOut) {
   });
 
   const dailyMinDuring = Array(daysInMonth + 1).fill(0);
-  dailyMinDuring[0] = startBalance;
+  const { daily: dailyCashFromSim, dailyMin: dailyMinFromSim } = buildDailyBalance(startBalance, events, daysInMonth, calYear, calMonth);
+  for (let d = 0; d <= daysInMonth; d++) {
+    dailyCash[d] = dailyCashFromSim[d];
+    dailyMinDuring[d] = dailyMinFromSim[d];
+  }
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const r = pessimisticDayCashStep(dailyCash[d - 1], byDay[d] || [], calYear, calMonth);
-    dailyCash[d] = r.end;
-    dailyMinDuring[d] = r.minDuring;
+  const planAnchor = getPlanAnchorDate();
+  const efFromDay =
+    calYear === planAnchor.getFullYear() && calMonth === planAnchor.getMonth()
+      ? Math.max(1, Math.min(planAnchor.getDate(), daysInMonth))
+      : 1;
+  for (let d = 1; d < efFromDay; d++) {
+    dailyEF[d] = startEF;
+  }
+  for (let d = efFromDay; d <= daysInMonth; d++) {
     dailyEF[d] = Math.min(efTarget, dailyEF[d - 1] + (efDeltas[d] || 0));
   }
 
@@ -10844,17 +11829,42 @@ function renderCalendar(explicitBalance, monthlyOut) {
     else if (isLow) cls += ' low-balance';
     else if (hasIncome) cls += ' payday';
     if (isPast)  cls += ' past-day';
-    const evtRank = (e) => (e.type === 'save' ? 0 : e.type === 'income' ? 1 : 2);
+    const evtRank = (e) => (e.type === 'income' ? 0 : e.type === 'save' ? 1 : 2);
     const evtsSorted = evts.slice().sort((a, b) => {
       const r = evtRank(a) - evtRank(b);
       return r !== 0 ? r : String(a.label || '').localeCompare(String(b.label || ''));
     });
+    const displayEvts = [];
+    const seenSaveRows = new Map();
+    evtsSorted.forEach(e => {
+      if (hasIncome && e.type === 'save' && e.saveEvent) {
+        const rows = calendarDedupSaveRows(calendarSaveRowsForEvent(e, unifiedPlan, calYear, calMonth, d));
+        if (rows.length) {
+          rows.forEach((r, idx) => {
+            const rk = String(r.account || '').trim().toLowerCase() + '|' + Math.round(Number(r.amt) || 0);
+            const kParts = parseCalendarEventKeyParts(e.key);
+            const prio = (kParts.kind === 'msav' || kParts.kind === 'minv') ? 2 : 1;
+            const prev = seenSaveRows.get(rk);
+            const nextRow = { ...e, key: String(e.key || '') + ':saveRow:' + idx, saveRow: r };
+            if (!prev) {
+              seenSaveRows.set(rk, { prio, idx: displayEvts.length });
+              displayEvts.push(nextRow);
+            } else if (prio > prev.prio) {
+              displayEvts[prev.idx] = nextRow;
+              seenSaveRows.set(rk, { prio, idx: prev.idx });
+            }
+          });
+          return;
+        }
+      }
+      displayEvts.push(e);
+    });
     const MAX_SHOWN = 4;
-    const shown = evtsSorted.slice(0, MAX_SHOWN);
-    const overflow = evtsSorted.slice(MAX_SHOWN);
+    const shown = displayEvts.slice(0, MAX_SHOWN);
+    const overflow = displayEvts.slice(MAX_SHOWN);
 
     const overflowBtn = overflow.length > 0
-      ? `<div class="cal-overflow-btn" onclick="event.stopPropagation();openDayModal(${calYear},${calMonth},${d})" title="Show all ${evts.length} items">+${overflow.length} more</div>`
+      ? `<div class="cal-overflow-btn" onclick="event.stopPropagation();openDayModal(${calYear},${calMonth},${d})" title="Show all ${displayEvts.length} items">+${overflow.length} more</div>`
       : '';
 
     const cashCls = isNeg ? 'neg' : isLow ? 'low' : 'pos';
@@ -10869,7 +11879,7 @@ function renderCalendar(explicitBalance, monthlyOut) {
     html += `<div class="${cls}" style="${isPast ? 'opacity:0.65' : ''}" onclick="openCalendarQuickAdd(${calYear},${calMonth},${d})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCalendarQuickAdd(${calYear},${calMonth},${d});}" title="Click to add income or expense on this date" role="button" tabindex="0">
       <div class="cal-day-num">${d}</div>
       <div class="cal-day-body">
-        ${shown.map(e => renderCalendarEventChip(e)).join('')}
+        ${shown.map(e => renderCalendarEventChip(e, hasIncome)).join('')}
         ${overflowBtn}
       </div>
       <div class="cal-day-footer" onclick="event.stopPropagation()">
@@ -10883,6 +11893,7 @@ function renderCalendar(explicitBalance, monthlyOut) {
   }
 
   document.getElementById('cal-grid').innerHTML = html;
+  window.__calMenuEventMap = menuEventMap;
 
   // Month-end report card — free cash = planner/manual set-aside (emergency fund + invest + extra debt) this month
   let freeEf = 0, freeDebt = 0, freeInv = 0;
@@ -11013,23 +12024,55 @@ function parseEventKeyYmd(key) {
 function openDayModal(year, month, day) {
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const events = buildMonthlyEvents(year, month);
-  const dayEvts = events.filter(e => e.day === day);
+  const baseDayEvts = events.filter(e => e.day === day);
+  const hasIncome = baseDayEvts.some(e => e.type === 'income');
+  const dayEvts = [];
+  const seenSaveRows = new Map();
+  baseDayEvts.forEach(e => {
+    if (hasIncome && e.type === 'save' && e.saveEvent) {
+      const rows = calendarDedupSaveRows(calendarSaveRowsForEvent(e, unifiedPlan, year, month, day));
+      if (rows.length) {
+        rows.forEach((r, idx) => {
+          const rk = String(r.account || '').trim().toLowerCase() + '|' + Math.round(Number(r.amt) || 0);
+          const kParts = parseCalendarEventKeyParts(e.key);
+          const prio = (kParts.kind === 'msav' || kParts.kind === 'minv') ? 2 : 1;
+          const prev = seenSaveRows.get(rk);
+          const nextRow = { ...e, key: String(e.key || '') + ':saveRow:' + idx, saveRow: r };
+          if (!prev) {
+            seenSaveRows.set(rk, { prio, idx: dayEvts.length });
+            dayEvts.push(nextRow);
+          } else if (prio > prev.prio) {
+            dayEvts[prev.idx] = nextRow;
+            seenSaveRows.set(rk, { prio, idx: prev.idx });
+          }
+        });
+        return;
+      }
+    }
+    dayEvts.push(e);
+  });
   const html = dayEvts.map(e => {
     const paidBill = (e.type === 'bill' || e.type === 'loan') && isCashflowBillLoanPaid(e, year, month);
     const paid = paidBill;
     const billLoanToggleable = (e.type === 'bill' || e.type === 'loan') && e.amount < 0;
+    const keySafe = String(e.key || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const rowClick = billLoanToggleable
-      ? `onclick="event.stopPropagation();togglePaidModal(${JSON.stringify(e.key)})"`
+      ? `onclick="event.stopPropagation();togglePaidModal('${keySafe}',${year},${month},${day},'${e.type}')"`
       : 'onclick="event.stopPropagation()"';
     const indicator = paid ? '✓' : e.type==='save' ? '★' : e.amount>=0 ? '↑' : '↓';
-    const amtStr = e.amount !== 0 ? (e.amount>=0?'+':'')+'$'+Math.abs(e.amount).toLocaleString() : 'set aside';
+    const amtStr = e.type === 'save' && e.saveRow
+      ? '$' + Math.round(Number(e.saveRow.amt) || 0).toLocaleString()
+      : (e.amount !== 0 ? (e.amount>=0?'+':'')+'$'+Math.abs(e.amount).toLocaleString() : 'allocation');
+    const name = e.type === 'save' && e.saveRow
+      ? '+ (' + String(e.saveRow.account || 'Allocation') + ')'
+      : e.label;
     return `<div ${rowClick}
       style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:6px;margin-bottom:5px;cursor:${billLoanToggleable?'pointer':'default'};background:${paid?'rgba(255,255,255,0.03)':'var(--surface2)'};${paid?'opacity:0.5;text-decoration:line-through;':''}">
       <span style="display:flex;align-items:center;gap:7px;font-size:12px">
         <span class="cal-event ${e.type}" style="margin-bottom:0;white-space:nowrap">${indicator} ${e.type}</span>
-        ${e.label}
+        ${name}
       </span>
-      <span style="font-size:12px;font-weight:500;color:${e.amount>0?'var(--green)':e.amount<0?'var(--red)':'var(--amber)'};white-space:nowrap">${amtStr}</span>
+      <span style="font-size:12px;font-weight:500;color:${e.type==='save'?'var(--purple)':(e.amount>0?'var(--green)':e.amount<0?'var(--red)':'var(--amber)')};white-space:nowrap">${amtStr}</span>
     </div>`;
   }).join('');
 
@@ -11049,8 +12092,98 @@ function openDayModal(year, month, day) {
   document.body.appendChild(modal);
 }
 
-function togglePaidModal(key) {
-  togglePaid(key);
+let calItemMenuMeta = null;
+
+function closeCalendarItemMenu() {
+  const m = document.getElementById('cal-item-menu');
+  if (m) m.remove();
+  calItemMenuMeta = null;
+}
+
+function parseCalendarEventKeyParts(key) {
+  const p = String(key || '').split(':');
+  return { kind: p[1] || '', id: parseInt(p[2], 10) || null };
+}
+
+function openCalendarEventMenuById(domEvt, menuId, year, month, day) {
+  const map = window.__calMenuEventMap || {};
+  const e = map[menuId];
+  if (!e) return;
+  openCalendarEventMenu(domEvt, e, year, month, day);
+}
+
+function calendarFlyoutTargetFromEvent(meta) {
+  const e = meta && meta.e ? meta.e : null;
+  if (!e) return { section: 'bills' };
+  const p = parseCalendarEventKeyParts(e.key);
+  if (e.type === 'income' && p.kind === 'income' && p.id != null) {
+    const inc = cfIncomes.find(x => x.id === p.id);
+    if (inc && cfIsOneTimeIncome(inc)) return { section: 'onetime', oneTimeKind: 'income', oneTimeId: p.id };
+    return { section: 'income', kind: 'income', id: p.id };
+  }
+  if (e.type === 'bill' && p.kind === 'bill' && p.id != null) {
+    const b = cfBills.find(x => x.id === p.id);
+    if (b && cfIsOneTimeBill(b)) return { section: 'onetime', oneTimeKind: 'bill', oneTimeId: p.id };
+    return { section: 'bills', kind: 'bill', id: p.id };
+  }
+  if (e.type === 'loan' && p.kind === 'loan' && p.id != null) return { section: 'bills', kind: 'loan', id: p.id };
+  if (e.type === 'save' && p.kind === 'msav' && p.id != null) return { section: 'transfers', kind: 'savings', id: p.id };
+  if (e.type === 'save' && p.kind === 'minv' && p.id != null) return { section: 'transfers', kind: 'investments', id: p.id };
+  return { section: 'onetime' };
+}
+
+function calendarOpenEditInputsScope() {
+  if (!calItemMenuMeta) return;
+  const target = calendarFlyoutTargetFromEvent(calItemMenuMeta);
+  closeCalendarItemMenu();
+  if (typeof openPaycheckInputsFlyout === 'function') openPaycheckInputsFlyout(target);
+}
+
+function openCalendarEventMenu(domEvt, e, year, month, day) {
+  if (!domEvt || !e) return;
+  domEvt.preventDefault();
+  domEvt.stopPropagation();
+  closeCalendarItemMenu();
+  const menu = document.createElement('div');
+  menu.id = 'cal-item-menu';
+  menu.className = 'cal-item-menu';
+  const paidKeySafe = String(e.key || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  const paidToggle = (e.type === 'bill' || e.type === 'loan') ? (
+    '<button type="button" class="cal-item-menu-btn" onclick="togglePaid(\'' + paidKeySafe + '\',' + year + ',' + month + ',' + e.day + ',\'' + e.type + '\');closeCalendarItemMenu();renderCalendar(undefined, unifiedPlan && unifiedPlan.totalOut)">' +
+    (isCashflowBillLoanPaid(e, year, month) ? 'Mark unpaid' : 'Mark paid') +
+    '</button>'
+  ) : '';
+  menu.innerHTML =
+    '<div class="cal-item-menu-title">' + (String(e.label || e.type).replace(/</g, '&lt;')) + '</div>' +
+    '<button type="button" class="cal-item-menu-btn" onclick="calendarOpenEditInputsScope()">Edit</button>' +
+    paidToggle +
+    '<button type="button" class="cal-item-menu-btn" onclick="closeCalendarItemMenu()">Close</button>';
+  document.body.appendChild(menu);
+  calItemMenuMeta = { e, year, month, day };
+  const vw = window.innerWidth || document.documentElement.clientWidth;
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  let left = domEvt.clientX + 10;
+  let top = domEvt.clientY + 10;
+  const r = menu.getBoundingClientRect();
+  if (left + r.width > vw - 10) left = Math.max(8, vw - r.width - 10);
+  if (top + r.height > vh - 10) top = Math.max(8, vh - r.height - 10);
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  setTimeout(() => {
+    const closeIfOutside = function (evt) {
+      const el = document.getElementById('cal-item-menu');
+      if (!el) { document.removeEventListener('mousedown', closeIfOutside); return; }
+      if (!el.contains(evt.target)) {
+        closeCalendarItemMenu();
+        document.removeEventListener('mousedown', closeIfOutside);
+      }
+    };
+    document.addEventListener('mousedown', closeIfOutside);
+  }, 0);
+}
+
+function togglePaidModal(key, year, month, day, type) {
+  togglePaid(key, year, month, day, type);
   const overlay = document.getElementById('day-modal-overlay');
   if (overlay) {
     const { y, m, d } = parseEventKeyYmd(key);
@@ -11087,6 +12220,12 @@ function calQuickAddPickFlow(flow) {
   const q = calQuickAddDraft;
   if (!q) return;
   q.flow = flow;
+  if (flow === 'alloc') {
+    q.pickExpenseKind = false;
+    q.step = 3;
+    refreshCalendarQuickAddCard();
+    return;
+  }
   const L = typeof loans !== 'undefined' && loans ? loans : [];
   if (flow === 'out' && q.lifetime === 'once' && L.length) q.pickExpenseKind = true;
   else {
@@ -11123,6 +12262,12 @@ function calQuickAddGoBack() {
     return;
   }
   const L = typeof loans !== 'undefined' && loans ? loans : [];
+  if (q.step === 3 && q.flow === 'alloc') {
+    q.step = 2;
+    delete q.flow;
+    refreshCalendarQuickAddCard();
+    return;
+  }
   if (q.step === 3 && q.flow === 'out' && q.lifetime === 'once' && L.length && q.expenseKind && !q.pickExpenseKind) {
     q.pickExpenseKind = true;
     delete q.expenseKind;
@@ -11155,13 +12300,24 @@ function buildCalendarQuickAddInnerHtml() {
   }
   if (q.step === 2) {
     return `<div class="cal-qa-top">${closeRow}<div class="cal-qa-head">${head}</div></div>
-      <p class="cal-qa-sub">Is this money coming in or going out?</p>
+      <p class="cal-qa-sub">Choose what you want to add.</p>
       <div class="cal-qa-actions">
         <button type="button" class="cal-qa-btn cal-qa-btn--in" onclick="calQuickAddPickFlow('in')">Income</button>
         <button type="button" class="cal-qa-btn cal-qa-btn--out" onclick="calQuickAddPickFlow('out')">Expense</button>
+        <button type="button" class="cal-qa-btn" onclick="calQuickAddPickFlow('alloc')">Cash allocations</button>
       </div>
       <button type="button" class="cal-qa-link" onclick="calQuickAddGoBack()">Back</button>`;
   }
+  if (q.flow === 'alloc') {
+    return `<div class="cal-qa-top">${closeRow}<div class="cal-qa-head">${head}</div></div>
+      <p class="cal-qa-sub">Cash allocations</p>
+      <p class="cal-qa-hint">Use the planner inputs side panel to add or edit recurring transfers to Emergency Fund, Investments, or other allocation rows.</p>
+      <div class="cal-qa-actions cal-qa-actions--footer">
+        <button type="button" class="cal-qa-btn cal-qa-btn--primary" onclick="calQuickAddOpenAllocations()">Open cash allocations</button>
+      </div>
+      <button type="button" class="cal-qa-link" onclick="calQuickAddGoBack()">Back</button>`;
+  }
+
   if (q.step === 3 && q.pickExpenseKind) {
     return `<div class="cal-qa-top">${closeRow}<div class="cal-qa-head">${head}</div></div>
       <p class="cal-qa-sub">What type of expense?</p>
@@ -11472,6 +12628,11 @@ function calQuickAddSubmitLoanExtra() {
   if (!lid) return;
   cfAddLoanOneTimeExtra(lid, amt, q.year, q.month, day);
   closeCalendarQuickAdd();
+}
+
+function calQuickAddOpenAllocations() {
+  closeCalendarQuickAdd();
+  if (typeof openPaycheckInputsFlyout === 'function') openPaycheckInputsFlyout({ section: 'transfers' });
 }
 
 function openCalendarQuickAdd(year, month, day) {
@@ -12186,9 +13347,10 @@ function collectPaychecks(months) {
       if (!inc.nextDate) return;
       const interval = inc.freq === 'biweekly' ? 14 : 7;
       let cur = new Date(inc.nextDate + 'T12:00:00');
+      const end0 = cfStartOfDay(endDate);
       while (cfStartOfDay(cur) > today0) cur.setDate(cur.getDate() - interval);
       while (cfStartOfDay(cur) < today0) cur.setDate(cur.getDate() + interval);
-      while (cur <= endDate) {
+      while (cfStartOfDay(cur) <= end0) {
         paychecks.push({ date: new Date(cur), amount: inc.amount, source: label, incId: inc.id });
         cur.setDate(cur.getDate() + interval);
       }
@@ -12513,7 +13675,8 @@ function buildManualOptimizedCompareStripHtml(p, manualMetrics, dashDebtVal) {
     plannerProjection: shadow.plannerProjection,
     plannerDebtStrategy: effectiveStrat,
     postEfGoal: postEf,
-    efBalance: p.efBalance
+    efBalance: p.efBalance,
+    cashBalance: p.cashBalance
   };
   const ppOpt = filterPaycheckPlansForDisplayedHorizon(pS, shadow.paycheckPlans);
   if (!ppOpt.length) return '';
@@ -12527,7 +13690,7 @@ function buildManualOptimizedCompareStripHtml(p, manualMetrics, dashDebtVal) {
     optDebt = Math.round(lastOpt.loanBalancesProjected.reduce((s, l) => s + Math.max(0, Number(l.balance) || 0), 0));
   }
   const optInv = Math.round(investEndBalanceFromDisplayedPaychecks(pS));
-  const optOd = ppOpt.reduce((s, x) => s + Math.max(0, Number(x.overdraftHits) || 0), 0);
+  const optOd = computePlanOverdraftCrossingsByCalendarReplay(pS, ppOpt).total;
   const planSelect = buildOptimizedPlanPreviewSelectHtml();
   const optContrib = sumPaycheckPlansContributedTotals(ppOpt);
   /** Same calendar window as EF / debt / invest headline figures (`ppOpt`), not full `shadow.totalTo*` across all modeled checks. */
@@ -12554,7 +13717,7 @@ function buildManualOptimizedCompareStripHtml(p, manualMetrics, dashDebtVal) {
     freeCash: optFreeCash,
     overdrafts: optOd,
     healthHb: optHealthHb,
-    freeCashLabel: 'To goals & extra <span class="pp-compare-lbl-note">(optimized routing)</span>',
+    freeCashLabel: 'Free Cash Allocated <span class="pp-compare-lbl-note">(optimized routing)</span>',
     contribs: optContrib,
     showBeatMarkers: true,
     compareBaseline: {
@@ -12762,22 +13925,13 @@ function renderPaycheckPlan() {
   const paycheckCards = renderPaycheckSimpleMonthlyBlocks(p);
 
   const dashDebt = p.totalDashboardDebt != null ? p.totalDashboardDebt : loans.reduce((s,l)=>s+(l.balance||0),0);
-  // Summary + monthly blocks use per-paycheck.overdraftHits (optimizer: window sim; manual plan: calendar replay).
-  // computeProjectedOverdraftCounts (Insights) uses its own horizon/day map and may still differ slightly.
+  // Summary overdrafts use end-of-day calendar replay crossings for both optimized and manual plans.
+  // computeProjectedOverdraftCounts (Insights) uses a separate horizon/day map and may still differ slightly.
   const planList = ppDisplay;
-  const projectedOverdrafts = planList.reduce((s, pp) => s + Math.max(0, Number(pp.overdraftHits) || 0), 0);
+  const odReplay = computePlanOverdraftCrossingsByCalendarReplay(p, planList);
+  const projectedOverdrafts = odReplay.total;
   p.totalProjectedOverdrafts = projectedOverdrafts;
-  const odByMonthFromPlans = {};
-  planList.forEach(pp => {
-    const h = Math.max(0, Number(pp.overdraftHits) || 0);
-    if (!h) return;
-    const raw = pp.pc && pp.pc.date;
-    const d = raw ? (raw instanceof Date ? raw : new Date(raw)) : null;
-    if (!d || isNaN(d.getTime())) return;
-    const k = d.getFullYear() * 12 + d.getMonth();
-    odByMonthFromPlans[k] = (odByMonthFromPlans[k] || 0) + h;
-  });
-  p.projectedOverdraftHitsByMonth = odByMonthFromPlans;
+  p.projectedOverdraftHitsByMonth = odReplay.byMonth;
 
   // Summary cards
   const lastPPHorizon = planList.length ? planList[planList.length - 1] : null;
@@ -12817,16 +13971,16 @@ function renderPaycheckPlan() {
     healthHb: manualHealthHb,
     contribs: manualContribs,
     freeCashLabel: p.plannerActive
-      ? 'Total to goals <span class="pp-compare-lbl-note">(active plan)</span>'
-      : 'To goals & extra <span class="pp-compare-lbl-note">(your schedule)</span>'
+      ? 'Free Cash Allocated <span class="pp-compare-lbl-note">(active plan)</span>'
+      : 'Free Cash Allocated <span class="pp-compare-lbl-note">(your schedule)</span>'
   });
   let simpleWrapHtml = '';
   if (p.plannerActive) {
     const monthSide = renderPaycheckCurrentCalendarMonthSideCard(p);
     simpleWrapHtml =
       '<div class="pp-simple-summary-wrap pp-simple-summary-wrap--compare pp-active-plan-with-month">' +
-      '<div class="pp-active-plan-row">' +
-      monthSide +
+      '<div class="pp-active-plan-row pp-active-plan-row--fixed">' +
+      '<div id="pp-current-month-side-mount">' + monthSide + '</div>' +
       '<section class="pp-compare-panel pp-compare-panel--planner" aria-labelledby="pp-compare-active-h">' +
       '<header class="pp-compare-panel-hd">' +
       '<div class="pp-compare-panel-title-row pp-compare-panel-title-row--active-planner">' +
@@ -12877,6 +14031,7 @@ function renderPaycheckPlan() {
       '</div>';
   }
   setPaycheckCompareGlobalMount(simpleWrapHtml);
+  if (p.plannerActive) applyActivePlanFixedCardHeight(p);
 
   document.getElementById('pp-paychecks').innerHTML = paycheckCards;
   renderPaycheckSavingsTips(p);
@@ -12887,9 +14042,12 @@ function renderPaycheckPlan() {
 // ═══════════════════════════════════════════════════════
 function snapCalendarToWallClockMonthForActivePlan() {
   if (!paycheckPlannerResult) return;
-  const n = new Date();
-  calYear = n.getFullYear();
-  calMonth = n.getMonth();
+  if (typeof calYear !== 'number' || typeof calMonth !== 'number') {
+    const a = getPlanAnchorDate();
+    calYear = a.getFullYear();
+    calMonth = a.getMonth();
+  }
+  if (typeof clampCalendarPastDisplayedPlanWindow === 'function') clampCalendarPastDisplayedPlanWindow();
   if (typeof saveClearpathPersistedState === 'function') saveClearpathPersistedState();
 }
 
